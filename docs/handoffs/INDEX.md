@@ -4,7 +4,9 @@ Self-contained prompts for fresh Cascades picking up work at sprint boundaries o
 
 | File | From | To | Status |
 |---|---|---|---|
-| [cascade-a-sprint-1.md](./cascade-a-sprint-1.md) | Cascade A | Sprint 1 (L1 Foundation) | active |
+| `cascade-a-sprint-1.md` | A (Sprint 0) | A (Sprint 1) | superseded — Sprint 1 closed |
+| `cascade-b-template-python-ml-uv.md` | A (Sprint 1 closer) | B (vertical, Sprint 2) | active |
+| `cascade-c-obsidian.md` | A (Sprint 1 closer) | C (vertical, Sprint 2) | active |
 
 ## Convention
 

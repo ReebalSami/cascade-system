@@ -25,6 +25,8 @@ cascade-system/
     ├── handoffs/
     │   ├── INDEX.md                # handoff prompt index
     │   └── <from-cascade-id>-<to-sprint-or-vertical>.md
+    ├── reviews/                    # peer-Cascade review reports (added per ADR-007)
+    │   └── <sprint-or-vertical-slug>-review.md
     └── prompts/
         └── stages/                 # per-phase artifacts (when this repo runs phases.yaml)
             └── NN-<phase-slug>.md
