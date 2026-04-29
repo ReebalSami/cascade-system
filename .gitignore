@@ -1,0 +1,14 @@
+# Vendored reference repos — clone locally, never commit
+refs/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Env
+.env
+.env.local
