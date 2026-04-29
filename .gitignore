@@ -1,6 +1,9 @@
 # Vendored reference repos — clone locally, never commit
 refs/
 
+# Scratch — used for temp files when editing protected paths (e.g. ~/.codeium/)
+.scratch/
+
 # macOS
 .DS_Store
 
