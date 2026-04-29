@@ -1,5 +1,7 @@
 # ADR-004: `_shared/scaffold/` pattern for cross-cutting L3 template files
 
+> **Concurrency note**: Authored concurrently with `ADR-005-sprint-1-execution-order.md`. Both Cascades initially picked ADR-004; the conflict was resolved by the Sprint-1 Cascade yielding ADR-005 to its own ADR (since this one represents a mid-sprint *plan amendment*, traditionally referenced from later places). See `ADR-005-sprint-1-execution-order.md` for the matching note.
+
 **Status**: Accepted
 **Date**: Sprint 1 (mid-sprint plan amendment, applies to M1.4 design)
 

@@ -5,8 +5,8 @@
 | [ADR-001](./ADR-001-mcp-vs-gh-cli-for-write-mutations.md) | MCP vs `gh` CLI for GitHub write mutations | Accepted |
 | [ADR-002](./ADR-002-handoff-prompts-subdirectory.md) | `docs/handoffs/` subdirectory for cross-Cascade handoff prompts | Accepted |
 | [ADR-003](./ADR-003-strict-docs-structure.md) | Strict enforcement of `docs/` placement rules | Accepted |
-| [ADR-004](./ADR-004-sprint-1-execution-order.md) | Sprint 1 execution order | Accepted |
 | [ADR-004](./ADR-004-shared-scaffold-pattern.md) | `_shared/scaffold/` pattern for cross-cutting L3 template files | Accepted |
+| [ADR-005](./ADR-005-sprint-1-execution-order.md) | Sprint 1 execution order (M1.3 → M1.1 → M1.2 → M1.5 → M1.4 → …) | Accepted |
 
 ## Conventions
 

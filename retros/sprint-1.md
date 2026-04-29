@@ -4,13 +4,14 @@
 **Status**: in progress (running draft — closed when all M1.x milestones close)
 **Plan ref**: `~/.windsurf/plans/cascade-project-system-cac5f9.md` §4 Sprint 1
 **Execution plan**: `~/.windsurf/plans/sprint-1-execution-abf225.md`
-**Order ADR**: `docs/decisions/ADR-004-sprint-1-execution-order.md`
+**Order ADR**: `docs/decisions/ADR-005-sprint-1-execution-order.md`
+**Mid-sprint amendment ADR**: `docs/decisions/ADR-004-shared-scaffold-pattern.md` (affects M1.4 design)
 
 ## Milestone outcomes (appended live as each closes)
 
 | Order | ID | Issue | Status | Artifact | Notes |
 |---|---|---|---|---|---|
-| 1 | M1.3 | #4 | pending | `~/.windsurf/contracts/phase-taxonomy.md` | — |
+| 1 | M1.3 | #4 | ✓ closed | `~/.windsurf/contracts/phase-taxonomy.md` | Schema novel to system; no upstream pattern at this granularity. Includes 4 reader contracts + versioning policy + 2 examples (python-ml-uv + nextjs-app generality check). |
 | 2 | M1.1 | #2 | pending | `~/.windsurf/rules/<extracted>.md` | — |
 | 3 | M1.2 | #3 | pending | `~/.windsurf/skills/grill-me/SKILL.md` | — |
 | 4 | M1.5 | #6 | pending | `~/.windsurf/workflows/run-phase.md` | — |

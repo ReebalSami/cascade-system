@@ -1,7 +1,8 @@
-# ADR-004: Sprint 1 execution order
+# ADR-005: Sprint 1 execution order
 
 **Status**: Accepted
 **Date**: Sprint 1 start
+**Note on numbering**: Originally drafted as ADR-004 but renumbered when a concurrent ADR-004 (`_shared/scaffold/` pattern, mid-sprint plan amendment) landed first.
 
 ## Context
 
