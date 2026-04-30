@@ -44,7 +44,7 @@ For verification: invoke `@verify-l1` to confirm the layout is consistent before
 /start-project [<name> <type>]
 ```
 
-The workflow walks 14 steps (validate type → scaffold → copy global rules → GitHub repo → initial commit → Project v2 → milestones → brainstorm phase → handoff). See `~/.codeium/windsurf/global_workflows/start-project.md` for the procedure.
+The workflow walks 15 steps (validate type → scaffold → copy global rules → GitHub repo → initial commit → push → branch protection → Project v2 → milestones → brainstorm phase → handoff). See `~/.codeium/windsurf/global_workflows/start-project.md` for the procedure.
 
 Recommended: hand off to a fresh Cascade after `/start-project` completes — running phases in a context-cleared session prevents state bleed.
 
@@ -89,6 +89,24 @@ Looks up the phase in the project's `.windsurf/phases.yaml`, runs pre-checks, in
 - `docs/rules/INDEX.md` — the long-form rule archive index
 - `docs/decisions/INDEX.md` — all ADRs
 - `~/.codeium/windsurf/memories/global_rules.md` — the LAW (concise, always-on)
+
+## Invocation cheat-sheet
+
+| Intent | Syntax | Auto-activates? |
+|---|---|---|
+| Use a skill | `@<skill-name>` | Yes — description-match on user phrasing |
+| Browse skills in a dropdown | `@skills:` then pick | n/a |
+| Use a manual rule | `@<rule-name>` | n/a (manual rules are never auto-loaded) |
+| Run a workflow | `/<workflow-name>` | Never auto |
+| Browse workflows in a dropdown | `/` then pick | n/a |
+
+`@rules:` dropdown shows only `manual`-trigger rules plus any `AGENTS.md` — by Windsurf design (docs [chunk 340](https://docs.windsurf.com/llms-full.txt)). Always-on and `model_decision` rules are silently active in every message; they are **not** listed in any dropdown and do **not** need (or benefit from) `@rules:` invocation. We currently have zero manual-trigger rules.
+
+Workflows are slash-only. The `@` prefix does not resolve workflow names (docs [chunk 362](https://docs.windsurf.com/llms-full.txt): *"Manual only via `/[workflow-name]` slash command"*).
+
+The `docs/rules/` long-form archive is a human/agent reference; Windsurf does not scan it as rules (ADR-014 hybrid model). Active rules live in `~/.codeium/windsurf/memories/global_rules.md`.
+
+Source: `https://docs.windsurf.com/llms-full.txt` chunks 338, 340, 352, 362.
 
 ## Sections deferred
 
