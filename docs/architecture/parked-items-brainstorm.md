@@ -205,6 +205,8 @@ Backstop for §1's skill. If the agent forgets to invoke `@release-manager`, the
 
 ### 2.3 6000-char budget for `global_rules.md` *(critical constraint)*
 
+> **[CORRECTED — see ADR-018 §"Brainstorm drift correction"]** This section's premise is partially wrong: the trim need was overstated. Per Windsurf docs (`https://docs.windsurf.com/llms-full.txt` position 340), `global_rules.md` is always-on with no per-section activation modes; only workspace rules support `model_decision` activation. Architectural fix shipped in PR #13: `branch-and-pr-required` fits without trim (5822 + ~165 = ~5987 / 6000); `know-your-hardware` deploys workspace-only via `/start-project`, not as a `global_rules.md` entry. No existing rule was trimmed.
+
 **Current state**: 5822 / 6000 chars (178 chars headroom — measured during execution prep)
 
 **Adding `branch-and-pr-required` always_on**: minimum useful concise body ~250–400 chars. **Busts the cap.**
@@ -276,6 +278,8 @@ User runs M1 Pro 16 GB Metal 4 (no CUDA). Tool / library / model choices must re
 **Recommendation: (a) L1**. Cost-blast-radius (AWS bills) isn't tied to a project's stack; AWS escalation is a posture, not a stack. A web project asking for "process 80 GB of CSV" is just as relevant as a thesis project asking for "fine-tune 7B". L2 / L3 confine to one stack and lose the cross-project posture.
 
 ### 3.3 Activation
+
+> **[CORRECTED — see ADR-018 §"Brainstorm drift correction"]** This section's premise is wrong: `global_rules.md` does not support per-section activation modes. The `(model_decision)` annotations on existing rules in that file are decorative — the file is always-on as a whole per Windsurf docs. Real `model_decision` activation is only available for workspace rules (`<project>/.windsurf/rules/<name>.md`) via `trigger:` frontmatter. Architectural fix shipped in PR #13: `know-your-hardware` lives as long-form archive only, deployed to per-project `.windsurf/rules/` by `/start-project` step 6a — that's where it gets real `model_decision` activation. No `global_rules.md` entry.
 
 **(a) `always_on`** — loads in every conversation  
 **(b) `model_decision`** — fires only when resource-heavy intent is detected (training, large datasets, GPU, AWS, > N parallel jobs)
