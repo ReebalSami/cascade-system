@@ -65,7 +65,7 @@ State-based detection (not time-based) per `no-time-estimates`. `@release-manage
 
 - Skill body inlines the pre-flight checklist and refuses to proceed when on `main`
 - 4 helper workflows (`/branch-start`, `/branch-push-and-pr`, `/ci-watch`, `/branch-merge-and-cleanup`) implement the deterministic procedures
-- `/start-project` is intended to set `main` branch protection on the GitHub side (when enforceable); wiring deferred per `queue/pending-review.md`. This rule is the agent-side mirror and is load-bearing in the meantime.
+- `/start-project` step 11 sets `main` branch protection on the GitHub side (when enforceable); this rule is the agent-side mirror and remains load-bearing on free-tier private repos where server-side protection cannot enforce.
 
 The rule + skill pairing mirrors the proven `no-terminal-oneline-scripts` + `/commit` pattern (ADR-013).
 

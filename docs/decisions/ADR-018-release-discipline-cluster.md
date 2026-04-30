@@ -81,7 +81,7 @@ State-based detection (not time-based) per `no-time-estimates`.
 
 ### Branch-protection on `main`
 
-`/start-project` step 9 (a new step added by this ADR) calls:
+`/start-project` step 11 (a new step added by this ADR, between push and Project v2 creation) calls:
 
 ```sh
 gh api -X PUT repos/:owner/:repo/branches/main/protection \
@@ -126,7 +126,7 @@ Per brainstorm §7.2, this ADR is a **mid-Sprint-2 amendment** (precedent: ADR-0
 
 - Solo-dev workflow now requires a PR even for trivial changes. Mitigation: PR description auto-fills from commit; user-review hard-gate is fast.
 - `@release-manager` cannot run on cold-start (chicken-and-egg — first commit + push of a new repo). Cold-start exception in `branch-and-pr-required` covers this.
-- `/start-project` adds branch-protection step 9; failures (e.g., 403) require user attention but do not block project creation.
+- `/start-project` adds branch-protection step 11; failures (e.g., 403) require user attention but do not block project creation.
 - `know-your-hardware` is invisible on brand-new projects until `/start-project` runs. Acceptable; brand-new projects rarely train models on day 0.
 
 **Self-test plan:**
