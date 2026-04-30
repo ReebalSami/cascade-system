@@ -9,9 +9,9 @@ You are a fresh Cascade picking up the meta-system's knowledge-integration verti
 
 ## 1 — Your role
 
-You wire up the Obsidian MCP so Cascade-A authored skills can read and (where appropriate) write to the user's personal knowledge vault. Goal: cross-project notes (research log, thesis notes, paper summaries, brainstorm spillover) become first-class citizens of the system — `/grill-me`, `/recalibrate`, `/to-prd` can all reach into Obsidian for context.
+You wire up the Obsidian MCP so Cascade-A authored skills can read and (where appropriate) write to the user's personal knowledge vault. Goal: cross-project notes (research log, thesis notes, paper summaries, brainstorm spillover) become first-class citizens of the system — `@grill-me`, `/recalibrate`, `@to-prd` can all reach into Obsidian for context.
 
-You do **not** modify L1 (`~/.windsurf/`) outside of adding the Obsidian-aware MCP wiring + (if absolutely necessary) one or two new rules / skill updates that touch Obsidian-specific behavior. Even those are first proposed via the queue → Cascade A's `/update-horizontal` route, **not** authored directly by you.
+You do **not** modify L1 (`~/.windsurf/`) outside of adding the Obsidian-aware MCP wiring + (if absolutely necessary) one or two new rules / skill updates that touch Obsidian-specific behavior. Even those are first proposed via the queue → Cascade A's `@update-horizontal` route, **not** authored directly by you.
 
 You are vertical, not horizontal. Stay in scope.
 
@@ -24,10 +24,10 @@ You are vertical, not horizontal. Stay in scope.
 | 3 | `~/Projects/cascade-system/retros/sprint-1.md` | What just shipped + open observations |
 | 4 | `~/Projects/cascade-system/docs/decisions/INDEX.md` | All ADRs |
 | 5 | `~/.windsurf/contracts/phase-taxonomy.md` | Note `obsidian://` artifact path scheme is reserved (M1.3 §4) |
-| 6 | `~/.windsurf/rules/*.md` | All L1 rules (you operate under these) |
-| 7 | `~/.windsurf/skills/grill-me/SKILL.md` | Reads context from Obsidian when enabled (M1.2 §1) |
-| 8 | `~/.windsurf/skills/to-prd/SKILL.md` | Reads linked vault notes (M1.6) |
-| 9 | `~/.windsurf/workflows/recalibrate.md` | Future drift signal: vault notes vs PRD |
+| 6 | `~/Projects/cascade-system/docs/rules/*.md` | All L1 rules (you operate under these) |
+| 7 | `~/.codeium/windsurf/skills/grill-me/SKILL.md` | Reads context from Obsidian when enabled (M1.2 §1) |
+| 8 | `~/.codeium/windsurf/skills/to-prd/SKILL.md` | Reads linked vault notes (M1.6) |
+| 9 | `~/.codeium/windsurf/global_workflows/recalibrate.md` | Future drift signal: vault notes vs PRD |
 | 10 | The user's Obsidian vault path (ask the user; not hardcoded) | Your operating surface |
 
 ## 3 — Work to do (Sprint 2 Vertical C)
@@ -41,14 +41,14 @@ Per plan §4 Sprint 2:
   - How are project-linked notes tagged? (e.g., `#project/thesis`, `#cascade-aware`)
   - How does a Cascade know which notes apply to its active project?
 
-- **M2C.3** — Update the L1 skills that have Obsidian touchpoints (these are owned by Cascade A; you propose changes via queue → `/update-horizontal`):
-  - `/grill-me` — read linked vault notes during context load
-  - `/to-prd` — incorporate vault findings into §13 Sources
+- **M2C.3** — Update the L1 skills that have Obsidian touchpoints (these are owned by Cascade A; you propose changes via queue → `@update-horizontal`):
+  - `@grill-me` — read linked vault notes during context load
+  - `@to-prd` — incorporate vault findings into §13 Sources
   - `/recalibrate` — surface drift between vault and PRD as a 7th drift signal
 
 - **M2C.4** — Author a new L1 rule (proposed via queue): `obsidian-context-priming` — when active project's `phases.yaml` has any `obsidian://` artifact path, prime the conversation with relevant vault notes at session start.
 
-- **M2C.5** — Build a "vault → PRD" auxiliary skill (or extend `/to-prd`): when a project starts and the user has substantial existing vault notes on the topic, surface them at brainstorm time.
+- **M2C.5** — Build a "vault → PRD" auxiliary skill (or extend `@to-prd`): when a project starts and the user has substantial existing vault notes on the topic, surface them at brainstorm time.
 
 - **M2C.6** — Write the vertical retro at `~/Projects/cascade-system/retros/sprint-2-vertical-c.md`. Cover what shipped, vault layout decisions, MCP choice rationale, friction.
 
@@ -56,11 +56,11 @@ Each milestone closes its corresponding GitHub issue (filed during Sprint 0 M0.6
 
 ## 4 — Operating constraints
 
-You operate under all L1 rules in `~/.windsurf/rules/`. Highlights for your work:
+You operate under all L1 rules in `~/Projects/cascade-system/docs/rules/`. Highlights for your work:
 
 - **`adapt-from-all`**: research the Obsidian MCP space (HuggingFace, GitHub, awesome-mcp lists) before building anything custom. Cite consultation in any ADR.
 - **`document-as-you-go`**: ADR for MCP selection, ADR for vault layout convention, ADR for any rule additions.
-- **L1 changes go through the queue** → Cascade A's `/update-horizontal`. You write proposals; you don't apply L1 directly. Even small additions like `obsidian-context-priming` rule must route via Cascade A or the next horizontal `/sprint-review`.
+- **L1 changes go through the queue** → Cascade A's `@update-horizontal`. You write proposals; you don't apply L1 directly. Even small additions like `obsidian-context-priming` rule must route via Cascade A or the next horizontal `@sprint-review`.
 - **`no-time-estimates`**, **`no-quantity-over-shape`**, **`no-terminal-oneline-scripts`**, **`make-sure-it-works`**, **`be-honest-direct-critical`** all apply.
 - **Privacy**: the user's vault contains personal notes. Read carefully; don't dump unrelated notes into PRDs or chat. Surface only what's directly relevant to the active project.
 - **`bidirectional-learning-pipe`**: capture every cross-project insight (those are the whole point of this vertical) to the queue.
@@ -76,7 +76,7 @@ ADR routing per ADR-001 still applies for any GitHub mutations you do (issue clo
 
 ## 6 — Pitfalls to avoid (carried from Sprint 1 friction)
 
-- **Don't author L1 directly** — propose via queue. Cascade A's `/update-horizontal` is the L1-mutation channel.
+- **Don't author L1 directly** — propose via queue. Cascade A's `@update-horizontal` is the L1-mutation channel.
 - **Don't dump vault content** — read with intent. The user's privacy expectations on personal notes are stronger than on code.
 - **Don't ship an MCP that requires per-project setup** — vault MCP wiring should be one-time at L1 + per-project enable flag in `phases.yaml` (or `.windsurf/config.yaml` if needed; ADR if you create one).
 - **Don't drift into Vertical B's scope** — `python-ml-uv` template is Cascade B. If you find yourself authoring `pyproject.toml` snippets, you've drifted.
@@ -92,13 +92,13 @@ You're finished when:
 - Auxiliary skill (M2C.5) is shipped at L2 or as an L1 proposal
 - Sprint 2 vertical C retro is written and `Status: closed`
 - All M2C.x issues are closed
-- L1 observations are in the queue for Cascade A's next horizontal `/sprint-review`
+- L1 observations are in the queue for Cascade A's next horizontal `@sprint-review`
 
 ## 8 — Termination + handoff
 
 When done, your last action is:
 
-> Vertical C (Obsidian integration) complete. MCP: <name>. Retro at `retros/sprint-2-vertical-c.md`. L1 proposals queued for Cascade A's next horizontal `/sprint-review`. Cascades B and D can now use `obsidian://` artifact paths in their projects' `phases.yaml`.
+> Vertical C (Obsidian integration) complete. MCP: <name>. Retro at `retros/sprint-2-vertical-c.md`. L1 proposals queued for Cascade A's next horizontal `@sprint-review`. Cascades B and D can now use `obsidian://` artifact paths in their projects' `phases.yaml`.
 
 Do **not** start Cascade D's work yourself. That's a separate vertical with its own handoff.
 
