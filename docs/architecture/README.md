@@ -1,6 +1,6 @@
-# Architecture diagrams — cascade-system meta-repo
+# Architecture — cascade-system meta-repo
 
-Reserved for system-overview and cross-Cascade flow diagrams. Empty at the end of Sprint 1; backfill expected in a future sprint once the multi-Cascade flow has stabilized across Sprint 2 verticals.
+Reserved for system-overview and cross-Cascade flow diagrams. Also hosts cross-cutting design brainstorms (e.g., `parked-items-brainstorm.md`) when no `docs/prompts/stages/` exists in this meta-repo per `docs/structure.md` §6. Empty at the end of Sprint 1; backfill expected once the multi-Cascade flow has stabilized across Sprint 2 verticals.
 
 ## Intended contents
 
