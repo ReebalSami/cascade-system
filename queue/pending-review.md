@@ -42,3 +42,13 @@ Format:
 - **Proposed L1 change**: Create `queue/archive/.gitkeep` when first archived entry lands, or during Sprint 2's first `@sprint-review`. No action needed until exercised.
 - **Trigger for promotion**: First Sprint 2 `@sprint-review` that drops an item.
 
+## Sprint 2 prep — cascade-system — Cascade A — brainstorm drift correction (ADR-018)
+
+- **Insight**: The `parked-items-brainstorm.md` (commit `fa48ea2`, 2026-04-30) made two errors that ADR-018 corrected during dispatch: (1) §2.3 specified `know-your-hardware` would have a section in `global_rules.md`; (2) §3.3 specified `model_decision` activation in the global file. Both are wrong per Windsurf docs (`https://docs.windsurf.com/windsurf/cascade/memories`) — `global_rules.md` is always-on with no per-rule activation modes; the `(model_decision)` annotations there are decorative; only workspace rules support real `model_decision`. The architectural fix landed in ADR-018: `know-your-hardware` is workspace-deployed only.
+- **Source**: ADR-018 §"Brainstorm drift correction"; `parked-items-brainstorm.md` §2.3 + §3.3
+- **Empirical-test signal for ADR-017**: This is the brainstorm's first-dispatch artifact. The dispatch (Phase A of `~/.windsurf/plans/build-parked-items-6984b3.md`) caught the drift before it shipped — useful evidence that the brainstorm-then-dispatch pattern surfaces errors the brainstorm itself missed. Future Cascade authoring brainstorms should treat the dispatch step as a re-validation gate, not a rubber-stamp.
+- **Proposed L1 change** (re-evaluate at Sprint 2 `@sprint-review`):
+  - Should `@propose-extension` step 8 (route + ADR-draft presentation) include a "platform constraint check" sub-step that verifies any global_rules.md / activation-mode claims against current Windsurf docs? Possibly via a `context7` MCP query as a routine pre-flight.
+  - Should the brainstorm template add a "platform-constraints checklist" section so future brainstorms catch these without dispatch-time correction?
+- **Trigger for promotion**: Either at next Sprint 2 `@sprint-review`, or earlier if a similar dispatch-time correction is caught in another build.
+
