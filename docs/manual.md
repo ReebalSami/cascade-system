@@ -108,6 +108,123 @@ The `docs/rules/` long-form archive is a human/agent reference; Windsurf does no
 
 Source: `https://docs.windsurf.com/llms-full.txt` chunks 338, 340, 352, 362.
 
-## Sections deferred
+## Mental model
 
-Mental model overview, vertical-spawning conventions, and full release discipline are deferred to a later authoring pass. Capture follow-ups in `cascade-system/queue/pending-review.md`.
+Cascade operates across four layers. Each layer has a distinct authoring discipline; conflating them is the most common source of "where does this belong?" confusion.
+
+| Layer | What lives here | Canonical location | Edit discipline |
+|---|---|---|---|
+| **L0** | User + Windsurf IDE + system shell | Fixed substrate | n/a — not authored |
+| **L1** | Cross-project system: global rules, skills, workflows, contracts, L3 templates, meta-repo ADRs | `~/.codeium/windsurf/` (active surface) + `~/Projects/cascade-system/` (long-form docs) | `@propose-extension` dispatches to `@write-skill` / `@update-horizontal` / direct-write by route |
+| **L2** | Per-project: project-scoped rules, skills, workflows, handoffs, retros, ADRs | `<project>/.windsurf/` + `<project>/docs/` | Direct authoring within the project; per-project rules may mirror L1 long-form archive via `/start-project` step 6a |
+| **L3** | Project-type templates (Python ML, Next.js, thesis/research, etc.) | `~/.windsurf/templates/<type>/` | `/add-project-type` to bootstrap; `@write-skill` + `@update-horizontal` to modify |
+
+### Meta-repo vs project repo
+
+Two distinct git repos carry different responsibilities:
+
+- **`cascade-system/`** — the L1 meta-repo: long-form documentation (ADRs, rule archive, handoffs, retros), learning queue, vendored reference skills in `refs/`. Immutable history via conventional-commits + PR discipline. Active L1 surface (`~/.codeium/windsurf/{skills,global_workflows,memories}/`) is operationally separate and currently unversioned (M-2 storage decision deferred).
+- **`portfolio-website/`, `hafenhut/`, `FH-Wedel-thesis/`, …** — project repos carrying L2 artifacts alongside domain code. Each has its own `.windsurf/` with project-scoped rules/skills/workflows.
+
+The two are coupled through `/start-project` (seeds a new project repo with a snapshot of relevant L1 rules) and `@update-horizontal` (propagates L1 changes to downstream projects when an L1 rule is modified).
+
+### Horizontal vs vertical Cascade
+
+A single Windsurf workspace hosts one Cascade session. In practice we run multiple sessions in parallel, each with a distinct role:
+
+| Role | Where opened | Purpose |
+|---|---|---|
+| **Horizontal (Cascade A)** | `~/Projects/cascade-system/` | Meta-maintenance: authors/modifies L1, drains the queue via `@sprint-review`, handles cross-project propagation via `@update-horizontal` |
+| **Vertical (Cascade B, C, D, …)** | `<project>/` | Project-specific work: implements features, fixes bugs, authors L2 artifacts, opens PRs via `@release-manager` |
+
+Verticals **consume** L1 (read global rules, use global skills, invoke global workflows) but do not **author** L1 directly. Friction, patterns, or missing rules surfaced during vertical work flow back via `bidirectional-learning-pipe` → `cascade-system/queue/pending-review.md` → next `@sprint-review` drain → `@update-horizontal`.
+
+### What `refs/` holds
+
+`cascade-system/refs/` contains vendored reference skill repositories (superpowers, mattpocock-skills, claude-skills, awesome-agent-skills). Read-only per the `adapt-from-all` convention: when authoring a new L1 artifact, consult refs for patterns, cite sources in the artifact's frontmatter, adapt the pattern to our system. Never runtime-import — adapt and vendor.
+
+## Spawning a vertical Cascade
+
+### When to spawn
+
+Signs that work should move to a new vertical Cascade:
+
+- The work is a distinct problem domain (a separate project, a new feature cluster, a one-off experiment)
+- Context window pressure in the current session (long histories degrade attention)
+- Two agents need to work in parallel on different concerns
+- Clean slate desired for a focused sprint (no bleed from prior conversation)
+
+### How to spawn
+
+1. Open Windsurf with the target project directory as workspace (new window or new workspace)
+2. Paste the handoff prompt for that vertical (authored in the horizontal Cascade; see examples below)
+3. Let the vertical Cascade read its prompt + ambient state, then draft its first plan; hard-gate approval before executing
+
+### Handoff prompt structure
+
+Canonical examples live at `docs/handoffs/`:
+
+- `cascade-b-template-python-ml-uv.md` — bootstrapping an L3 template (Python/ML/uv stack)
+- `cascade-c-obsidian.md` — integrating an external tool (Obsidian MCP)
+
+Structure (from those examples):
+
+- **Scope** — 1-paragraph statement of what the vertical owns
+- **Context pointers** — the handful of files that define the working state (PRD, relevant ADRs, `phases.yaml`)
+- **Non-goals** — explicit exclusions to prevent scope creep
+- **First action** — the concrete first step (often `/run-phase <name>`)
+- **Escalation protocol** — when to stop and ping the horizontal Cascade (L1 change surfaced, scope expansion needed, blocker)
+
+### Vertical ↔ horizontal coupling
+
+Verticals commit to their project repo via `@release-manager` (same release discipline as horizontal). L1 mutations require escalating to horizontal — the vertical captures to `cascade-system/queue/pending-review.md` with a `#capture` tag, and the next `@sprint-review` drain (run by horizontal) decides promotion.
+
+### Milestone ownership
+
+Each vertical's milestones (e.g., M2B.x for Cascade B, M2C.x for Cascade C) live on the `cascade-system` GitHub Project for horizontal visibility. Per-project issue boards are optional; the meta-repo board is the canonical tracker for sprint rhythm across all verticals.
+
+## Release discipline
+
+The invariant: **`main` in any repo is never pushed to directly outside cold-start.** All changes land via squash-merged PRs. Enforcement is a cluster of four artifact kinds working in concert (per ADR-018):
+
+| Artifact | Type | Role |
+|---|---|---|
+| `branch-and-pr-required` | Rule (always-on) | Forces pre-flight self-check before any `git push`; the load-bearing backstop |
+| `@release-manager` | Skill (auto-activate) | Orchestrates the full lifecycle; owns the invariants, delegates deterministic steps |
+| `/branch-start`, `/branch-push-and-pr`, `/ci-watch`, `/branch-merge-and-cleanup` | Workflows | Independently invocable helpers for each deterministic procedure |
+
+### The flow
+
+1. User or Cascade intends to land a change on `main`.
+2. `@release-manager` auto-fires on trigger phrases (ship / merge / land / PR / release / push to main).
+3. `/branch-start <type>/<topic-slug>` — creates feature branch from `main` (conventional-commits prefix required).
+4. Edits happen on branch; commits via `/commit` (multi-paragraph bodies go through tempfile per ADR-013).
+5. `/branch-push-and-pr` — pushes branch, drafts PR description from commits, hard-gates user review before opening via `gh pr create --fill`.
+6. `/ci-watch <pr>` — polls `gh pr checks` with adaptive cadence (10 s → 30 s back-off). On no-CI, exits clean with "merge gate is manual review only".
+7. `/branch-merge-and-cleanup <pr>` — presents 4-option model (merge / keep / close-no-merge / discard); on "merge" runs `gh pr merge --squash --delete-branch`, cleans local branch + worktree if applicable.
+
+### Cold-start exception
+
+`branch-and-pr-required` permits `git push -u origin main` when all three hold (state-based, not time-based per `no-time-estimates`):
+
+1. Current branch has no upstream tracking branch
+2. Working tree has exactly 1 commit (no more)
+3. Remote has no `main` branch yet (`gh api repos/:owner/:repo/branches/main` returns 404)
+
+Typical trigger: the very first commit of a repo just created via `gh repo create`.
+
+### Branch protection
+
+`/start-project` step 11 calls `gh api -X PUT .../branches/main/protection` to require 1 approving review on `main`. On free-tier private repos, GitHub returns 403 (enforcement requires Pro/Team/Enterprise); the step skips with a warning and the agent-side `branch-and-pr-required` rule carries the load exclusively.
+
+### Worked example: this manual section's own authoring
+
+The three sections above (Mental model, Spawning a vertical Cascade, Release discipline) were authored during the post-Sprint-1 punch-list closure (plan: `~/.windsurf/plans/post-sprint-1-punch-list-4fa159.md`). Execution:
+
+1. `/branch-start chore/punch-list-pre-sprint-2` (in-place, no `--worktree`)
+2. Five commits on the branch, one per gap (G6 → G3 → G1 → G8 → G2), each via `/commit`
+3. `/branch-push-and-pr` → PR opened on `ReebalSami/cascade-system`
+4. `/ci-watch` → cascade-system has no CI configured → exits clean per ADR-018 empirical-test stanza
+5. `/branch-merge-and-cleanup` → squash-merge → branch deleted, local + worktree cleaned
+
+This IS the Phase B dogfood test specified by ADR-018 §"Self-test plan" item #10. The PR's diff + history is the live-fire evidence that the cluster works end-to-end.
