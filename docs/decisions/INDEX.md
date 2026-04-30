@@ -18,6 +18,7 @@
 | [ADR-014](./ADR-014-l1-canonical-storage-paths.md) | L1 canonical storage paths — Windsurf reads `~/.codeium/windsurf/`, not `~/.windsurf/`; hybrid rule storage (concise global + long-form archive + per-project copies) | Accepted |
 | [ADR-015](./ADR-015-skill-vs-workflow-invocation-syntax.md) | Skill vs workflow invocation syntax — skills use `@<name>` (auto or manual), workflows use `/<name>` (manual slash command only) | Accepted |
 | [ADR-016](./ADR-016-workflow-canonical-path-correction.md) | Workflow canonical path correction — global workflows live at `~/.codeium/windsurf/global_workflows/`, not `~/.codeium/windsurf/workflows/`; supersedes ADR-014 workflow-path row | Accepted |
+| [ADR-017](./ADR-017-propose-extension-intake-channel.md) | `@propose-extension` as the single intake channel for adding/modifying any cascade-system artifact (rule, skill, workflow, contract, L3 template, shared asset, AGENTS.md, L1 mutation, or queue capture) | Accepted |
 
 ## Conventions
 

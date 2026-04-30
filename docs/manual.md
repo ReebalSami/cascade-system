@@ -80,6 +80,7 @@ Looks up the phase in the project's `.windsurf/phases.yaml`, runs pre-checks, in
 - ADR-014 — the migration record for the L1 canonical paths
 - ADR-016 — workflow canonical path correction (`global_workflows/`)
 - ADR-015 — skill vs workflow invocation syntax (`@` vs `/`)
+- ADR-017 — `@propose-extension` as the single intake channel for system extensions
 - ADR-006 — skill frontmatter schema
 - ADR-003 — strict docs structure
 - ADR-008 — clean working tree gate before closing retros
