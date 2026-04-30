@@ -140,6 +140,8 @@ If `@release-manager` fails to orchestrate Phase B, that's a Phase A bug; captur
 
 **Empirical-test footnote (per ADR-017)**: this ADR + cluster were synthesized via `parked-items-brainstorm.md` (which performed `@propose-extension` steps 1–8 in batched form per user choice during plan-mode). The dispatch step (step 9) executes via this Phase A commit. If a future Cascade authors comparable artifacts *without* engaging `@propose-extension`'s logic (route table, 3-test, `adapt-from-all`), that's the discoverability bug ADR-017 anticipates; capture to queue.
 
+**Empirical-test stanza (own discoverability)**: `@release-manager` should auto-fire when a user message contains any of the `When to use` trigger phrases enumerated in the skill body (`ship`, `merge`, `land`, `PR`, `release`, `push to main`). The first vertical Cascade session that wants to land a change on `main` is the live-fire test. If a fresh Cascade reaches a `git push origin main` intent *without* having engaged `@release-manager` (no branch, no PR), that's a discoverability bug worth capturing to queue — the `branch-and-pr-required` always_on rule should backstop it, but skill auto-activation on description-match is the preferred forcing function. Note: Cascade auto-activation matches on user phrasing, not on intent introspection of the agent's own queued tool calls; the rule is therefore the load-bearing backstop, the skill is the orchestrator. Mirrors ADR-017's empirical test for `@propose-extension`. Cross-reference: `~/.windsurf/plans/three-question-audit-475e93.md` Q1+Q3 surfaced the need for this stanza.
+
 ## Verification
 
 Acceptance criteria for Phase A:
