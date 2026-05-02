@@ -4,13 +4,18 @@ This is **cascade-system** — the L1 meta-repository for the Cascade personal s
 
 ## Start here
 
-- `docs/manual.md` — system manual (mental model, invocation cheat-sheet, release discipline, full "where things live" reference)
+- `docs/cheat-sheet.md` — **scannable single-page inventory** (every skill, workflow, rule, contract, template + how to start work + how to extend the system). Read this first if you want the *what*.
+- `docs/manual.md` — narrative system manual (mental model, invocation cheat-sheet, release discipline, full "where things live" reference). Read this for the *why*.
+- `docs/architecture/system-overview.mmd` — single Mermaid diagram of the layered architecture, entry-point skills, and primary flows. Renders in GitHub markdown previews.
 - `docs/decisions/INDEX.md` — all Architectural Decision Records; highlight reading:
   - **ADR-014** — L1 canonical storage paths (`~/.codeium/windsurf/`, NOT `~/.windsurf/`)
   - **ADR-015** — skill vs workflow invocation syntax (`@<skill>` vs `/<workflow>`)
   - **ADR-016** — workflow canonical path correction (`global_workflows/`)
   - **ADR-017** — `@propose-extension` as the single intake channel for system extensions
   - **ADR-018** — release-discipline cluster (`@release-manager` + `branch-and-pr-required` + 4 helper workflows)
+  - **ADR-019** — `@begin` as front-door entry skill for new-idea project starts
+  - **ADR-020** — `@kickoff` as front-door entry skill for vertical Cascade pickups
+- `docs/skills/INDEX.md` and `docs/workflows/INDEX.md` — pointer indexes to canonical L1 paths (auto-maintained by `@docs-refresh`)
 - `docs/rules/INDEX.md` — long-form rule archive (reference only; concise active versions live in `~/.codeium/windsurf/memories/global_rules.md`)
 
 ## Where artifacts live
@@ -26,6 +31,14 @@ This is **cascade-system** — the L1 meta-repository for the Cascade personal s
 - Rules: most are always-on or `model_decision` (silently active, no invocation syntax); only `manual`-trigger rules appear in the `@rules:` dropdown — we currently have zero
 
 Full semantics + Windsurf docs citations in `docs/manual.md#invocation-cheat-sheet`.
+
+## How to start work
+
+- **New idea / new project** → invoke `@begin` and pass the idea or note path. Auto-activates on phrasing like *"I have a new idea"*, *"start a new project"*, *"@begin <idea-note>"*. Orchestrates `@grill-me` → stack-decision → `/add-project-type` (if needed) → `/start-project` → `/run-phase brainstorm`. Per ADR-019.
+- **Pick up a vertical** (Sprint 2 verticals B/C/D from a handoff doc) → invoke `@kickoff` and pass the handoff path. Auto-activates on *"pick up Cascade C"*, *"@kickoff <handoff-path>"*. Reads handoff + parent plan + cited ADRs + cheat-sheet, detects lifecycle position, files missing milestones, asks ONE focused starting question. Per ADR-020.
+- **Resume an existing project** → just open the project directory; its `AGENTS.md` auto-loads, L2 rules auto-load, and `/run-phase` (no arg) lists current phases with artifact status.
+
+`@begin` and `@kickoff` together obsolete hand-authored kickoff plans at `~/.windsurf/plans/<vertical>-kickoff-*.md` (legacy plans preserved per ADR-011 supersession-over-deletion; new flows route through the skills).
 
 ## Adding or modifying anything in the system
 
