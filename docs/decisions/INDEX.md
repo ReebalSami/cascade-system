@@ -22,6 +22,7 @@
 | [ADR-018](./ADR-018-release-discipline-cluster.md) | Release-discipline cluster — `@release-manager` skill + `branch-and-pr-required` rule + `know-your-hardware` rule + 4 helper workflows; brainstorm drift correction (`know-your-hardware` is workspace-only, not in `global_rules.md`); Sprint 2 amendment scope M2A.1–M2A.6 | Accepted |
 | [ADR-019](./ADR-019-begin-skill.md) | `@begin` as front-door entry skill for new projects (idea → grill → stack-decide → bootstrap → first phase); paired with `@kickoff` for vertical handoffs (ADR-020); obsoletes hand-authored kickoff plans for new-idea path | Accepted |
 | [ADR-020](./ADR-020-kickoff-skill.md) | `@kickoff` as front-door entry skill for vertical Cascade pickups (read handoff + parent plan + cited ADRs → orient → file issues if missing → first focused question); paired with `@begin` (ADR-019); obsoletes hand-authored `~/.windsurf/plans/<vertical>-kickoff-*.md` files | Accepted |
+| [ADR-021](./ADR-021-manual-not-split.md) | `docs/manual.md` stays as single-file narrative — cheat-sheet (Sprint 1.5.3) handles scannable inventory; manual handles narrative depth (mental model + lifecycle + release discipline + Windsurf-docs-cited invocation semantics). Splitting into 4-5 short files would worsen navigation | Accepted |
 
 ## Conventions
 
