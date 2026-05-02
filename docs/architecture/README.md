@@ -1,12 +1,12 @@
 # Architecture — cascade-system meta-repo
 
-Reserved for system-overview and cross-Cascade flow diagrams. Also hosts cross-cutting design brainstorms (e.g., `parked-items-brainstorm.md`) when no `docs/prompts/stages/` exists in this meta-repo per `docs/structure.md` §6. Empty at the end of Sprint 1; backfill expected once the multi-Cascade flow has stabilized across Sprint 2 verticals.
+Hosts system-overview and cross-Cascade flow diagrams. Also hosts cross-cutting design brainstorms (e.g., `parked-items-brainstorm.md`) when no `docs/prompts/stages/` exists in this meta-repo per `docs/structure.md` §6. The first diagram landed in Sprint 1.5.5; the remaining two stay deferred until the multi-Cascade flow has stabilized across Sprint 2 verticals.
 
 ## Intended contents
 
 | Diagram | Purpose | Format | Status |
 |---|---|---|---|
-| `system-overview.mmd` | L0 → L1 → L2 → L3 layer diagram + Cascade-A/B/C/D role map | Mermaid | pending |
+| `system-overview.mmd` | L0 → L1 → L2 → L3 layers + 5 entry-point skills + 4 primary flows + extension side-channel | Mermaid | **active** (Sprint 1.5.5, this PR) |
 | `cross-cascade-flow.mmd` | Sprint-to-vertical-spawn handoff flow + `/sprint-review` ↔ `/update-horizontal` ↔ queue cycle | Mermaid | pending |
 | `phase-taxonomy.excalidraw` | Conceptual sketch of the `phases.yaml` contract and its readers | Excalidraw | pending |
 

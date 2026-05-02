@@ -1,0 +1,140 @@
+%% Cascade system overview — Sprint 1.5.5
+%%
+%% Purpose: single-screen view of the layered architecture (L0–L3) +
+%%   the five user-facing entry-point skills (auto-activated by phrasing) +
+%%   the four primary flows (begin / kickoff / release / review) +
+%%   the system-extension side-channel (@propose-extension).
+%%
+%% This is the ONE diagram in scope for Sprint 1.5.5. Two more diagrams
+%% remain pending (cross-cascade-flow.mmd, phase-taxonomy.excalidraw) —
+%% deferred to Sprint 2+ per the architecture/README.md backlog.
+%%
+%% Companion docs:
+%%   - docs/cheat-sheet.md  — what each skill/workflow/rule does
+%%   - docs/manual.md       — narrative (mental model, lifecycle, release discipline)
+%%   - docs/decisions/INDEX.md — every architectural decision (ADR-014/015/017/018 are highest-leverage)
+%%
+%% Render: GitHub auto-renders .mmd in markdown previews. CLI: `mmdc -i system-overview.mmd -o out.svg`.
+
+flowchart TB
+    %% =========== USER + ENTRY-POINT SKILLS ===========
+    User(["User"])
+
+    Begin["`**@begin**
+    new idea`"]
+    Kickoff["`**@kickoff**
+    vertical pickup`"]
+    Release["`**@release-manager**
+    ship to main`"]
+    Review["`**@sprint-review**
+    close milestone`"]
+    Extend["`**@propose-extension**
+    extend the system`"]
+
+    User --> Begin
+    User --> Kickoff
+    User --> Release
+    User --> Review
+    User --> Extend
+
+    %% =========== L0 SYSTEM TOOLS ===========
+    subgraph L0["L0 — system tools"]
+        L0Tools["gh · git · uv · node · pnpm · docker
+        MCP: chrome-devtools · context7 · serena · github · huggingface · playwright"]
+    end
+
+    %% =========== L1 META-SYSTEM ===========
+    subgraph L1["L1 — Cascade meta-system"]
+        direction TB
+
+        subgraph L1Active["Active surface — Windsurf-scanned (~/.codeium/windsurf/)"]
+            L1Skills["skills/&lt;name&gt;/SKILL.md
+            (11 skills)"]
+            L1Wf["global_workflows/&lt;name&gt;.md
+            (9 workflows)"]
+            L1Rules["memories/global_rules.md
+            (16 always-on rules, ≤6000 chars)"]
+        end
+
+        subgraph L1Internal["Agent-internal — consumed by skills (~/.windsurf/)"]
+            L1Contracts["contracts/phase-taxonomy.md"]
+            L1Templates["templates/_shared + templates/&lt;type&gt;"]
+            L1Plans["plans/&lt;slug&gt;-&lt;suffix&gt;.md"]
+        end
+
+        subgraph L1Repo["Long-form docs — meta-repo (cascade-system/)"]
+            L1ADRs["docs/decisions/ADR-*.md + INDEX"]
+            L1Queue["queue/pending-review.md"]
+            L1Retros["retros/sprint-N.md"]
+            L1RuleArc["docs/rules/&lt;name&gt;.md (long-form archive)"]
+            L1Manual["docs/manual.md + docs/cheat-sheet.md"]
+            L1Diagram["docs/architecture/system-overview.mmd"]
+        end
+    end
+
+    %% =========== L2 PER-PROJECT ===========
+    subgraph L2["L2 — per-project workspace (&lt;project&gt;/)"]
+        L2WS[".windsurf/{rules, skills, workflows}/"]
+        L2Docs["docs/{decisions, handoffs, retros, prompts/stages}/"]
+        L2Agents["AGENTS.md (auto-loads on workspace open)"]
+        L2Phases[".windsurf/phases.yaml"]
+    end
+
+    %% =========== L3 PROJECT-TYPE TEMPLATES ===========
+    subgraph L3["L3 — project-type templates (~/.windsurf/templates/)"]
+        L3Shared["_shared/scaffold/
+        (universal docs structure, applied first per ADR-004)"]
+        L3Type["&lt;type&gt;/scaffold/ + phases.yaml + (rules/skills/workflows)
+        active: python-ml-uv · pending: nextjs-app, python-pipeline"]
+    end
+
+    %% =========== FLOWS ===========
+
+    %% Flow 1 — Begin: new idea → bootstrap → first phase
+    Begin -- "@grill-me<br/>/add-project-type<br/>(if no L3 type)" --> L3
+    L3 -- "/start-project<br/>two-pass scaffold (ADR-004)" --> L2
+    L2 -- "/run-phase brainstorm" --> L1Skills
+
+    %% Flow 2 — Kickoff: handoff → orient → execute
+    Kickoff -- "read handoff +<br/>parent plan +<br/>cited ADRs +<br/>cheat-sheet" --> L1Repo
+    Kickoff -- "@to-issues<br/>(if missing)" --> L2
+    L2 -- "/run-phase &lt;phase&gt;" --> L1Skills
+
+    %% Flow 3 — Release: branch lifecycle → main
+    Release -- "/branch-start<br/>/commit<br/>/branch-push-and-pr<br/>/ci-watch<br/>/branch-merge-and-cleanup" --> Main(["`**main**
+    branch`"])
+
+    %% Flow 4 — Sprint review: drain → propose → propagate
+    Review --> L1Queue
+    L1Queue -- "approved L1 promotions" --> Update["`**@update-horizontal**
+    (L1 mutator)`"]
+    Update --> L1Active
+    Update --> L1Internal
+    Update --> L1Repo
+    Review --> L1Retros
+    Review -- "@sync-github" --> Board(["GitHub Project board"])
+
+    %% Side-channel — Extend: single intake → routes
+    Extend -- "skill route" --> WriteSkill["@write-skill"]
+    WriteSkill --> L1Skills
+    Extend -.->|"workflow / rule / contract / template / AGENTS.md routes"| L1Active
+    Extend -.->|"L2 routes"| L2
+    Extend -.->|"L3 routes (calls /add-project-type)"| L3
+    Extend -.->|"L1 mutation"| Update
+    Extend -.->|"capture-only"| L1Queue
+
+    %% Tools dependency
+    L1Active -.consumes.-> L0
+    L2 -.consumes.-> L0
+
+    %% Bootstrap auto-load
+    L2Agents -. auto-loads on workspace open .-> User
+
+    %% =========== STYLING ===========
+    classDef entry fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#000
+    classDef mainBranch fill:#198754,stroke:#0f5132,color:#fff,stroke-width:2px
+    classDef board fill:#fff3cd,stroke:#664d03,color:#000
+
+    class Begin,Kickoff,Release,Review,Extend,Update,WriteSkill entry
+    class Main mainBranch
+    class Board board
