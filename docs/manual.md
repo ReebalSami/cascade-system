@@ -79,18 +79,9 @@ Looks up the phase in the project's `.windsurf/phases.yaml`, runs pre-checks, in
 
 ## Pointers
 
-- ADR-014 — the migration record for the L1 canonical paths
-- ADR-016 — workflow canonical path correction (`global_workflows/`)
-- ADR-015 — skill vs workflow invocation syntax (`@` vs `/`)
-- ADR-017 — `@propose-extension` as the single intake channel for system extensions
-- ADR-006 — skill frontmatter schema
-- ADR-003 — strict docs structure
-- ADR-008 — clean working tree gate before closing retros
-- ADR-011 — record retention (supersession over deletion)
-- ADR-013 — `/commit` workflow as forcing function
-- `docs/rules/INDEX.md` — the long-form rule archive index
-- `docs/decisions/INDEX.md` — all ADRs
-- `~/.codeium/windsurf/memories/global_rules.md` — the LAW (concise, always-on)
+For the system inventory (skills / workflows / rules / contracts / templates) and "highlight ADRs" list, see `docs/cheat-sheet.md` and `cascade-system/AGENTS.md` "Start here". This manual focuses on narrative depth; those two artifacts carry the index/pointer load.
+
+For the long-form rule archive index: `docs/rules/INDEX.md`. For the live (concise, always-on) rules that load every conversation: `~/.codeium/windsurf/memories/global_rules.md`. For all ADRs: `docs/decisions/INDEX.md`.
 
 ## Invocation cheat-sheet
 
