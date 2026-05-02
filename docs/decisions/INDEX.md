@@ -20,6 +20,7 @@
 | [ADR-016](./ADR-016-workflow-canonical-path-correction.md) | Workflow canonical path correction — global workflows live at `~/.codeium/windsurf/global_workflows/`, not `~/.codeium/windsurf/workflows/`; supersedes ADR-014 workflow-path row | Accepted |
 | [ADR-017](./ADR-017-propose-extension-intake-channel.md) | `@propose-extension` as the single intake channel for adding/modifying any cascade-system artifact (rule, skill, workflow, contract, L3 template, shared asset, AGENTS.md, L1 mutation, or queue capture) | Accepted |
 | [ADR-018](./ADR-018-release-discipline-cluster.md) | Release-discipline cluster — `@release-manager` skill + `branch-and-pr-required` rule + `know-your-hardware` rule + 4 helper workflows; brainstorm drift correction (`know-your-hardware` is workspace-only, not in `global_rules.md`); Sprint 2 amendment scope M2A.1–M2A.6 | Accepted |
+| [ADR-019](./ADR-019-begin-skill.md) | `@begin` as front-door entry skill for new projects (idea → grill → stack-decide → bootstrap → first phase); paired with `@kickoff` for vertical handoffs (ADR-020); obsoletes hand-authored kickoff plans for new-idea path | Accepted |
 
 ## Conventions
 
