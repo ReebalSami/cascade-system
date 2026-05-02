@@ -42,7 +42,7 @@ adapted_for:                               # required (may be empty list); per a
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `name` | string | yes | kebab-case; matches `~/.windsurf/skills/<name>/SKILL.md` directory |
+| `name` | string | yes | kebab-case; matches `~/.codeium/windsurf/skills/<name>/SKILL.md` directory per ADR-014 |
 | `description` | string | yes | one-sentence activation hint; surfaces in Cascade's skill picker; informs auto-invoke matching |
 | `activation` | enum (`auto` \| `manual`) | yes | `auto` = activated when description matches conversational context; `manual` = user must explicitly invoke `/<name>` |
 | `sources_consulted` | list of strings | yes | may be empty (`[]`) for fully novel skills; per `adapt-from-all` rule, every authored skill must show its work |
@@ -74,7 +74,7 @@ adapted_for:                               # required (may be empty list); per a
 - L3-template skills (Sprint 2 onward) inherit this schema; downstream projects use it too.
 - `/write-skill` (M1.10) generates new skills using this schema as its template.
 - `/update-horizontal` (M1.10) uses `sources_consulted` to mechanically check upstream changes.
-- L1 workflows (`~/.windsurf/workflows/<name>.md`) use a similar but not identical schema — separate ADR if a workflow-specific decision arises (none anticipated; workflows are simpler).
+- L1 workflows (`~/.codeium/windsurf/global_workflows/<name>.md` per ADR-014/016) use a similar but not identical schema — separate ADR if a workflow-specific decision arises (none anticipated; workflows are simpler).
 
 ## Source
 
