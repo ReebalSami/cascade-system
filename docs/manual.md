@@ -2,6 +2,8 @@
 
 The day-to-day operating guide for the Cascade lifecycle system. Covers what lives where, how to make changes safely, and how to start new work. Authoritative for "where" questions; refer to ADRs for "why" questions.
 
+> **Looking for a scannable inventory?** See `docs/cheat-sheet.md` for the one-page list of every skill, workflow, rule, contract, and template, plus how to start work (`@begin` / `@kickoff`) and how to extend the system (`@propose-extension`). The cheat-sheet says *what*; this manual says *why*.
+
 ## Where things live
 
 The L1 layer (global rules, skills, workflows, contracts, templates) is split across two roots because Windsurf only scans one of them and global rules have a hard size cap. Per ADR-014:
