@@ -21,11 +21,13 @@ There is **one critical operational gap**: the Sprint 1 work is not committed. S
 
 ## 2 — Methodology
 
+> **Note added 2026-05-01 (Sprint 1.5.6 drift fix)**: Path references in this section reflect pre-ADR-014 paths used during Sprint 1 (`~/.windsurf/skills/`, `~/.windsurf/workflows/`). The active L1 surface was migrated to `~/.codeium/windsurf/skills/` and `~/.codeium/windsurf/global_workflows/` per ADR-014 + ADR-016. Per ADR-011 (supersession over deletion), original paths are preserved here as historical record of what existed at Sprint 1 close. `~/.windsurf/contracts/` and `~/.windsurf/templates/` remain canonical per ADR-014.
+
 I read every Sprint-1-shipped file end-to-end:
 
-- 14 rules in `~/.windsurf/rules/` — full bodies
-- 8 SKILL.md in `~/.windsurf/skills/` — full bodies
-- 4 workflows in `~/.windsurf/workflows/` — full bodies
+- 14 rules in `~/.windsurf/rules/` — full bodies *(historical — pre-ADR-014 path)*
+- 8 SKILL.md in `~/.windsurf/skills/` — full bodies *(historical — pre-ADR-014 path)*
+- 4 workflows in `~/.windsurf/workflows/` — full bodies *(historical — pre-ADR-014/016 path)*
 - 1 contract `~/.windsurf/contracts/phase-taxonomy.md` — all 328 lines
 - 2 templates + 12-file scaffold in `~/.windsurf/templates/_shared/`
 - 7 ADRs (5 from Sprint 1 + 1 carried from Sprint 0 + ADR-007 authored during this review)
