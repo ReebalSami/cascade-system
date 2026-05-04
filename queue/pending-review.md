@@ -52,17 +52,6 @@ Format:
   - Should the brainstorm template add a "platform-constraints checklist" section so future brainstorms catch these without dispatch-time correction?
 - **Trigger for promotion**: Either at next Sprint 2 `@sprint-review`, or earlier if a similar dispatch-time correction is caught in another build.
 
-## Sprint 1.5 — cascade-system — Cascade A — ADR-006 path drift discovered during 1.5.6
-
-- **Insight**: While verifying the planned 3-file scope of issue 1.5.6, grep across `~/.windsurf/contracts/`, `~/.codeium/windsurf/global_workflows/`, and `cascade-system/docs/` surfaced two additional live-drift references in `docs/decisions/ADR-006-skill-frontmatter-schema.md`: line 45 (the `name` field constraint) pointed to dead `~/.windsurf/skills/<name>/SKILL.md`, and line 77 (workflow-schema consequence) pointed to dead `~/.windsurf/workflows/<name>.md`. Because ADR-006 is the schema contract that `@write-skill` consumes when authoring new skills, the drift would have misdirected the soon-to-be-authored `@begin` (1.5.1) and `@kickoff` (1.5.2) skill placements if left unfixed.
-- **Source**: 1.5.6 verification grep, this conversation (`f8add2`), 2026-05-01.
-- **Action taken in 1.5.6**: Both ADR-006 lines were fixed in the same PR as the planned 3-file scope, with a citation to ADR-014 (line 45) and ADR-014/016 (line 77). Per `bidirectional-learning-pipe`, the in-flight scope expansion is captured here rather than left silent.
-- **Proposed L1 change** (re-evaluate at Sprint 1.5 `@sprint-review`):
-  - Add a one-time path-drift sweep to `@verify-l1` that greps for `~/.windsurf/skills/`, `~/.windsurf/workflows/`, and `~/.windsurf/rules/` literally across cascade-system docs + L1 contracts/templates and reports any hit not already inside a historical-marker note. The grep itself is mechanical; the false-positive filter (allow ADRs / manuals / rule archives that intentionally cite the dead paths as anti-patterns) is the harder part.
-  - Decide whether `@docs-refresh` should also include this lint, or whether `@verify-l1` is the better home (current lean: `@verify-l1` since it already audits L1 path correctness).
-- **Trigger for promotion**: Sprint 1.5 `@sprint-review` (1.5.11) — surface as L1-promotion candidate after authoring `@begin`/`@kickoff` proves the pattern of consulting ADR-006 from within `@write-skill` flows.
-
-
 ## Sprint 2 — cascade-system — Cascade C — M2C.6 retro (`@kickoff` milestone-mode candidate)
 
 - **Insight**: Vertical C produced 10 plan files at `~/.windsurf/plans/` for 6 milestones (`cascade-c-obsidian-kickoff-{4fa159, 52d465, 3bf063}.md`, `m2c1-obsidian-cli-execution-52d465.md`, `m2c2-{plan-verification-3bf063, vault-execution-handoff, vault-execution-kickoff-7afcc2}.md`, `cascade-c-{kickoff-m2c3-16f0dc, m2c4-priming-rule-057e79, m2c5-vault-research-skill-057e79}.md`). Each milestone after M2C.2 grew its own milestone-scoped kickoff plan rather than executing direct from the parent vertical handoff. The pattern is recurring enough across M2C.3 / M2C.4 / M2C.5 to constitute a signal rather than coincidence. `@kickoff` currently operates at the *vertical* granularity (one handoff = one orient + one focused question); mid-vertical milestone re-orientation has no first-class L1 affordance.
