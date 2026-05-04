@@ -21,6 +21,7 @@ For a higher-level view of how skills fit into the system, see `docs/cheat-sheet
 | `@release-manager` | auto | Orchestrate branch lifecycle: branch → commits → push → PR → CI → squash-merge → cleanup | `~/.codeium/windsurf/skills/release-manager/SKILL.md` |
 | `@propose-extension` | auto | Single intake channel for any system extension; 5-question interview, route table | `~/.codeium/windsurf/skills/propose-extension/SKILL.md` |
 | `@write-skill` | auto | Author/edit a skill body (frontmatter, structure, sources_consulted) | `~/.codeium/windsurf/skills/write-skill/SKILL.md` |
+| `@vault-research` | auto | Surface ranked vault notes for a topic via structural composite ranking (recency × tag-overlap × MOC-distance); deliberately not embedding-based per ADR-023 hand-curated vault | `~/.codeium/windsurf/skills/vault-research/SKILL.md` |
 
 ## Notes
 
