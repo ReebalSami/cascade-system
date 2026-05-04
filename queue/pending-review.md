@@ -293,3 +293,23 @@ Format:
 
 - **Trigger for promotion**: next `@sprint-review` drain. **Highest priority of the five entries** because M2C.3's edits mechanically depend on this skill existing. Recommended drain order: M2C.5 first (build the skill) → M2C.3 entries (wire integration points to the skill) → M2C.4 (priming rule that benefits from the skill but doesn't require it).
 
+## Sprint 2 — cascade-system — Cascade C — M2C.6 retro (`@kickoff` milestone-mode candidate)
+
+- **Insight**: Vertical C produced 10 plan files at `~/.windsurf/plans/` for 6 milestones (`cascade-c-obsidian-kickoff-{4fa159, 52d465, 3bf063}.md`, `m2c1-obsidian-cli-execution-52d465.md`, `m2c2-{plan-verification-3bf063, vault-execution-handoff, vault-execution-kickoff-7afcc2}.md`, `cascade-c-{kickoff-m2c3-16f0dc, m2c4-priming-rule-057e79, m2c5-vault-research-skill-057e79}.md`). Each milestone after M2C.2 grew its own milestone-scoped kickoff plan rather than executing direct from the parent vertical handoff. The pattern is recurring enough across M2C.3 / M2C.4 / M2C.5 to constitute a signal rather than coincidence. `@kickoff` currently operates at the *vertical* granularity (one handoff = one orient + one focused question); mid-vertical milestone re-orientation has no first-class L1 affordance.
+- **Source**: Sprint 2 Vertical C retro `retros/sprint-2-vertical-c.md` §4.1 + §7; `~/.windsurf/plans/` directory listing as of 2026-05-04.
+- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
+  - Option A: Add a `--milestone <id>` mode to `@kickoff` that takes a milestone-scoped kickoff plan (rather than the parent vertical handoff) and orients on that milestone's AC alone, skipping the vertical-level lifecycle detection.
+  - Option B: Promote mid-vertical milestone re-orientation into `/run-phase` instead — `@kickoff` stays vertical-scoped, and `/run-phase` learns to consume milestone-scoped plans within an active vertical's `phases.yaml` equivalent.
+  - Option C: Accept the milestone-scoped plans as the right pattern and update `@kickoff` SKILL.md §Anti-patterns to allow them rather than discouraging them. Lowest-cost change; simply codifies what worked.
+  - Decision criterion: which option minimizes the *number* of plan files per milestone without losing the orient-step value. Empirical evidence from Verticals B and D (when they run) will inform.
+- **Trigger for promotion**: After Vertical D closes — three verticals' worth of milestone-plan-creation behavior is enough to decide between A / B / C. Earlier promotion if Cascade A authors a single `@update-horizontal` change that resolves all three options simultaneously.
+
+## Sprint 2 — cascade-system — Cascade C — M2C.6 retro (design-locked-plan size threshold)
+
+- **Insight**: M2C.2 produced a 63KB design-locked plan (`~/.windsurf/plans/cascade-c-obsidian-kickoff-3bf063.md`) that proved unwieldy in a single Cascade session's context window. The user directed a freeze + fresh-session pickup mid-design (the design phase produced the locked plan; execution then ran in a separate session via the M2C.2 execution handoff). The freeze worked — execution Phase 1–3 ran cleanly with reduced context pressure — but the freeze was reactive (forced by context-window strain) rather than proactive (planned at design start).
+- **Source**: Sprint 2 Vertical C retro `retros/sprint-2-vertical-c.md` §4.3; `~/.windsurf/plans/cascade-c-obsidian-kickoff-3bf063.md` (63KB); `docs/handoffs/cascade-c-m2c2-vault-execution.md`.
+- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
+  - Add a heuristic to `@grill-me` (or wherever design-lock plans are authored): when a plan file approaches some size threshold (~20KB candidate; empirically calibrated), surface a freeze-handoff suggestion to the user. Output shape: *"Plan is now {size}; consider a freeze-handoff to a fresh session for execution"* — single-line, suppressible, no auto-action.
+  - Alternative: bake the size check into `/commit` for `~/.windsurf/plans/*` paths — surface the suggestion at commit time when a plan crosses the threshold.
+  - The threshold is a *shape* not a hard count per `no-quantity-over-shape`; ~20KB is the starting hypothesis based on a single data point (the M2C.2 plan at 63KB needed freeze; smaller plans within Vertical C did not).
+- **Trigger for promotion**: After Verticals B and D produce one or more design-locked plans of comparable size — three data points are enough to calibrate the threshold. If neither produces a comparable plan within Sprint 2, defer to Sprint 3.
