@@ -1,13 +1,13 @@
 # Sprint 2 — Vertical C drain — Cascade A horizontal retro
 
-**Status**: in progress
+**Status**: closed
 **Sprint**: 2 — Cascade A horizontal pass following Vertical C close
 **Cascade**: A (horizontal — owns L1 + queue drain)
 **Pairs with**: `retros/sprint-2-vertical-c.md` (Vertical C's milestone-scope retro, `Status: closed`)
 **Plan ref**: `~/.windsurf/plans/sprint-2-vertical-c-drain-86a684.md`
 **Milestone reviewed**: GitHub `Sprint 2 Vertical C — Obsidian integration` (#2 — closed on PR #53 merge, 2026-05-04)
 **Date opened**: 2026-05-04
-**Date closed**: (filled at close — Phase 3 ADR-008 gate)
+**Date closed**: 2026-05-04
 
 > **Snapshot semantics**: rows in §3 reflect queue state **at decision time**, not at retro-write time. Dispositions applied during this review create the new queue baseline. Subsequent reviews should treat these decisions as a closed audit trail, not a mutable list.
 
@@ -64,18 +64,20 @@ Per skill step 5 *"single decision per item, don't bundle"*. Each row applied du
 
 | Order | Skill | Target | ADR | PR | Status |
 |---|---|---|---|---|---|
-| 1 | `@write-skill` | NEW `@vault-research` skill (M2C.5) | ADR-024 | (Phase 2.1) | proposed |
-| 2 | `@update-horizontal` | `@grill-me` (M2C.3) | ADR-025 | (Phase 2.2) | proposed |
-| 3 | `@update-horizontal` | `@to-prd` (M2C.3) | ADR-026 | (Phase 2.3) | proposed |
-| 4 | `@update-horizontal` | `/recalibrate` (M2C.3) | ADR-027 | (Phase 2.4) | proposed |
-| 5 | `@update-horizontal` | NEW `obsidian-context-priming` rule (M2C.4) | ADR-028 | (Phase 2.5) | proposed |
-| 6 | `@update-horizontal` | `@verify-l1` (path drift sweep) | ADR-029 | (Phase 2.6) | proposed |
+| 1 | `@write-skill` | NEW `@vault-research` skill (M2C.5) | ADR-024 | [#55](https://github.com/ReebalSami/cascade-system/pull/55) | landed |
+| 2 | `@update-horizontal` | `@grill-me` (M2C.3) | ADR-025 | [#56](https://github.com/ReebalSami/cascade-system/pull/56) | landed |
+| 3 | `@update-horizontal` | `@to-prd` + PRD template (M2C.3) | ADR-026 | [#57](https://github.com/ReebalSami/cascade-system/pull/57) | landed |
+| 4 | `@update-horizontal` | `/recalibrate` (M2C.3) | ADR-027 | [#58](https://github.com/ReebalSami/cascade-system/pull/58) | landed |
+| 5 | `@update-horizontal` | NEW `obsidian-context-priming` rule (M2C.4) + `@grill-me` step 1.6a bridge removal | ADR-028 | [#59](https://github.com/ReebalSami/cascade-system/pull/59) | landed |
+| 6 | `@update-horizontal` | `@verify-l1` (path drift sweep + workspace-only-rule awareness) | ADR-029 | [#60](https://github.com/ReebalSami/cascade-system/pull/60) | landed |
 
-ADR numbers reserved by editing `INDEX.md` first (per ADR-009) at the start of each promotion. Each PR routes through `@release-manager`. **Bundle-anti-pattern note**: per `@update-horizontal` SKILL.md *"one ADR per logical change; bundling unrelated edits into one ADR loses traceability"*, these six are sequential, not bundled — even though Vertical C retro §6 hinted at bundling. The skill anti-pattern wins.
+ADR numbers reserved by editing `INDEX.md` first (per ADR-009) at the start of each promotion. Each PR routed through `@release-manager`. **Bundle-anti-pattern note** (held): per `@update-horizontal` SKILL.md *"one ADR per logical change; bundling unrelated edits into one ADR loses traceability"*, these six shipped sequentially, not bundled — even though Vertical C retro §6 hinted at bundling. The skill anti-pattern won.
+
+**Plus Phase 1 queue housekeeping PR**: [#54](https://github.com/ReebalSami/cascade-system/pull/54) — retro draft + `queue/archive/sprint-1-5.md` + queue deletions (M1.1 drops + RESOLVED archives) + 3 GA captures appended. **Plus Phase 3 close PR**: this PR.
 
 ## 5 — ADRs written this milestone (Cascade A horizontal pass)
 
-ADRs **emerging from this drain** (Phase 2 will land them):
+ADRs **emerging from this drain** (Phase 2 landed them — see §4 for PR numbers):
 
 | ID | Title | Trigger |
 |---|---|---|
@@ -110,10 +112,10 @@ No retroactive ADRs required.
 | **Vertical B (`python-ml-uv` L3 template)** stale | Handoff exists (`docs/handoffs/cascade-b-template-python-ml-uv.md`) since Sprint 1 close; **zero issues filed; zero milestone created**. Cascade A action: `@kickoff` the handoff, OR run `/recalibrate` to surface the drift formally, OR explicitly archive Vertical B if it's been superseded. **Recommended: `@kickoff cascade-system/docs/handoffs/cascade-b-template-python-ml-uv.md`** in a fresh Cascade window when Sprint 2 work resumes on B. | This retro §7 + `@kickoff` invocation pending |
 | **Vertical D (thesis dogfood)** not started | Per `cascade-project-system-cac5f9.md`: D consumes B's `python-ml-uv` template + benefits from C's vault layer. D is Sprint 3, not Sprint 2. No handoff yet; Cascade A will author when B closes. | Sprint 3 planning |
 | **8 deferred queue entries** | Items #1.3, #1.4, #2, #4, #13, #14 + GA-1, GA-2, GA-3 stay in queue with explicit re-eval triggers. Queue should not grow beyond this between reviews. | `queue/pending-review.md` |
-| **`@release-manager` cleanup hygiene gap** (11 stale merged remote branches) | Vertical C retro §4.6 flagged. Not a queue entry yet; awaiting one more cycle of evidence. **Action this review**: surface in retro; defer formal capture until next horizontal review. | This retro §7 |
-| **L1 surface (`~/.codeium/windsurf/`, `~/.windsurf/`) unversioned** | ADR-008 step-8 gate emits manual warnings rather than enforcing for these paths. Trade-off accepted; entry #2 (M-2) tracks the eventual decision. | Queue entry #2 |
-| **`global_rules.md` budget** | Currently 5822/6000 chars per `pre-sprint-2-review-4fa159.md` §B.1. Adding the `obsidian-context-priming` rule's concise version (Phase 2.5) must keep total ≤6000. Verify `wc -c` after edit. | Phase 2.5 acceptance check |
-| **Milestone close PR for this retro** | This retro itself needs a close PR after Phase 2 + Phase 3. Pattern follows `sprint-1-5.md` and `sprint-2-vertical-c.md`. | Phase 3 closure commit |
+| **`@release-manager` cleanup hygiene gap** (11 stale merged remote branches) | Vertical C retro §4.6 flagged. Not a queue entry yet; awaiting one more cycle of evidence. **Action this review**: surface in retro; defer formal capture until next horizontal review. Phase 2 drain itself closed all 7 branches it opened, no new debt accrued. | This retro §7 |
+| **L1 surface (`~/.codeium/windsurf/`, `~/.windsurf/`) unversioned** | ADR-008 step-8 gate emits manual warnings rather than enforcing for these paths. Trade-off accepted; entry #2 (M-2) tracks the eventual decision. Each Phase 2 PR noted the outside-repo edit explicitly in its description. | Queue entry #2 |
+| **`global_rules.md` budget resolution** | Pre-Phase-2.5: 5972/6000 chars. **Resolved at Phase 2.5** by authoring `obsidian-context-priming` as a **workspace-only** rule per ADR-028 + ADR-018 `know-your-hardware` precedent — no `global_rules.md` entry needed; file stays at 5972/6000. ADR-028 §Alternatives documents this choice. | Closed |
+| **Milestone close PR for this retro** | This retro's close PR is **this PR** (Phase 3). Pattern follows `sprint-1-5.md` and `sprint-2-vertical-c.md`. | This PR |
 
 ## 8 — Definition of done for this retro
 
@@ -123,14 +125,34 @@ No retroactive ADRs required.
 - [x] ADRs written this milestone catalogued with reserved numbers (§5)
 - [x] Retroactive-ADR check performed (§6)
 - [x] Carry-forward populated (§7)
-- [ ] All 6 Phase 2 promotions landed (PRs merged) — Phase 2 in progress
-- [ ] Clean-tree gate (ADR-008) passed for `cascade-system/`; `~/.codeium/windsurf/` + `~/.windsurf/` warnings acknowledged — Phase 3
-- [ ] `Status: closed` + `Date closed: <YYYY-MM-DD>` filled — Phase 3
-- [ ] Final report block (`@sprint-review` step 11) emitted to user — Phase 3
+- [x] All 6 Phase 2 promotions landed (PRs #55–#60 merged into `main`)
+- [x] Clean-tree gate (ADR-008) passed for `cascade-system/`; `~/.codeium/windsurf/` + `~/.windsurf/` outside-repo edits acknowledged per Phase 2 PR descriptions (M-2 deferral trade-off)
+- [x] `Status: closed` + `Date closed: 2026-05-04` filled
+- [x] Final report block (`@sprint-review` step 11) emitted to user
 
-## 9 — Sign-off (Phase 3, deferred)
+## 9 — Sign-off
 
-Filled in at retro close after all Phase 2 promotions land + ADR-008 clean-tree gate passes.
+Closed 2026-05-04 after all 6 Phase 2 promotions landed on `main` (PRs #55 → #60) and ADR-008 clean-tree gate passed (`git status --porcelain` clean post-`.serena/` gitignore addition; Phase 3 close PR consumes the remaining `Status` edit + `Date closed` fill + `.gitignore` line).
+
+**Phase outcomes**:
+
+- **Phase 1 — queue housekeeping**: 17 of 17 items triaged (6 PROMOTE + 2 DROP + 2 ARCHIVE + 8 DEFER including 3 GA captures). Archive file created at `queue/archive/sprint-1-5.md`. PR [#54](https://github.com/ReebalSami/cascade-system/pull/54) merged.
+- **Phase 2 — 6 L1 promotions, 6 ADRs (024–029), 6 PRs (#55–#60)**: every PROMOTE item landed on `main` with its own ADR. Zero bundling. Delegation pattern (`@vault-research` as single ranking source) held across three integration targets. ADR-025 step 1.6a bridge removed cleanly in ADR-028 as planned.
+- **Phase 3 — clean-tree close**: `.serena/` gitignored; retro `Status: closed`; this PR.
+
+**Follow-ups carried forward** (per §7):
+
+- Vertical B `@kickoff` (stale handoff; no issues filed; no milestone)
+- Vertical D thesis dogfood (Sprint 3)
+- 8 deferred queue entries with explicit re-eval triggers
+- M-2 L1 storage strategy (architectural — Sprint 3 strategic vertical candidate paired with GA-1 write-path)
+
+**What this drain did NOT change** (worth naming so future reviews don't waste cycles re-examining):
+
+- The `~/.windsurf/` legacy paths stay deprecated (per ADR-014 / 016); `@verify-l1` ADR-029 expansion makes their re-introduction detectable, not impossible
+- The vault itself (`~/Projects/obsidian/second-brain/`) is unchanged — Phase 2 edits touch cascade-system's awareness of the vault, not the vault contents
+- Sprint 2 as a whole is NOT closed by this drain — Vertical B is stale and D hasn't started; Sprint 2 close waits on B at minimum
+- The `plan-drift-watcher` rule and `/recalibrate` workflow's drift-signal count was incremented to 7 (ADR-027) but the rule text in `global_rules.md` still says 6 — `global_rules.md` is the concise form that captures *the existence* of the check, not the exact axis count. No char-count impact; no edit needed.
 
 ---
 

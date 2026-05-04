@@ -12,6 +12,9 @@ refs/
 .idea/
 *.swp
 
+# Serena MCP local state
+.serena/
+
 # Env
 .env
 .env.local
