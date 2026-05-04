@@ -62,20 +62,6 @@ Format:
   - Decide whether `@docs-refresh` should also include this lint, or whether `@verify-l1` is the better home (current lean: `@verify-l1` since it already audits L1 path correctness).
 - **Trigger for promotion**: Sprint 1.5 `@sprint-review` (1.5.11) — surface as L1-promotion candidate after authoring `@begin`/`@kickoff` proves the pattern of consulting ADR-006 from within `@write-skill` flows.
 
-## Sprint 2 — cascade-system — Cascade C — M2C.3 (`@grill-me` vault context load)
-
-- **Insight**: `@grill-me` SKILL.md step 1 "Load context" carries a single parenthetical line `(When enabled) Obsidian: query linked cross-project notes` (`~/.codeium/windsurf/skills/grill-me/SKILL.md:44`). The touchpoint predates M2C.1 (Obsidian CLI adoption per ADR-022) and M2C.2 (vault layout v3 per ADR-023); it specifies no concrete query surface, no vault-resident routing, and doesn't honor the `_meta/AGENTS.md` §12 session-start protocol. In its current shape the skill cannot actually perform a vault read — the mechanism is implicit. Post-ADR-023 the vault now has a deterministic spine (`_meta/` + `raw/` + `originals/` + `wiki/`) that makes the read concrete.
-- **Source**: Issue [#43](https://github.com/ReebalSami/cascade-system/issues/43); ADR-022 (CLI selection); ADR-023 (vault layout v3); commits `41ae0b3` (#47) + `87fc76e` (#49); `~/.codeium/windsurf/skills/grill-me/SKILL.md:38-44`; handoff `docs/handoffs/cascade-c-obsidian.md:48`
-- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
-  - Replace the single parenthetical line in step 1 with a concrete Obsidian CLI subroutine:
-    1. Load vault schema per AGENTS.md §12 session-start protocol: `obsidian read file=_meta/AGENTS.md` → `obsidian read file=_meta/log.md` (tail 10 entries) → `obsidian read "file=wiki/mocs/MOC - home.md"`
-    2. For the active project, resolve canonical notes in `originals/software/projects/<repo>/` via `obsidian search` or frontmatter `linked_software:<repo>` scan
-    3. Follow backlinks from any MOC cited in the grill topic: `obsidian backlinks file="MOC - <topic>" format=json`
-    4. Read relevant `wiki/sources/<type>/<slug>.md` cards + `wiki/concepts/<domain>/<sub>/` pages so prior research is surfaced to the user at interview open (prevents re-plowing known ground)
-  - Change activation condition from `(When enabled)` → unconditional (CLI is now the vault-access architecture per ADR-022; Obsidian app running is the sole runtime dependency + is always-on during user's knowledge work per ADR-022 "Constrains" §1)
-  - Update `sources_consulted` frontmatter with ADR-022 + ADR-023 citations
-  - Preserve privacy discipline from handoff §4: read with intent (targeted queries), never dump unrelated notes into the conversation
-- **Trigger for promotion**: next `@sprint-review` drain. Earlier if any vertical Cascade starts a brainstorm that would benefit from vault context. Bundle with the `@to-prd` entry below (they share the CLI subroutine shape; one authoring pass covers both).
 
 ## Sprint 2 — cascade-system — Cascade C — M2C.3 (`@to-prd` vault sources integration)
 
