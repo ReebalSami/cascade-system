@@ -18,7 +18,7 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 
 ---
 
-## 1 — Skills (11)
+## 1 — Skills (13)
 
 `@<skill-name>` — auto-activated by description match. Per ADR-015, skills are stateful, judgment-heavy, multi-step.
 
@@ -35,6 +35,8 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 | `@release-manager` | Orchestrate branch lifecycle: branch → commits → push → PR → CI → squash-merge → cleanup | every `main`-bound change |
 | `@propose-extension` | **Single intake channel** for any system extension; 5-question interview, route table | "I want to add a new rule/skill/workflow" |
 | `@write-skill` | Author/edit a skill body (frontmatter, structure, sources_consulted) | invoked by `@propose-extension` for skill routes |
+| `@vault-research` | Surface ranked vault notes for a topic via structural composite ranking. READ bookend of `@vault-distill` | `@grill-me` / `@to-prd` vault-context load, `/recalibrate` vault-drift triage, standalone topic exploration |
+| `@vault-distill` | Compile raw vault sources → `wiki/` cards per ADR-023 §8 ingest workflow; dry-run tempdir preview + `--commit` atomic write. WRITE bookend of `@vault-research` | ingest clippings / papers / books / _inbox into vault; dogfood ADR → `wiki/sources/adrs/` per ADR-030 |
 
 Canonical paths: `~/.codeium/windsurf/skills/<name>/SKILL.md`. Maintained index: `docs/skills/INDEX.md`.
 
