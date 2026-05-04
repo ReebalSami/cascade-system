@@ -27,6 +27,7 @@ Per `/start-project`, every new project gets these full files copied into `<proj
 | `no-time-estimates.md` | always_on | No time-based language. Event-based only: sprint, milestone, phase, "when X holds". |
 | `plan-drift-watcher.md` | model_decision | Surfaces drift between PRD slices, GitHub state, and commits. Recommends `/recalibrate`. |
 | `sprint-review-prompt.md` | model_decision | Suggests `@sprint-review` when a GitHub milestone closes. |
+| `obsidian-context-priming.md` | model_decision | Primes Cascade on the Obsidian vault at session start when the active project has vault co-location (`phases.yaml` `obsidian://` paths or `linked_software:<repo>` vault hits). Three-tier load; privacy guardrails from prompt-injection literature. **Workspace-deployed only** (per `know-your-hardware` precedent); copied via `/start-project` step 6a; no concise entry in `global_rules.md`. ADR-028. |
 
 ## Notes
 
