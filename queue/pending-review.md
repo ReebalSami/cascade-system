@@ -73,32 +73,6 @@ Format:
   - The threshold is a *shape* not a hard count per `no-quantity-over-shape`; ~20KB is the starting hypothesis based on a single data point (the M2C.2 plan at 63KB needed freeze; smaller plans within Vertical C did not).
 - **Trigger for promotion**: After Verticals B and D produce one or more design-locked plans of comparable size — three data points are enough to calibrate the threshold. If neither produces a comparable plan within Sprint 2, defer to Sprint 3.
 
-## Sprint 2 — cascade-system — Cascade A — GA-1 (vault WRITE path / `@vault-distill` candidate)
-
-- **Insight**: Vertical C shipped the vault's **read path** (layout per ADR-023 + access tool per ADR-022 + read-side L1 proposals queued at M2C.3-M2C.5) but did not build the **write path**. ADR-023 §"Layer ownership" says *"Cascade writes `wiki/`"* but does not say *how* or *when* — the trigger, the input scope, the distillation algorithm, the write discipline are all undefined. As a result `wiki/mocs/MOC - home.md` is a stub; no other `wiki/` content exists. The whole "Cascade-distilled durable knowledge" promise of ADR-023 §4 is unfulfilled until a write-path mechanism lands.
-- **Source**: `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` Q2 (gap #1) + Q5 (three plausible architectures); ADR-023 §"Layer ownership" + §AGENTS.md §6 (one-canonical-home rule); Karpathy LLM-wiki gist + Cole Medin self-evolving-memory clipping (cited in gap analysis Q7); `retros/sprint-2-vertical-c-drain.md` §3 row GA-1.
-- **Proposed L1 change** (re-evaluate at Sprint 3 planning OR when first vault-distill friction surfaces):
-  - **Architecture A (cheapest)**: Author `@vault-distill` skill — user-invoked: *"Cascade, distill the N clippings in `raw/_inbox/<topic>/` into `wiki/concepts/<domain>/`."* Explicit, auditable, low-risk. Bookends with `@vault-research` (M2C.5) for symmetry: research = read; distill = write.
-  - **Architecture B (Karpathy-style scheduled flush)**: Cron/hook runs daily, takes new `raw/` + `originals/` entries and auto-extracts into `wiki/`. Requires Windsurf session hooks we don't have (see GA-3) or external cron. Higher infrastructure cost.
-  - **Architecture C (conversation-triggered)**: At end of `@grill-me` or `@to-prd` session, ask *"Should findings X, Y, Z be written to `wiki/concepts/<topic>`?"* — couples knowledge capture to the work that produced it. Most intellectually honest (write-only-what-you-learned).
-  - User's gap-analysis recommendation: **Architecture A** for v1 (cheapest), **C** as evolution path. **B** deferred until Windsurf gains session hooks.
-- **Pairs with**: queue entry §"M-2 (L1 storage)" — both are Sprint 3 strategic-vertical candidates. Bundle into one `@grill-me` session.
-- **Severity**: High (gap analysis Q2 row #1). The unfulfilled half of ADR-023's promise.
-- **Trigger for promotion**: Sprint 3 planning OR when the user first reaches for `wiki/` content and finds none + says *"why is the wiki empty?"*.
-
-## Sprint 2 — cascade-system — Cascade A — GA-2 (ADR ↔ vault relationship — future ADR proposal)
-
-- **Insight**: cascade-system's own knowledge (ADRs at `docs/decisions/`, retros at `retros/`, queue at `queue/`) lives in the meta-repo and has no defined relationship to the vault. ADR-023 scoped this out per handoff §4 privacy guideline. The decision is currently *"separation by default"* (Posture A from gap analysis Q6) but is undocumented. As `wiki/` accumulates content, two independent knowledge graphs will drift.
-- **Source**: `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` Q6 (three postures: A separation / B unified discovery via vault sources cards / C vault-first); `retros/sprint-2-vertical-c-drain.md` §3 row GA-2.
-- **Three postures** (gap analysis Q6, verbatim shape):
-  - **Posture A — Separation (current default)**: cascade-system `docs/decisions/` stays canonical. Vault never sees ADRs. Two audiences, two homes. Simplest. Works fine until vault has content.
-  - **Posture B — Unified discovery**: ADR files stay at `docs/decisions/`. Vault adds `wiki/sources/adrs/<slug>.md` cards with 1-line summary + `[[wikilinks]]` + path back to canonical file. One-canonical-home rule preserved.
-  - **Posture C — Vault-first**: ADRs authored inside vault, rendered/exported to `docs/decisions/` for git history. Treats vault as source of truth. Highest tooling cost.
-- **Gap-analysis weak recommendation**: **B** if/when vault has enough `wiki/` content to make cross-linking useful. **A** acceptable until then.
-- **Proposed L1 change** (re-evaluate when trigger fires): Author **ADR-NNN** declaring the chosen posture. Posture A = no further action. Posture B = small `wiki/sources/adrs/` retro-fill pass + `@docs-refresh` enhancement to maintain ADR↔vault cards. Posture C = bigger lift; defer.
-- **Severity**: Medium (gap analysis Q2 row #2). Latent gap; becomes noise as `wiki/` fills.
-- **Trigger for promotion**: When `wiki/` accumulates ≥5 cards (signals real content; cross-linking becomes useful) OR when a future ADR struggles to surface to the user via `docs/decisions/` only.
-
 ## Sprint 2 — cascade-system — Cascade A — GA-3 (Windsurf session-hooks equivalent — Cole Medin pattern)
 
 - **Insight**: Cole Medin's "self-evolving memory" pattern (cited in gap analysis Q7) auto-captures every Claude Code session into `daily logs/` via `SessionStart` / `PreCompact` / `SessionEnd` hooks. Windsurf has rules (`always_on` / `model_decision`) but no session-boundary callbacks. As a result, `bidirectional-learning-pipe` is manually triggered (user says *"capture this"*) — works but requires user discipline. An automated path would surface insights/friction Cascade observes inline that the user might not flag.
@@ -118,6 +92,27 @@ Format:
   - Also consider: does `@update-horizontal` step 8 Propagate table need a matching row for "new L1 skill" specifying the two index updates? Currently only "Skill description / behavior change" is listed — adding a skill isn't the same as modifying one.
 - **Severity**: Low. Friction is noticeable (manual index bumps) but not blocking — human authoring caught it. Higher severity if an automated flow ever invokes `@write-skill` and relies on its step 9 being complete.
 - **Trigger for promotion**: Next invocation of `@write-skill` for a new L1 skill (after M_C2.3); OR M_C2.5 retro; OR any future `@sprint-review` processes a queue of skill-authoring friction and this is one of them.
+
+## Sprint 3 — cascade-system — Cascade C2 — M_C2.5 retro (`_meta/AGENTS.md` §4 + §5 clarifications — vault-contract drift surfaced by `@vault-distill` dogfood)
+
+- **Insight**: During the M_C2.4 `@vault-distill` dogfood run, two vault-schema ambiguities surfaced that the first formal WRITE-path invocation forced into visibility: (1) **§5 `status` contract collision with §9 scope flags** — the preview-mirror for source 4 (autoresearch clipping) was initially written with `status: flagged-out-of-scope`, violating `_meta/AGENTS.md` §5's enum (`draft|active|published|completed|archived`); fixed pre-commit by setting `status: active` and preserving the scope flag via `tags: [out-of-scope-llm-wiki]` + body annotation + `extracted_concepts: []`. (2) **§4 naming convention ambiguity for `wiki/sources/*`** — §4 specifies `YYYY-<slug>` *"for Sources in raw/ post-triage"* only; applied by analogy to `wiki/sources/articles/` (`2026-<slug>.md`) without explicit contract backing. Both are low-severity friction that self-review caught, but both will recur on every future `@vault-distill` run that has a flagged source OR writes a new `wiki/sources/<type>/` card.
+- **Source**: `retros/sprint-3-c2-write-path.md` §2 "Shifted (post-M_C2.3 discoveries)" + §3.2 + §3.3; `_meta/.preview/2026-05-04T182540_karpathy-clippings-distill/mirrors/wiki/sources/articles/2026-karpathy-autoresearch-llm-training.md` (the mirror that triggered the fix); `_meta/AGENTS.md` §4 + §5 current state.
+- **Proposed L1 changes** (re-evaluate at Cascade A's next horizontal `@sprint-review` OR at second `@vault-distill` run that produces a scope-flagged mirror):
+  - **§5 clarification**: Add explicit `scope:` frontmatter field for `wiki/sources` subtype with enum `in | out | flagged` — makes scope a first-class attribute that's Dataview-queryable without overloading `status` or `tags`. OR formalize the tag-based convention explicitly: *"if a source is out-of-scope for all existing MOCs, prefer a tag like `out-of-scope-<moc-slug>` + body annotation + `extracted_concepts: []`; do NOT overload `status`."* Decision criterion: how often does scope-flagging occur? If rare (< 10% of sources), tag-based convention is fine; if common, `scope:` field.
+  - **§4 clarification**: Extend the "Sources in raw/ post-triage: `YYYY-<slug>.<ext>`" rule to explicitly cover `wiki/sources/<type>/<slug>.md` cards with the same year-prefix convention (or with no prefix if the slug is inherently self-dating). Either way, make the wiki/sources case explicit rather than leave it to analogy.
+  - Route via `@propose-extension` → direct-authoring (since `_meta/AGENTS.md` is vault-schema, not L1 skill/rule/workflow — but the change still routes through the intake channel per ADR-017).
+- **Severity**: Low. Friction is noticeable (authoring-time ambiguity + one contract violation caught at self-review pre-commit) but not blocking. Rises to Medium if a second `@vault-distill` run misses the self-review catch and commits a violation.
+- **Trigger for promotion**: Cascade A's next horizontal `@sprint-review` (these are vault-schema edits, not L1 edits — ADR-017 still routes them but `@update-horizontal` isn't the right executor; direct-authoring at `~/Projects/obsidian/second-brain/_meta/AGENTS.md` with an ADR at `_meta/decisions/` per §13 co-evolution) OR next `@vault-distill` run that produces a scope-flagged or new-wiki-source card.
+
+## Sprint 3 — cascade-system — Cascade C2 — M_C2.5 retro (MOC-creation heuristic calibration)
+
+- **Insight**: The PRD §10 O7 heuristic *"≥3 concepts share a topic without existing MOC → propose new MOC; ≤2 → link to nearest existing MOC"* held at M_C2.4 (6 concepts → new `MOC - llm-knowledge-bases`), but the `3`-threshold is soft: the judgment "should this cluster under `MOC - home`'s Domains stub instead?" remained discretionary even at 6 concepts. Single data point insufficient for calibration. Worth re-evaluating after Vertical D produces its first new-MOC case (likely thesis-research topic cluster, which may have different cluster shape than this LLM-wiki cluster).
+- **Source**: `retros/sprint-3-c2-write-path.md` §2 "Shifted" row (O7) + §3.4; M_C2.4 dogfood evidence (`_meta/log.md` entry for `2026-05-04T182540_karpathy-clippings-distill`); PRD `docs/prompts/stages/m_c2-1-prd.md` §10 O7.
+- **Proposed L1 change** (re-evaluate after 3 new-MOC cases accumulate across C2 + D + any future vertical):
+  - Empirically calibrate the `3`-threshold (or confirm it's shape-not-count per `no-quantity-over-shape`). Update `@vault-distill` SKILL.md step 4 (MOC-creation heuristic) with either a sharper rule OR an explicit "this is shape, not count — user judgment applies" annotation.
+  - Alternative: add a `--interactive` prompt-for-MOC-creation that surfaces the heuristic decision to the user ("6 concepts detected without existing MOC — create `MOC - <inferred-topic>` or link to existing `[[MOC - home]]`?"). Default non-interactive behavior would continue auto-creating.
+- **Severity**: Low. Heuristic worked; no mis-creation or missed-creation observed. Calibration is quality-of-life, not correctness.
+- **Trigger for promotion**: After Vertical D's first `@vault-distill` run produces a new-MOC case (or explicitly doesn't — that's also a data point). 3 data points total (C2, D, one more) sufficient for calibration; defer until then.
 
 ## Sprint 3 — cascade-system — Cascade C2 — M_C2.1 grill (iCloud materialization — prefer Obsidian CLI for vault reads)
 
