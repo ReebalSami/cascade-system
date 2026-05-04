@@ -127,6 +127,7 @@ Canonical access path: `~/Projects/obsidian/second-brain` → symlinked to `~/Li
 - `_meta/templates/legacy/` review (2 pre-existing course-folder Templater scripts)
 - Papers in `originals/academic/masters/courses/seminar-safe-rl/papers/` normalization to `raw/papers/` canonical location with cross-link (one-canonical-home per AGENTS.md §6)
 - Clipping ingestion to `wiki/sources/articles/` (3 Karpathy articles topically relevant to this ADR itself)
+- **ADR ↔ vault relationship posture** — not originally listed (identified post-authoring in `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` §Q6 as a latent gap after ADR-023 shipped). **Resolved by ADR-030** (Posture B — unified discovery via project-namespaced summary cards at `wiki/sources/adrs/<project-slug>/<project-slug>_adr-NNN-<slug>.md`). See [ADR-030](./ADR-030-adr-vault-posture.md) for decision + §2/§5 schema extensions.
 
 ## Alternatives considered
 
