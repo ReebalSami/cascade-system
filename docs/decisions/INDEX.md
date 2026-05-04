@@ -24,6 +24,7 @@
 | [ADR-020](./ADR-020-kickoff-skill.md) | `@kickoff` as front-door entry skill for vertical Cascade pickups (read handoff + parent plan + cited ADRs → orient → file issues if missing → first focused question); paired with `@begin` (ADR-019); obsoletes hand-authored `~/.windsurf/plans/<vertical>-kickoff-*.md` files | Accepted |
 | [ADR-021](./ADR-021-manual-not-split.md) | `docs/manual.md` stays as single-file narrative — cheat-sheet (Sprint 1.5.3) handles scannable inventory; manual handles narrative depth (mental model + lifecycle + release discipline + Windsurf-docs-cited invocation semantics). Splitting into 4-5 short files would worsen navigation | Accepted |
 | [ADR-022](./ADR-022-obsidian-cli-selection.md) | Obsidian vault-access tool selection — pick first-party `obsidian` CLI (shipped in Obsidian 1.12, stable v1.12.7) over all 4 community MCP architectures (REST-API plugin, filesystem-direct, native-plugin, DIY). Supersedes issue #41 MCP framing; pre-registered `obsidian-mcp-server` entry annotated as superseded | Accepted |
+| [ADR-023](./ADR-023-vault-layout-v3.md) | Vault layout v3 (`_meta/` + `raw/` + `originals/` + `wiki/` spine) + iCloud-symlink ratification — 7-domain `originals/` + Karpathy type-first `wiki/` + triaged `raw/` + load-bearing `_meta/AGENTS.md`; in-place restructure of pre-existing chaos-state vault; supersedes parent-plan §3–5 greenfield-copy approach | Accepted |
 
 ## Conventions
 
