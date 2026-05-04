@@ -87,3 +87,42 @@ Format:
 - **Blocker for**: Nothing — current hand-authored flow works. This is process-quality / discoverability improvement, not a bug.
 - **Trigger for promotion**: After Sprint 2 closes with three vertical spawns (B, C, D) all hand-authored. The friction of writing each one + the recurring shape (always read-list, always mandatory channels, always hard-gate) will be the empirical case for promotion.
 
+## Sprint 2 — cascade-system — Cascade C — M2C.3 (`@grill-me` vault context load)
+
+- **Insight**: `@grill-me` SKILL.md step 1 "Load context" carries a single parenthetical line `(When enabled) Obsidian: query linked cross-project notes` (`~/.codeium/windsurf/skills/grill-me/SKILL.md:44`). The touchpoint predates M2C.1 (Obsidian CLI adoption per ADR-022) and M2C.2 (vault layout v3 per ADR-023); it specifies no concrete query surface, no vault-resident routing, and doesn't honor the `_meta/AGENTS.md` §12 session-start protocol. In its current shape the skill cannot actually perform a vault read — the mechanism is implicit. Post-ADR-023 the vault now has a deterministic spine (`_meta/` + `raw/` + `originals/` + `wiki/`) that makes the read concrete.
+- **Source**: Issue [#43](https://github.com/ReebalSami/cascade-system/issues/43); ADR-022 (CLI selection); ADR-023 (vault layout v3); commits `41ae0b3` (#47) + `87fc76e` (#49); `~/.codeium/windsurf/skills/grill-me/SKILL.md:38-44`; handoff `docs/handoffs/cascade-c-obsidian.md:48`
+- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
+  - Replace the single parenthetical line in step 1 with a concrete Obsidian CLI subroutine:
+    1. Load vault schema per AGENTS.md §12 session-start protocol: `obsidian read file=_meta/AGENTS.md` → `obsidian read file=_meta/log.md` (tail 10 entries) → `obsidian read "file=wiki/mocs/MOC - home.md"`
+    2. For the active project, resolve canonical notes in `originals/software/projects/<repo>/` via `obsidian search` or frontmatter `linked_software:<repo>` scan
+    3. Follow backlinks from any MOC cited in the grill topic: `obsidian backlinks file="MOC - <topic>" format=json`
+    4. Read relevant `wiki/sources/<type>/<slug>.md` cards + `wiki/concepts/<domain>/<sub>/` pages so prior research is surfaced to the user at interview open (prevents re-plowing known ground)
+  - Change activation condition from `(When enabled)` → unconditional (CLI is now the vault-access architecture per ADR-022; Obsidian app running is the sole runtime dependency + is always-on during user's knowledge work per ADR-022 "Constrains" §1)
+  - Update `sources_consulted` frontmatter with ADR-022 + ADR-023 citations
+  - Preserve privacy discipline from handoff §4: read with intent (targeted queries), never dump unrelated notes into the conversation
+- **Trigger for promotion**: next `@sprint-review` drain. Earlier if any vertical Cascade starts a brainstorm that would benefit from vault context. Bundle with the `@to-prd` entry below (they share the CLI subroutine shape; one authoring pass covers both).
+
+## Sprint 2 — cascade-system — Cascade C — M2C.3 (`@to-prd` vault sources integration)
+
+- **Insight**: `@to-prd` SKILL.md step 2 "Load context" ends with `(If enabled) read linked Obsidian notes` (`~/.codeium/windsurf/skills/to-prd/SKILL.md:46`). Same implicit-mechanism problem as `@grill-me`: no concrete CLI surface, no awareness of ADR-023's `wiki/sources/` + `wiki/concepts/` split, no routing guidance for PRD §13 Sources. Handoff §3 M2C.3 bullet 2 explicitly requires "incorporate vault findings into §13 Sources" — that requires the skill to know *where* vault findings live + *how* to cite them as first-class `[[wikilinks]]` rather than external URLs.
+- **Source**: Issue [#43](https://github.com/ReebalSami/cascade-system/issues/43); ADR-022; ADR-023; `~/.codeium/windsurf/skills/to-prd/SKILL.md:40-46`; handoff `docs/handoffs/cascade-c-obsidian.md:49`
+- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
+  - Replace step 2 last bullet with: query vault for topic-relevant sources via `obsidian search query=<topic>` + `obsidian tags query=<slug>`. Read matching `wiki/sources/<type>/<slug>.md` cards + `wiki/concepts/<domain>/<sub>/` pages. Follow backlinks from `wiki/mocs/` entries relevant to the brainstorm topic.
+  - Amend §13 Sources authoring guidance (step 3 / PRD template §13 row): PRD §13 must cite vault entries as `[[wikilinks]]` to their canonical `wiki/sources/<type>/<slug>.md` locations (one-canonical-home rule per ADR-023 AGENTS.md §6), with per-source reasoning. External-web-only sources get plain URL citations.
+  - If brainstorm topic has no matching `wiki/` entries but `raw/_inbox/` has ingestable material, surface as deferred-ingest candidate to the user (doesn't block PRD drafting; flags M2C.5-style vault→PRD surfacing territory)
+  - Update `sources_consulted` frontmatter with ADR-022 + ADR-023 citations
+  - Change activation condition from `(If enabled)` → unconditional (same rationale as `@grill-me` entry above)
+- **Trigger for promotion**: next `@sprint-review` drain. Bundle with `@grill-me` entry (shared CLI subroutine). Higher-priority than `/recalibrate` entry below because `@to-prd` is on every project's hot path (spec phase); `/recalibrate` fires less often.
+
+## Sprint 2 — cascade-system — Cascade C — M2C.3 (`/recalibrate` vault-drift 7th signal)
+
+- **Insight**: `/recalibrate` workflow currently has **zero Obsidian touchpoint**. The 6-axis drift table at step 2 (`~/.codeium/windsurf/global_workflows/recalibrate.md:31-43`) is PRD/GitHub/git-scoped only: scope-creep, unreflected work, issue abandonment, artifact lag, milestone-state mismatch, phase mismatch. Handoff §3 M2C.3 bullet 3 proposes "surface drift between vault and PRD as a 7th drift signal" — this is a net-new drift axis, not an edit to an existing one. ADR-023's vault-layout-v3 with dated entries in `_meta/log.md` + frontmatter `date:` fields across `originals/` and `wiki/` makes "vault newer than PRD, relevant but uncited" mechanically computable via the Obsidian CLI.
+- **Source**: Issue [#43](https://github.com/ReebalSami/cascade-system/issues/43); ADR-022; ADR-023; `~/.codeium/windsurf/global_workflows/recalibrate.md:19-43`; handoff `docs/handoffs/cascade-c-obsidian.md:50`
+- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
+  - Add a 7th row to the drift table at step 2: **Vault drift** — `wiki/sources/` or `wiki/concepts/<domain>/<sub>/` entries with `date:` frontmatter newer than PRD `Date` that are topically relevant (MOC backlink or tag match) but not cited in PRD §13; plus `obsidian://` artifact paths in `phases.yaml` whose referenced vault notes have moved or been superseded per AGENTS.md §11
+  - Add source #4 to step 1: **Vault state** via `obsidian` CLI (`obsidian search`, `obsidian backlinks`, `obsidian tags`). Update section header from "Load three sources of truth" → "Load four sources of truth"
+  - Add a row to step 5 "Apply approved actions" table for Vault drift: Either (a) invoke `@to-prd` re-edit to add missing `[[wikilinks]]` to PRD §13; or (b) if a cited vault note was superseded, update the `[[wikilink]]` target per AGENTS.md §11 supersession-over-deletion
+  - Update `sources_consulted` frontmatter with ADR-022 + ADR-023 citations
+  - Integrates with the `@grill-me` + `@to-prd` vault subroutines (shared CLI surface); no duplicate subroutine authoring needed
+- **Trigger for promotion**: next `@sprint-review` drain. Lower urgency than entries 1 + 2 (`/recalibrate` fires less often than brainstorm/spec phases) but semantically completes the trio — all three Obsidian-touched skills aligned to the same vault-access architecture. Consider bundling all three into a single `@update-horizontal` pass.
+
