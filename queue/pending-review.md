@@ -63,18 +63,6 @@ Format:
 - **Trigger for promotion**: Sprint 1.5 `@sprint-review` (1.5.11) — surface as L1-promotion candidate after authoring `@begin`/`@kickoff` proves the pattern of consulting ADR-006 from within `@write-skill` flows.
 
 
-## Sprint 2 — cascade-system — Cascade C — M2C.3 (`/recalibrate` vault-drift 7th signal)
-
-- **Insight**: `/recalibrate` workflow currently has **zero Obsidian touchpoint**. The 6-axis drift table at step 2 (`~/.codeium/windsurf/global_workflows/recalibrate.md:31-43`) is PRD/GitHub/git-scoped only: scope-creep, unreflected work, issue abandonment, artifact lag, milestone-state mismatch, phase mismatch. Handoff §3 M2C.3 bullet 3 proposes "surface drift between vault and PRD as a 7th drift signal" — this is a net-new drift axis, not an edit to an existing one. ADR-023's vault-layout-v3 with dated entries in `_meta/log.md` + frontmatter `date:` fields across `originals/` and `wiki/` makes "vault newer than PRD, relevant but uncited" mechanically computable via the Obsidian CLI.
-- **Source**: Issue [#43](https://github.com/ReebalSami/cascade-system/issues/43); ADR-022; ADR-023; `~/.codeium/windsurf/global_workflows/recalibrate.md:19-43`; handoff `docs/handoffs/cascade-c-obsidian.md:50`
-- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
-  - Add a 7th row to the drift table at step 2: **Vault drift** — `wiki/sources/` or `wiki/concepts/<domain>/<sub>/` entries with `date:` frontmatter newer than PRD `Date` that are topically relevant (MOC backlink or tag match) but not cited in PRD §13; plus `obsidian://` artifact paths in `phases.yaml` whose referenced vault notes have moved or been superseded per AGENTS.md §11
-  - Add source #4 to step 1: **Vault state** via `obsidian` CLI (`obsidian search`, `obsidian backlinks`, `obsidian tags`). Update section header from "Load three sources of truth" → "Load four sources of truth"
-  - Add a row to step 5 "Apply approved actions" table for Vault drift: Either (a) invoke `@to-prd` re-edit to add missing `[[wikilinks]]` to PRD §13; or (b) if a cited vault note was superseded, update the `[[wikilink]]` target per AGENTS.md §11 supersession-over-deletion
-  - Update `sources_consulted` frontmatter with ADR-022 + ADR-023 citations
-  - Integrates with the `@grill-me` + `@to-prd` vault subroutines (shared CLI surface); no duplicate subroutine authoring needed
-- **Trigger for promotion**: next `@sprint-review` drain. Lower urgency than entries 1 + 2 (`/recalibrate` fires less often than brainstorm/spec phases) but semantically completes the trio — all three Obsidian-touched skills aligned to the same vault-access architecture. Consider bundling all three into a single `@update-horizontal` pass.
-
 ## Sprint 2 — cascade-system — Cascade C — M2C.4 (`obsidian-context-priming` rule proposal)
 
 - **Insight**: phase-taxonomy contract §4 (`~/.windsurf/contracts/phase-taxonomy.md:100`) reserves `obsidian://<note-path>` as an artifact path scheme, but no L1 component primes on its presence. ADR-022 + ADR-023 shipped the architecture (CLI + deterministic vault layout) but not the conversation-level integration. Without a priming rule, the architectural trio is incomplete — Cascade reads vault only when a skill explicitly invokes `obsidian` CLI (and per the M2C.3 entries above, even those skill touchpoints are abstract). The novelty here is applying a well-established session-start priming pattern (Claude Code CLAUDE.md auto-load, Memory Bank, codebase-onboarding, c-level-advisor context-engine) to a **PKM vault external to the project repo**, with the security implications that user-authored vault content carries (prompt-injection attack surface elevated by recent literature).
