@@ -1,5 +1,7 @@
 # Pending sprint-review queue
 
+> **Last drained**: 2026-05-04 by `@sprint-review` against the closed Sprint 2 Vertical C milestone. Drain decisions captured in `~/Projects/cascade-system/retros/sprint-2-vertical-c-drain.md` §3. The queue-archive policy activated on this drain (entry that announced it is now resolved); archived entries live at `queue/archive/sprint-1-5.md`. Six entries were marked PROMOTE and are being landed sequentially via `@update-horizontal` / `@write-skill` (Phase 2.1 — 2.6 of the drain plan); each PROMOTE entry will be removed from this file as its PR merges.
+
 Drained by `@sprint-review`. Anything tagged `#capture` in chat (via `capture-signal` rule, once it lands) appends here.
 
 Format:
@@ -13,11 +15,9 @@ Format:
 
 ## Sprint 1 — cascade-system — Cascade A — M1.1
 
-- **Insight**: 4 portfolio-website rules were considered for L1 promotion but deferred during M1.1 — each because its principle is captured elsewhere or its scope is L3-template-specific.
-- **Source**: M1.1 issue #2 closure, this conversation
+- **Insight**: 2 portfolio-website rules remain deferred for L1 promotion (originally 4; 2 were dropped at the Sprint 2 Vertical C drain after three sprints' worth of evidence showed their principles were already covered elsewhere — see `queue/archive/sprint-1-5.md`). The remaining two await trigger-condition firing.
+- **Source**: M1.1 issue #2 closure; drop decisions in `retros/sprint-2-vertical-c-drain.md` §3 (entries 1.1 + 1.2).
 - **Proposed L1 changes** (re-evaluate at next @sprint-review):
-  - `skill-by-skill` — currently deferred; re-evaluate if context-overload friction surfaces in any vertical Cascade. Trigger for promotion: a vertical reports "I started multiple things and lost focus."
-  - `local-demo-before-push` — absorbed into `make-sure-it-works`; re-evaluate if make-sure-it-works proves too abstract and concrete UI-demo discipline needs its own rule.
   - `config-yaml-first` — defer to L3 nextjs-app template (future trigger sprint, when the first web project starts).
   - `github-project-management` — defer to `@sync-github` skill (M1.8). If `@sync-github` ends up duplicating logic across repos, extract a rule.
 
@@ -35,12 +35,12 @@ Format:
   - `@sprint-review` step 8 (ADR-008 clean-tree gate) — currently skips `~/.windsurf/` with a warning; full enforcement needs the repo to exist
 - **Scope note**: Sprint 2 Verticals B + C do **not** modify L1 directly, so they can proceed without this resolved. Prioritize ahead of Sprint 3 or when `@update-horizontal` gets its first real invocation.
 
-## Sprint 1 review — cascade-system — Cascade A — queue archive policy
+## Sprint 1 review — cascade-system — Cascade A — queue archive policy — **RESOLVED at Sprint 2 Vertical C drain (2026-05-04)**
 
-- **Insight**: `@sprint-review` step 10 (queue drain) says "Dropped → archive to `~/Projects/cascade-system/queue/archive/<sprint>.md` (create if missing)". The archive directory does not yet exist and no sprint has exercised the drop-to-archive path.
+- **Insight**: `@sprint-review` step 10 (queue drain) says "Dropped → archive to `~/Projects/cascade-system/queue/archive/<sprint>.md` (create if missing)". The archive directory did not yet exist and no sprint had exercised the drop-to-archive path.
 - **Source**: `~/.codeium/windsurf/skills/sprint-review/SKILL.md` step 10
-- **Proposed L1 change**: Create `queue/archive/.gitkeep` when first archived entry lands, or during Sprint 2's first `@sprint-review`. No action needed until exercised.
-- **Trigger for promotion**: First Sprint 2 `@sprint-review` that drops an item.
+- **Resolution**: Activated mechanically during the Sprint 2 Vertical C drain (2026-05-04). The drain produced 4 archived entries (2 dropped + 2 resolved), so `queue/archive/sprint-1-5.md` was created with full archived content per `retros/sprint-2-vertical-c-drain.md` §3. Future sprints follow the same `queue/archive/<sprint>.md` filename convention.
+- **Will be removed from this queue when**: this PR (Phase 1 of the drain) merges. Retained in this drain's PR diff for traceability.
 
 ## Sprint 2 prep — cascade-system — Cascade A — brainstorm drift correction (ADR-018)
 
@@ -52,18 +52,6 @@ Format:
   - Should the brainstorm template add a "platform-constraints checklist" section so future brainstorms catch these without dispatch-time correction?
 - **Trigger for promotion**: Either at next Sprint 2 `@sprint-review`, or earlier if a similar dispatch-time correction is caught in another build.
 
-## Sprint 2 — cascade-system — Cascade A — release-discipline cluster gap (`/start-project` step 9 dangling reference) — **RESOLVED by PR #14 / issue #18**
-
-> **Sprint 1.5 retro decision (2026-05-02)**: Resolved during PR #14 (G6) which inserted branch-protection as step 11 of `/start-project.md`, renumbered subsequent steps, and aligned the 4 cross-references. Retro-filed as issue #18 (Sprint 1.5.9). Entry retained for archaeological value; will move to `queue/archive/sprint-1-5.md` when archive policy activates on first true drop.
-
-- **Insight**: ADR-018 §"Branch-protection on `main`" (line 84) claims `/start-project` step 9 was "a new step added by this ADR" that invokes `gh api ... /branches/main/protection`. Two downstream cross-references propagate the claim: `~/.codeium/windsurf/skills/release-manager/SKILL.md:116` (*"called from `/start-project` step 9"*) and `~/Projects/cascade-system/docs/rules/branch-and-pr-required.md:68` (*"`/start-project` step 9 sets `main` branch protection"*). But `~/.codeium/windsurf/global_workflows/start-project.md:120-136` step 9 is currently "Initial commit" (the `/commit` invocation) — the branch-protection step was **never actually added** to the workflow. The cluster shipped with rule + skill + 4 workflows but the cross-cutting `/start-project` edit was missed during Phase A dispatch.
-- **Source**: Three-question audit on 2026-04-30 (`~/.windsurf/plans/three-question-audit-475e93.md`); affected files cited above.
-- **Proposed fix** (Sprint 2 punch-list, before any retro can claim the cluster is "complete"): Add the branch-protection step to `/start-project.md` *after* the cold-start push (current step 10) and *before* Project v2 creation (current step 11) — branch-protection requires `main` to exist on the remote first. Insert as new step 11 with the single-line `gh api -X PUT repos/<owner>/<repo>/branches/main/protection ...` call; on HTTP 403 (free-tier private repo), skip-with-warning per ADR-018 §"Branch-protection on `main`". Renumber existing steps 11→12, 12→13, 13→14, 14→15. Update the three cross-references to point to "step 11" (was "step 9").
-- **Acceptable alternative**: keep ADR-018's "step 9" language and reorder the workflow body so the new step lands at position 9. Worse — larger churn, breaks the natural "create → commit → push → protect → project" reading order.
-- **Why-deferred**: Phase A landed the rule + skill + workflows; the cluster functions correctly without branch-protection (the agent-side rule is the enforcement; server-side protection is a nice-to-have that's also impossible on free-tier private repos). The fix is a follow-up edit, not a Phase A blocker. Per ADR-018 §"Self-test plan" intent (*"If `@release-manager` fails to orchestrate Phase B, that's a Phase A bug; capture inline"*).
-- **Trigger for promotion**: Sprint 2 punch-list cleanup before any sprint retro that would otherwise mark the release-discipline cluster as proven.
-- **Caveat on auto-fire**: `/start-project.md:113` uses `gh repo create ... --push`, where the cold-start push happens as a `gh` side-effect — Cascade itself doesn't invoke `git push`, so the `branch-and-pr-required` self-check never gets a runtime trigger to verify. The cold-start exception covers this semantically (all 3 conditions hold), but the rule's pre-flight checklist is bypassed. Worth retro discussion.
-
 ## Sprint 1.5 — cascade-system — Cascade A — ADR-006 path drift discovered during 1.5.6
 
 - **Insight**: While verifying the planned 3-file scope of issue 1.5.6, grep across `~/.windsurf/contracts/`, `~/.codeium/windsurf/global_workflows/`, and `cascade-system/docs/` surfaced two additional live-drift references in `docs/decisions/ADR-006-skill-frontmatter-schema.md`: line 45 (the `name` field constraint) pointed to dead `~/.windsurf/skills/<name>/SKILL.md`, and line 77 (workflow-schema consequence) pointed to dead `~/.windsurf/workflows/<name>.md`. Because ADR-006 is the schema contract that `@write-skill` consumes when authoring new skills, the drift would have misdirected the soon-to-be-authored `@begin` (1.5.1) and `@kickoff` (1.5.2) skill placements if left unfixed.
@@ -73,19 +61,6 @@ Format:
   - Add a one-time path-drift sweep to `@verify-l1` that greps for `~/.windsurf/skills/`, `~/.windsurf/workflows/`, and `~/.windsurf/rules/` literally across cascade-system docs + L1 contracts/templates and reports any hit not already inside a historical-marker note. The grep itself is mechanical; the false-positive filter (allow ADRs / manuals / rule archives that intentionally cite the dead paths as anti-patterns) is the harder part.
   - Decide whether `@docs-refresh` should also include this lint, or whether `@verify-l1` is the better home (current lean: `@verify-l1` since it already audits L1 path correctness).
 - **Trigger for promotion**: Sprint 1.5 `@sprint-review` (1.5.11) — surface as L1-promotion candidate after authoring `@begin`/`@kickoff` proves the pattern of consulting ADR-006 from within `@write-skill` flows.
-
-## Sprint 2 prep — cascade-system — Cascade A — vertical-spawn bootstrap gap — **RESOLVED by Sprint 1.5.1 (`@begin`, ADR-019) + 1.5.2 (`@kickoff`, ADR-020)**
-
-> **Sprint 1.5 retro decision (2026-05-02)**: This entry was the foundational driver for Sprint 1.5 itself. Resolved by the paired ADRs ADR-019 (`@begin` for new-idea path) + ADR-020 (`@kickoff` for vertical-pickup path). Legacy `~/.windsurf/plans/<vertical>-kickoff-*.md` files retained per ADR-011. Live-fire test queued for first Sprint 2 vertical session — empirical-test footnotes in both ADRs specify what regression looks like (any reach for legacy kickoff plan instead of `@kickoff`). Entry retained for archaeological value; will move to `queue/archive/sprint-1-5.md` when archive policy activates on first true drop.
-
-- **Insight**: `/start-project` is project-bootstrap-only; runs once per project (cascade-system already consumed its run at Sprint 0). `/run-phase` reads `phases.yaml` and is L3-project-scoped per the phase-taxonomy contract — the cascade-system meta-repo has no `phases.yaml`. There is **no L1 workflow for spawning a vertical Cascade mid-sprint**. Verticals are spawned by hand-authored kickoff plans at `~/.windsurf/plans/<vertical>-kickoff-<suffix>.md` that the user pastes into a fresh Cascade window. The motions `/start-project` step 14 bakes in for new projects (research → brainstorm via `@grill-me` → handoff) do not transfer to mid-project sprint work. `@grill-me` exists and *should* auto-activate by description-match on "starting a new feature/phase", but the kickoff prompts have not been naming it explicitly, so the path stays implicit. Discovered during cascade-c-obsidian kickoff prep when the user asked whether the motions should be in `/start-project` (they aren't, and shouldn't be — different layer of concern).
-- **Source**: This conversation (cascade-c-obsidian kickoff prep, 2026-05-01); `~/.codeium/windsurf/global_workflows/start-project.md:1-263`; `~/.windsurf/contracts/phase-taxonomy.md:23` (phase sets are L3-project-scoped); existing kickoff plans `~/.windsurf/plans/cascade-{b,c}-*-kickoff-*.md`.
-- **Proposed L1 change** (re-evaluate at next `@sprint-review`):
-  - Author `/start-sprint <vertical>` global workflow that: (1) reads the meta-repo's active plan; (2) identifies the active sprint + vertical from §4 plan structure; (3) generates a kickoff prompt naming the read-list, mandatory channels (`@propose-extension`, `@release-manager`), `@grill-me` as the plan-stress-test gate, and the hard-gate before execution; (4) writes it to `~/.windsurf/plans/<vertical>-kickoff-<suffix>.md` for the user to paste. Treats vertical-spawning as first-class L1 infrastructure rather than ad-hoc artifact authoring.
-  - Alternative: extend `/start-project` to take a `--mode=vertical-pickup` flag that skips bootstrap steps (1–13) and runs only kickoff-prompt generation. Worse — overloads a workflow that has a clear single purpose.
-- **Tactical fix landed pre-promotion**: 2026-05-01 edit to `~/.windsurf/plans/cascade-c-obsidian-kickoff-4fa159.md` adds a research-broadened step 2 + `@grill-me` stress-test step 4 to the cascade-c kickoff prompt. Confirms the shape of motions a `/start-sprint` workflow would generate. If/when promoted, the workflow's prompt template should mirror this structure.
-- **Blocker for**: Nothing — current hand-authored flow works. This is process-quality / discoverability improvement, not a bug.
-- **Trigger for promotion**: After Sprint 2 closes with three vertical spawns (B, C, D) all hand-authored. The friction of writing each one + the recurring shape (always read-list, always mandatory channels, always hard-gate) will be the empirical case for promotion.
 
 ## Sprint 2 — cascade-system — Cascade C — M2C.3 (`@grill-me` vault context load)
 
@@ -313,3 +288,41 @@ Format:
   - Alternative: bake the size check into `/commit` for `~/.windsurf/plans/*` paths — surface the suggestion at commit time when a plan crosses the threshold.
   - The threshold is a *shape* not a hard count per `no-quantity-over-shape`; ~20KB is the starting hypothesis based on a single data point (the M2C.2 plan at 63KB needed freeze; smaller plans within Vertical C did not).
 - **Trigger for promotion**: After Verticals B and D produce one or more design-locked plans of comparable size — three data points are enough to calibrate the threshold. If neither produces a comparable plan within Sprint 2, defer to Sprint 3.
+
+## Sprint 2 — cascade-system — Cascade A — GA-1 (vault WRITE path / `@vault-distill` candidate)
+
+- **Insight**: Vertical C shipped the vault's **read path** (layout per ADR-023 + access tool per ADR-022 + read-side L1 proposals queued at M2C.3-M2C.5) but did not build the **write path**. ADR-023 §"Layer ownership" says *"Cascade writes `wiki/`"* but does not say *how* or *when* — the trigger, the input scope, the distillation algorithm, the write discipline are all undefined. As a result `wiki/mocs/MOC - home.md` is a stub; no other `wiki/` content exists. The whole "Cascade-distilled durable knowledge" promise of ADR-023 §4 is unfulfilled until a write-path mechanism lands.
+- **Source**: `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` Q2 (gap #1) + Q5 (three plausible architectures); ADR-023 §"Layer ownership" + §AGENTS.md §6 (one-canonical-home rule); Karpathy LLM-wiki gist + Cole Medin self-evolving-memory clipping (cited in gap analysis Q7); `retros/sprint-2-vertical-c-drain.md` §3 row GA-1.
+- **Proposed L1 change** (re-evaluate at Sprint 3 planning OR when first vault-distill friction surfaces):
+  - **Architecture A (cheapest)**: Author `@vault-distill` skill — user-invoked: *"Cascade, distill the N clippings in `raw/_inbox/<topic>/` into `wiki/concepts/<domain>/`."* Explicit, auditable, low-risk. Bookends with `@vault-research` (M2C.5) for symmetry: research = read; distill = write.
+  - **Architecture B (Karpathy-style scheduled flush)**: Cron/hook runs daily, takes new `raw/` + `originals/` entries and auto-extracts into `wiki/`. Requires Windsurf session hooks we don't have (see GA-3) or external cron. Higher infrastructure cost.
+  - **Architecture C (conversation-triggered)**: At end of `@grill-me` or `@to-prd` session, ask *"Should findings X, Y, Z be written to `wiki/concepts/<topic>`?"* — couples knowledge capture to the work that produced it. Most intellectually honest (write-only-what-you-learned).
+  - User's gap-analysis recommendation: **Architecture A** for v1 (cheapest), **C** as evolution path. **B** deferred until Windsurf gains session hooks.
+- **Pairs with**: queue entry §"M-2 (L1 storage)" — both are Sprint 3 strategic-vertical candidates. Bundle into one `@grill-me` session.
+- **Severity**: High (gap analysis Q2 row #1). The unfulfilled half of ADR-023's promise.
+- **Trigger for promotion**: Sprint 3 planning OR when the user first reaches for `wiki/` content and finds none + says *"why is the wiki empty?"*.
+
+## Sprint 2 — cascade-system — Cascade A — GA-2 (ADR ↔ vault relationship — ADR-024 candidate)
+
+- **Insight**: cascade-system's own knowledge (ADRs at `docs/decisions/`, retros at `retros/`, queue at `queue/`) lives in the meta-repo and has no defined relationship to the vault. ADR-023 scoped this out per handoff §4 privacy guideline. The decision is currently *"separation by default"* (Posture A from gap analysis Q6) but is undocumented. As `wiki/` accumulates content, two independent knowledge graphs will drift.
+- **Source**: `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` Q6 (three postures: A separation / B unified discovery via vault sources cards / C vault-first); `retros/sprint-2-vertical-c-drain.md` §3 row GA-2.
+- **Three postures** (gap analysis Q6, verbatim shape):
+  - **Posture A — Separation (current default)**: cascade-system `docs/decisions/` stays canonical. Vault never sees ADRs. Two audiences, two homes. Simplest. Works fine until vault has content.
+  - **Posture B — Unified discovery**: ADR files stay at `docs/decisions/`. Vault adds `wiki/sources/adrs/<slug>.md` cards with 1-line summary + `[[wikilinks]]` + path back to canonical file. One-canonical-home rule preserved.
+  - **Posture C — Vault-first**: ADRs authored inside vault, rendered/exported to `docs/decisions/` for git history. Treats vault as source of truth. Highest tooling cost.
+- **Gap-analysis weak recommendation**: **B** if/when vault has enough `wiki/` content to make cross-linking useful. **A** acceptable until then.
+- **Proposed L1 change** (re-evaluate when trigger fires): Author **ADR-NNN** declaring the chosen posture. Posture A = no further action. Posture B = small `wiki/sources/adrs/` retro-fill pass + `@docs-refresh` enhancement to maintain ADR↔vault cards. Posture C = bigger lift; defer.
+- **Severity**: Medium (gap analysis Q2 row #2). Latent gap; becomes noise as `wiki/` fills.
+- **Trigger for promotion**: When `wiki/` accumulates ≥5 cards (signals real content; cross-linking becomes useful) OR when a future ADR struggles to surface to the user via `docs/decisions/` only.
+
+## Sprint 2 — cascade-system — Cascade A — GA-3 (Windsurf session-hooks equivalent — Cole Medin pattern)
+
+- **Insight**: Cole Medin's "self-evolving memory" pattern (cited in gap analysis Q7) auto-captures every Claude Code session into `daily logs/` via `SessionStart` / `PreCompact` / `SessionEnd` hooks. Windsurf has rules (`always_on` / `model_decision`) but no session-boundary callbacks. As a result, `bidirectional-learning-pipe` is manually triggered (user says *"capture this"*) — works but requires user discipline. An automated path would surface insights/friction Cascade observes inline that the user might not flag.
+- **Source**: `~/.windsurf/plans/post-m2c6-strategic-gap-analysis-f832e8.md` Q7 (Karpathy vs Cole Medin scope disambiguation); `retros/sprint-2-vertical-c-drain.md` §3 row GA-3; `bidirectional-learning-pipe` rule (current closest analog).
+- **Proposed L1 change** (deferred — blocked by Windsurf platform):
+  - **If Windsurf adds session hooks**: author `~/.codeium/windsurf/skills/session-capture/SKILL.md` that hooks `SessionEnd` to scan transcript for `#capture` tags + auto-append to `queue/pending-review.md` (project-local) or vault `raw/_inbox/sessions/<date>.md` (cross-project). Mirror Cole Medin's `daily logs/` pattern but vault-resident per ADR-023.
+  - **If Windsurf does not add session hooks**: keep manual capture. Reinforce `bidirectional-learning-pipe` discipline in `@sprint-review` step 4 (draft retro) by explicitly checking *"any insight Cascade should have captured but didn't?"* per session walked.
+- **Severity**: Low (gap analysis Q2 row #3). Manual capture is working; automation is nice-to-have. Blocked by external platform decision.
+- **Trigger for promotion**: When Windsurf ships session-boundary callbacks OR when `bidirectional-learning-pipe` shows manual-capture failure rate > some threshold (no concrete metric yet; would need a retro to surface "we missed N insights this sprint" pattern).
+
+---
