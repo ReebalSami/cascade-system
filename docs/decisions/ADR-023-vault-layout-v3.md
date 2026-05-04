@@ -203,7 +203,7 @@ Canonical access path: `~/Projects/obsidian/second-brain` → symlinked to `~/Li
 
 - Skeleton: 223 dirs + 14 files (AGENTS.md + log.md + README.md + 8 templates + 2 wiki stubs + .gitkeep)
 - 11 storytelling techniques split from single `Knowledge Hub/Storytelling Mastery/Untitled.md` into individual `wiki/concepts/storytelling/techniques/<slug>.md` files per handoff Phase 2 step 10
-- 3 Karpathy clippings moved to `raw/clippings/` (topically relevant to this ADR itself)
+- 4 Karpathy clippings moved to `raw/clippings/` (topically relevant to this ADR itself; off-by-one corrected 2026-05-04 during M_C2.4 dogfood of `@vault-distill` — the run distilled all 4 clippings into `wiki/concepts/software/knowledge-management/` + `wiki/entities/` + `wiki/sources/articles/` + new `MOC - llm-knowledge-bases`, which was itself the direct evidence that the count was 4, not 3)
 - 1 legacy Kanban board → `raw/_inbox/` for user-triage (not deleted, per ADR-011 supersession)
 - Legacy Meta Templater scripts preserved at `_meta/templates/legacy/`
 - Empty placeholders deleted: `Andalusian.md`, `Schwimmen.md`, and empty-dir legacy containers (Masterarbeit/, General Resources/, Research/, KI-Methonden/)
