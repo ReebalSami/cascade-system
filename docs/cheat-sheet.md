@@ -97,7 +97,7 @@ Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 | Template | Status | Purpose |
 |---|---|---|
 | `_shared/` | active | universal `docs/` structure + INDEX files + `strict-docs-placement` rule (applied first by `/start-project` two-pass scaffold per ADR-004) |
-| `python-ml-uv` | not built yet (Vertical B) | Pattern A — Python ML / research (uv + PyTorch + Jupyter); will be consumed by Master-Thesis vertical (Cascade D) once authored |
+| `python-ml-uv` | in progress (Vertical B; M2B.1–M2B.4 shipped — awaits M2B.5–M2B.6) | Pattern A — Python ML / research (uv + jupytext + papermill + mypy + ruff + pytest; tracker-agnostic; stdlib seeding); will be consumed by Master-Thesis vertical (Cascade D) once M2B.6 validates |
 | `nextjs-app` | not built yet | Pattern B — TypeScript full-stack; defer until first project demands it |
 | `python-pipeline` | not built yet | Pattern D — data pipeline; defer until first project demands it |
 
