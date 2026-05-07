@@ -5,10 +5,11 @@ Self-contained prompts for fresh Cascades picking up work at sprint boundaries o
 | File | From | To | Status |
 |---|---|---|---|
 | `cascade-a-sprint-1.md` | A (Sprint 0) | A (Sprint 1) | superseded — Sprint 1 closed |
-| `cascade-b-template-python-ml-uv.md` | A (Sprint 1 closer) | B (vertical, Sprint 2) | active |
+| `cascade-b-template-python-ml-uv.md` | A (Sprint 1 closer) | B (vertical, Sprint 2) | superseded — Vertical B closed at Sprint 2 M2B.7 retro; M2B.8 spawned `cascade-d-master-thesis.md` |
 | `cascade-c-obsidian.md` | A (Sprint 1 closer) | C (vertical, Sprint 2) | active — M2C.1 closed via ADR-022, M2C.2 handed off to `cascade-c-m2c2-vault-execution.md` |
 | `cascade-c-m2c2-vault-execution.md` | C (M2C.2 design, 2026-05-04) | C (M2C.2 executor) | active |
 | `cascade-c2-vault-write-path.md` | A (horizontal, Sprint 2 Vertical C drain closer) | C2 (vertical, Sprint 3 — vault write path) | active |
+| `cascade-d-master-thesis.md` | B (Sprint 2 Vertical B closer, M2B.8) | D (vertical, Master-Thesis project — sprint TBD) | active — slug placeholder; thesis name + slug decided by user at D's `@kickoff` |
 
 ## Convention
 
