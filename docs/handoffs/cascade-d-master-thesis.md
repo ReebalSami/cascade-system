@@ -7,24 +7,25 @@
 **Thesis slug**: `horus` — Hybrid OCR-free Reading & Understanding System (`~/Projects/horus/`; `https://github.com/ReebalSami/horus`)
 **Issuing milestone**: M2B.8 (`ReebalSami/cascade-system#83`)
 
-You are a fresh Cascade picking up the HORUS Master-Thesis project mid-vertical. Vertical B (the `python-ml-uv` L3 template) is complete and consumer-ready; HORUS is its first real consumer. M2D.0 (bootstrap), M2D.1 (post-rename + identity), M2D.2 (decision-discipline + source-archival) are closed. See "Current state" below.
+You are a fresh Cascade picking up the HORUS Master-Thesis project mid-vertical. Vertical B (the `python-ml-uv` L3 template) is complete and consumer-ready; HORUS is its first real consumer. M2D.0 (bootstrap), M2D.1 (post-rename + identity), M2D.2 (decision-discipline + source-archival), M2D.3 (literature review), M2D.4 (brainstorm) are closed. See "Current state" below.
 
-> **Scope discipline**: This handoff orients to **HORUS specifically** as of 2026-05-07. The thesis-domain content lives in `~/Projects/horus/` (`README.md`, `AGENTS.md`, `docs/decisions/ADR-003-brand-naming-horus.md`) + the pre-loaded brainstorm v2 at `/Users/reebal/Projects/FH-Wedel/SS26/Master-Thesis/research/THESIS_BRAINSTORM_STATE_v2.md`. The `python-ml-uv` template remains generic; HORUS-specific decisions ratified at M2D.0–M2D.2 are the thesis's project-local layer.
+> **Scope discipline**: This handoff orients to **HORUS specifically** as of 2026-05-08 (originally authored 2026-05-07). The thesis-domain content lives in `~/Projects/horus/` (`README.md`, `AGENTS.md`, `docs/decisions/ADR-003-brand-naming-horus.md`, `docs/prompts/stages/{01-literature,02-brainstorm}.md`, 46 source stubs under `docs/sources/`) + the pre-loaded brainstorm v2 at `/Users/reebal/Projects/FH-Wedel/SS26/Master-Thesis/research/THESIS_BRAINSTORM_STATE_v2.md`. The `python-ml-uv` template remains generic; HORUS-specific decisions ratified at M2D.0–M2D.4 are the thesis's project-local layer.
 
-## Current state (2026-05-07)
+## Current state (2026-05-08)
 
-> **If picking up mid-vertical**: M2D.0 + M2D.1 + M2D.2 are complete. Next up is M2D.3 (`/run-phase literature`) then M2D.4 (`/run-phase brainstorm`).
+> **If picking up mid-vertical**: M2D.0 through M2D.4 are complete. Next up is M2D.5 (experiment phase kickoff: repo prep + tooling ADRs + first pilot data loop). Phase chain adaptation: `spec` + `issues` phases are deliberately skipped per `02-brainstorm.md` §8 — see "Work-breakdown" for rationale.
 
 | Milestone | Status | Commit / PR |
 |---|---|---|
 | M2D.0 — Bootstrap (`/start-project horus python-ml-uv`) | ✅ Closed | `1d55c42` (cold-start); GitHub repo + Project v2 board (#6) + 7 phase milestones + branch protection |
 | M2D.1 — Post-rename + HORUS identity | ✅ Closed | PR #1 squash-merged at `1559062`; `src/horus/` + `# HORUS` README with `## Why HORUS?` + `AGENTS.md` |
 | M2D.2 — Decision-discipline + source-archival | ✅ Closed | PR #2 squash-merged at `4a25d0d`; 2 L2 rules + 3 ADRs (ADR-001/002/003) + `docs/sources/{papers,tools,datasets,legal}/` tree |
-| M2D.3 — `/run-phase literature` | 🔲 Next | Import brainstorm v2 §7 + §15 to `docs/sources/papers/` + `docs/prompts/stages/01-literature.md` |
-| M2D.4 — `/run-phase brainstorm` | 🔲 Queued | `@grill-me` stress-tests brainstorm v2 §0–§12; decomposes M2D.5+ at step-9 handoff |
+| M2D.3 — `/run-phase literature` | ✅ Closed | PR #3 squash-merged at `5f970ec`; 46 source stubs (10 papers + 19 tools + 7 datasets + 10 legal) + `docs/prompts/stages/01-literature.md` synthesis; GitHub milestone `literature-review-complete` closed |
+| M2D.4 — `/run-phase brainstorm` | ✅ Closed | PR #4 squash-merged at `2e66fa1`; `docs/prompts/stages/02-brainstorm.md` (status: approved, 162 lines, 8 sections); GitHub milestone `design-tree-resolved` closed. Methodological reframe during walk: NO implementation-phase decisions locked at brainstorm (per user direction) — artefact captures direction + discipline commitments only |
+| M2D.5 — `/run-phase experiment` (kickoff) | 🔲 Next | Scope defined in `docs/prompts/stages/02-brainstorm.md` §8: repo structural prep (`data/`, `eval/`, `notebooks/`, `scripts/`) + first tooling-install ADRs (Mustang + MLX + Docling at minimum) + first pilot data loop (Mustang → ≈10–50 synthetic ZUGFeRD invoices → XML-extraction script + ADR → first local VLM on M1 Pro → initial F1 with full rigor per v2 §5.1 + §5.5, MLflow-tracked, deterministic seed) |
 
 Project state:
-- Local: `~/Projects/horus/` (main at `4a25d0d`)
+- Local: `~/Projects/horus/` (main at `2e66fa1`)
 - Remote: `https://github.com/ReebalSami/horus` (private; branch-protected, 1 review required)
 - Project board: `https://github.com/users/ReebalSami/projects/6`
 - Python: 3.14.3 (`.python-version`); torch 2.11.0 installed; `make install && make test` ✅ (4/4 pass) + `make lint` ✅ + `make typecheck` ✅
@@ -34,7 +35,7 @@ Project state:
 
 ## 1 — Your role
 
-You author the thesis project at `~/Projects/horus/`. The project is bootstrapped from the `python-ml-uv` L3 template (M2D.0). HORUS identity is captured (M2D.1). Decision-discipline + source-archival rules are live (M2D.2). Next: run the `literature` phase, then `brainstorm`.
+You author the thesis project at `~/Projects/horus/`. The project is bootstrapped from the `python-ml-uv` L3 template (M2D.0). HORUS identity is captured (M2D.1). Decision-discipline + source-archival rules are live (M2D.2). Literature review imported + synthesised (M2D.3). Brainstorm artefact authored as directional-only, no implementation-phase pre-locks (M2D.4). Next: `experiment` phase (M2D.5) — repo prep + tooling ADRs + first pilot data loop. Phase chain skips `spec` + `issues` per `02-brainstorm.md` §8; see §3 Work-breakdown for rationale.
 
 You do **not** modify L1 (`~/.codeium/windsurf/...`, `~/.windsurf/contracts/`, `~/.windsurf/templates/python-ml-uv/`). If a gap is found in L1 during your work, log it via `bidirectional-learning-pipe` to `cascade-system/queue/pending-review.md` for Cascade A's next horizontal `@sprint-review` to triage.
 
@@ -63,15 +64,20 @@ You are vertical, not horizontal. Stay in scope. The python-ml-uv template's gen
 
 Decomposed at kickoff (2026-05-07) per `~/.windsurf/plans/kickoff-cascade-d-horus-362eef.md` §4. Updated at end of each milestone.
 
-**Completed** (see "Current state" above): M2D.0 bootstrap, M2D.1 identity, M2D.2 discipline.
+**Completed** (see "Current state" above): M2D.0 bootstrap, M2D.1 identity, M2D.2 discipline, M2D.3 literature review, M2D.4 brainstorm.
 
 **Next** (execute in order):
 
-- **M2D.3 — `/run-phase literature`**: `@literature-review` imports brainstorm v2 §7 (critical research findings) + §15 (bibliography) into `docs/sources/papers/` (one stub per paper, per `horus-source-archival` rule) and `docs/prompts/stages/01-literature.md` (synthesis artefact). First real exercise of `horus-source-archival` — gives empirical evidence whether the rule fires correctly. Closes phase milestone `literature-review-complete`. Via `@release-manager` single PR.
+- **M2D.5 — `/run-phase experiment` (kickoff)**: Scope defined in `~/Projects/horus/docs/prompts/stages/02-brainstorm.md` §8. Steps (each gated on its own ADR per `horus-decision-discipline`):
+  1. Repo structural prep: `data/` (gitignored), `eval/`, `notebooks/`, `scripts/`
+  2. First tooling-install ADRs (NOT bulk install; each `uv add` triggers its own 5-section ADR per ADR-001): Mustang Project + MLX + Docling at minimum; also likely HuggingFace transformers/datasets + PyTorch MPS + MLflow
+  3. Dataset downloads (user-action; see §6.2 of `02-brainstorm.md` for the 8-dataset manual-action checklist with URLs + paths + approx sizes — P0: ZUGFeRD corpus + Mustang Project)
+  4. First pilot data loop: Mustang generator install + ADR → ≈10–50 synthetic ZUGFeRD invoices → XML-extraction-from-PDF script + script-architecture ADR → first local VLM on M1 Pro on 10 invoices (Granite-Docling via MLX indicated, cohort-selection ADR locks it) → initial F1 reading with **full rigor** (v2 §5.1 standard token F1 + v2 §5.5 field-level error heatmap, MLflow-tracked, deterministic seed; Säring-blocked metrics §5.2/§5.3/§5.4 deferred pending weights + validator stage). Pilot scope small for tractability, NOT for skipping rigor.
+  5. After pilot evidence in hand: schedule first Säring technical-progress meeting + draft Säring agenda materials in parallel (RQ + metric spec + hypothesis set + held-out policy + branching tree + budget asks).
 
-- **M2D.4 — `/run-phase brainstorm`**: `@grill-me` stress-tests brainstorm v2 §0–§12 (the v2 markers labelled "decided in principle (still open to revision)" are walked one-by-one; each gets either a confirm-as-locked decision or an open-question entry). Output: `docs/prompts/stages/02-brainstorm.md`. Decomposes M2D.5+ via `@grill-me` step-9 handoff. Via `@release-manager` single PR. Closes phase milestone `design-tree-resolved`.
+- **M2D.6+**: Defined at M2D.5 exit based on pilot evidence. Not pre-decomposed here. Likely shape: iterate on architecture choices (Layer-1 single-shot vs orchestrated, Layer-2 graph backend, Layer-3 retrieval strategy) each gated on its own ADR + experiment cycle. Eventually → writeup phase via `@writeup` (L1 skill, forward-reference).
 
-- **M2D.5+**: Defined by the M2D.4 brainstorm artefact; NOT pre-decomposed here. Likely shape (per kickoff plan §4 inferences): `/run-phase spec` (`@to-prd`) → `/run-phase issues` (`@to-issues`) → `/run-phase experiment` (`@run-experiment`) → `/run-phase implement` (`@tdd`) → `/run-phase writeup` (`@writeup`).
+**Phase-chain adaptation**: L3 `python-ml-uv` `phases.yaml` specifies `brainstorm` → `spec` → `issues` → `experiment`. HORUS **skips `spec` + `issues`** and proceeds directly to `experiment` (M2D.5). Rationale (full version in `02-brainstorm.md` §8): (a) v2 §0–§14 already substitutes for ~70% of typical PRD content; (b) the §4.1 a-priori locks a PRD typically formalises are Säring-blocked (cannot lock until first technical-progress meeting, which is gated on pilot results); (c) authoring a pre-Säring PRD risks HARKing on predictions that aren't pilot-grounded. Revisit at `@sprint-review` if phase-skip proves friction.
 
 **Locked** (carried from kickoff, ratified at M2D.0–M2D.2):
 
@@ -80,7 +86,7 @@ Decomposed at kickoff (2026-05-07) per `~/.windsurf/plans/kickoff-cascade-d-horu
 - Decision discipline: every tool/model/library/dataset choice gets a full ADR. Source: ADR-001 + `horus-decision-discipline` rule.
 - Source archival: every cited source archived under `docs/sources/<type>/<slug>.md`. Source: ADR-002 + `horus-source-archival` rule.
 
-**Decided in principle, still open to revision** (M2D.4 brainstorm walks each marker from `THESIS_BRAINSTORM_STATE_v2.md` §0–§12):
+**Decided in principle, imported as directional working assumptions** (M2D.4 brainstorm imported v2 §0 markers + v2 §3 D1–D11 as direction, NOT as a-priori locks, per user methodological correction; see `02-brainstorm.md` §3 + §7. Each implementation-phase choice gets its own ADR at decision time):
 
 - Single-shot vs. orchestrated VLM pipeline
 - VLM model choice (olmOCR-2 / Granite-Docling / LLaVA-Next / Qwen2-VL / others)
@@ -119,15 +125,23 @@ ADR routing per ADR-001:
 
 ## 5 — First action (for a fresh Cascade picking up mid-vertical)
 
-The slug question + M2D.0–M2D.2 are **already complete**. See "Current state" for exact commits + state.
+M2D.0–M2D.4 are **already complete**. See "Current state" for exact commits + state.
 
 Your first action is:
 
-1. **`/run-phase literature`** — invokes `@literature-review`. Pre-loaded input: `THESIS_BRAINSTORM_STATE_v2.md` §7 (critical research findings) + §15 (bibliography). Output: one stub per cited paper at `docs/sources/papers/<slug>.md` (per `horus-source-archival` rule) + a synthesis at `docs/prompts/stages/01-literature.md`. Branch + PR via `@release-manager`. Closes phase milestone `literature-review-complete`.
-2. **`/run-phase brainstorm`** — invokes `@grill-me` against brainstorm v2 §0–§12. Walk each "decided in principle (still open to revision)" marker; convert to either confirm-as-locked or open-question. Output: `docs/prompts/stages/02-brainstorm.md`. Branch + PR via `@release-manager`. Closes phase milestone `design-tree-resolved`. Decomposes M2D.5+ at `@grill-me` step-9 handoff.
-3. **`/run-phase spec`** (and onward) — defined at the M2D.4 brainstorm step-9 handoff. Likely chain: `@to-prd` → `@to-issues` → `@run-experiment` → `@tdd` → `@writeup`.
+1. **M2D.5 — `/run-phase experiment` (kickoff)** — scope defined in `~/Projects/horus/docs/prompts/stages/02-brainstorm.md` §8. Execute in order:
+   a. Repo structural prep: add `data/` (gitignored), `eval/`, `notebooks/`, `scripts/` directories + `.gitignore` entries. One PR via `@release-manager`.
+   b. First tooling-install ADR: start with Mustang Project (ZUGFeRD generator). Write 5-section ADR per ADR-001 + `horus-decision-discipline` rule. Include Mustang source stub at `docs/sources/tools/mustang-project.md` (likely already exists from M2D.3). PR via `@release-manager`.
+   c. Next tooling ADR: MLX + mlx-lm (`uv add`). Same pattern. PR via `@release-manager`.
+   d. Next tooling ADR: Docling library (`uv add`). Same pattern. PR via `@release-manager`.
+   e. User-action: download datasets per `02-brainstorm.md` §6.2 checklist (P0: ZUGFeRD corpus + Mustang Project). Confirm P0/P1 prioritisation before continuing.
+   f. First pilot data loop: generate ≈10–50 synthetic ZUGFeRD invoices via Mustang → write + ADR XML-extraction-from-PDF script → first local VLM inference on M1 Pro (Granite-Docling via MLX likely; cohort-selection ADR gates) → compute initial F1 with full rigor (v2 §5.1 + §5.5, MLflow-tracked, deterministic seed).
+   g. After pilot evidence: schedule first Säring technical-progress meeting + draft agenda materials.
+2. **M2D.6+** — defined at M2D.5 exit based on pilot evidence. Each architectural choice (Layer-1 spine, Layer-2 backend, Layer-3 retrieval) gated on ADR + experiment cycle per `horus-decision-discipline`. Eventually → writeup phase.
 
-**Original first-action (preserved for reference)**: when this handoff was authored at M2B.8, the first action was *"What's the thesis name + slug?"* and the steps were `/start-project <slug> python-ml-uv` → post-bootstrap rename → `/run-phase brainstorm`. That sequence completed at M2D.0–M2D.2.
+**Token economics note (2026-05-08 investigation)**: the cascade-system session that closed M2D.4 consumed ~100k+ tokens due to (a) M2D.3 bulk-authoring 46 stubs in one session, (b) reading full v2 brainstorm in chunks, (c) an M2D.4 `@grill-me` walk that was course-corrected after 5 markers (user pointed out "don't lock implementation-phase decisions at brainstorm"). Mitigation for future milestones: (1) fresh session per milestone when possible, (2) consider Sonnet 4.6 1M for code-heavy M2D.5 work (vs Opus 4.7 for architectural decisions in M2D.6+), (3) course-correct walks earlier, (4) tighter response verbosity. Queued for Cascade A horizontal sprint as `token-burn-mitigation` + `model-switching-advisory` observations in `queue/pending-review.md`.
+
+**Original first-action (preserved for reference)**: when this handoff was authored at M2B.8, the first action was *"What's the thesis name + slug?"* and the steps were `/start-project <slug> python-ml-uv` → post-bootstrap rename → `/run-phase brainstorm`. That sequence completed at M2D.0–M2D.4.
 
 ## 6 — Termination
 
