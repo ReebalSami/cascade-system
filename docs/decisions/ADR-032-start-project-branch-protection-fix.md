@@ -1,6 +1,6 @@
 # ADR-032: `/start-project` step 11 branch-protection `gh api` schema fix
 
-**Status**: Proposed
+**Status**: Accepted
 **Date**: 2026-05-08
 **Plan**: `~/.windsurf/plans/sprint-review-cascade-d-mid-vertical-691e32.md` (Cascade D mid-vertical capture)
 **Source retro**: `~/Projects/cascade-system/retros/cascade-d-mid-vertical-capture.md` §triage row M2D.0
