@@ -1,6 +1,6 @@
 # ADR-033: Token-economy discipline (selective Cascade D mitigations)
 
-**Status**: Proposed
+**Status**: Accepted
 **Date**: 2026-05-08
 **Plan**: `~/.windsurf/plans/sprint-review-cascade-d-mid-vertical-691e32.md` (Cascade D mid-vertical capture)
 **Source retro**: `~/Projects/cascade-system/retros/cascade-d-mid-vertical-capture.md` §triage row "Session-level token-burn audit"

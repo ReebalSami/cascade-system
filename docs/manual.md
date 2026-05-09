@@ -67,6 +67,16 @@ Looks up the phase in the project's `.windsurf/phases.yaml`, runs pre-checks, in
 5. Approved L1 promotions hand off to `@update-horizontal`.
 6. Retro closes (with `git status --porcelain` clean — hard gate per ADR-008).
 
+## Token-economy practices
+
+Per ADR-033 (selective Cascade D mid-vertical token-burn mitigations). Two coupled practices, codified as guidance — heuristics, not contracts. The other three audit items remain queue-deferred until a second token-burn data point.
+
+**Fresh session per milestone.** For long-running verticals, open a new Cascade session per significant milestone rather than continuing past ~50k accumulated tokens in one session. The `@release-manager` PR-close event is the natural break point — the working tree is clean, the milestone-issue is closed, and the next milestone's first action (`/run-phase` or a fresh `@grill-me`) re-loads context cheaply. Pickups: `@kickoff <handoff-path>` for vertical handoffs, `/run-phase <name>` for mid-vertical continuations. The 50k threshold is a starting heuristic, not a calibrated number; future ADRs may sharpen it.
+
+**Response verbosity scales to stakes.** Tight responses for routine updates (milestone closures, validation-gate summaries, queue-entry captures, PR ledger reports). Structured responses (multi-section headings, multi-bullet recap) only for decision-gates, handoffs, retrospectives, and ADR drafts. The principle composes with the system communication directive ("be concise; minimize output tokens") — verbosity earns its tokens by serving downstream readability of an artifact, not by acknowledging the user.
+
+The audit driver-breakdown (M2D.0–M2D.4 ~100k-token session) is preserved in ADR-033 §Context for future calibration.
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
