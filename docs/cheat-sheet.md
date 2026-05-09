@@ -137,6 +137,21 @@ Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold
 
 ---
 
+## 8 — Session ergonomics
+
+### Token-economy practices (per ADR-033)
+
+Two coupled practices for sessions that span sustained authoring. Heuristics, not contracts. Three deferred audit items remain in `queue/pending-review.md` for second-data-point calibration.
+
+| Practice | Action |
+|---|---|
+| **Fresh session per milestone** | For long-running verticals, open a new Cascade session per significant milestone rather than continuing past ~50k accumulated tokens. `@release-manager` PR-close is the natural break point. Pickup: `@kickoff <handoff-path>` (vertical) or `/run-phase <name>` (mid-vertical). |
+| **Response verbosity scales to stakes** | Tight responses for routine updates (milestone closures, validation summaries, queue captures, PR ledgers). Structured (multi-section, multi-bullet) only for decision-gates, handoffs, retrospectives, and ADR drafts. |
+
+Full driver-breakdown + alternatives in ADR-033 §Context. Manual narrative paragraph at `docs/manual.md` §"Token-economy practices".
+
+---
+
 ## Cross-references
 
 - `docs/manual.md` — narrative manual (mental model, "where things live", lifecycle, release discipline). When the cheat-sheet says *what*, the manual says *why*.
