@@ -28,6 +28,7 @@ Per `/start-project`, every new project gets these full files copied into `<proj
 | `plan-drift-watcher.md` | model_decision | Surfaces drift between PRD slices, GitHub state, and commits. Recommends `/recalibrate`. |
 | `sprint-review-prompt.md` | model_decision | Suggests `@sprint-review` when a GitHub milestone closes. |
 | `obsidian-context-priming.md` | model_decision | Primes Cascade on the Obsidian vault at session start when the active project has vault co-location (`phases.yaml` `obsidian://` paths or `linked_software:<repo>` vault hits). Three-tier load; privacy guardrails from prompt-injection literature. **Workspace-deployed only** (per `know-your-hardware` precedent); copied via `/start-project` step 6a; no concise entry in `global_rules.md`. ADR-028. |
+| `model-selection-advisor.md` | model_decision | Emits one-line advisory when phase-typed signals suggest the active session would benefit from a different model — Sonnet 4.6 1M for code-heavy work, Opus 4.7 for decision-heavy work. Points to `@handoff-to-coding-session` / `@handoff-to-thinking-session` skill pair. Never auto-switches; never blocks; per-session suppression after one decline. **Workspace-deployed only** (per `know-your-hardware` + `obsidian-context-priming` precedent); copied via `/start-project` step 6a; no concise entry in `global_rules.md`. ADR-034. |
 
 ## Notes
 

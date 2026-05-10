@@ -1,6 +1,6 @@
 # ADR-034: Model-selection cluster — advisor rule + handoff skill pair + cheat-sheet entry
 
-**Status**: Proposed
+**Status**: Accepted
 **Date**: 2026-05-08
 **Plan**: `~/.windsurf/plans/sprint-review-cascade-d-mid-vertical-691e32.md` (Cascade D mid-vertical capture)
 **Source retro**: `~/Projects/cascade-system/retros/cascade-d-mid-vertical-capture.md` §triage row "Model-switching advisory + handoff workflow"
@@ -178,3 +178,29 @@ Sources consulted:
 - `~/.codeium/windsurf/skills/release-manager/SKILL.md` (sibling pattern: skill that hands off to helper workflows; informs handoff-skill structure)
 
 Adapted for: cascade-system meta-repo conventions (workspace rule + ADR-NNN doc + cheat-sheet pattern), Windsurf per-session model constraint (no in-session switch), our L1 / L2 / L3 layering.
+
+## Applied via
+
+Applied 2026-05-09 in branch `feat/adr-034-model-selection-cluster` (single PR, milestone-gated full ledger; last of 4 ADRs from Cascade D mid-vertical capture retro: ADR-032 #97 ✅, ADR-033 #98 ✅, ADR-035 #99 ✅, ADR-034 this PR).
+
+**Versioned (this repo)**:
+
+- `docs/cheat-sheet.md` — §8 "Session ergonomics" gains new "When to use which model" subsection (sibling to Token-economy practices from ADR-033); §3 stale rule count fix (17 → 19; 1 workspace-only → 3 workspace-only listing all three).
+- `docs/rules/model-selection-advisor.md` — new long-form rule (`trigger: model_decision`, workspace-only per ADR-018 + ADR-028 precedent).
+- `docs/rules/INDEX.md` — new row for `model-selection-advisor.md` with workspace-only footnote.
+- `docs/decisions/INDEX.md` — ADR-034 row flipped to `Accepted` with applied-to footnote.
+- `docs/decisions/ADR-034-*.md` (this file) — `Status: Proposed → Accepted`; this section appended.
+
+**L1 active surface (unversioned per ADR-014)**:
+
+- `~/.codeium/windsurf/skills/handoff-to-coding-session/SKILL.md` — new skill (target = Sonnet 4.6 1M; 138 lines).
+- `~/.codeium/windsurf/skills/handoff-to-thinking-session/SKILL.md` — new mirror skill (target = Opus 4.7; 139 lines).
+- `~/.windsurf/handoffs/` — new directory with `README.md` stub explaining the filename convention + retention policy.
+
+**Not touched**: `~/.codeium/windsurf/memories/global_rules.md` (5943/6000 chars; workspace-only rule has no concise entry per ADR-018 + ADR-028 precedent and the explicit Alternative 3 rejection above).
+
+**Validation**:
+
+- `@verify-l1` audit clean (canonical paths intact; no deprecated path leaks; new skills' frontmatter valid; new rule absent from `global_rules.md` as expected per ADR-029 step 5/6/7 awareness).
+- Sequencing followed: skills + cheat-sheet first, rule last (rule body references skill names that exist on disk).
+- 4-of-4 Cascade D mid-vertical-capture ADRs now `Accepted`.

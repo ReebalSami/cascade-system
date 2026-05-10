@@ -62,7 +62,7 @@ Canonical paths: `~/.codeium/windsurf/global_workflows/<name>.md`. Maintained in
 
 ---
 
-## 3 — Rules (17)
+## 3 — Rules (19)
 
 **16 always-on** in `~/.codeium/windsurf/memories/global_rules.md` (single file, ≤6000 char cap, no per-rule frontmatter).
 
@@ -76,9 +76,11 @@ Canonical paths: `~/.codeium/windsurf/global_workflows/<name>.md`. Maintained in
 | **Documentation** | `document-as-you-go`, `adapt-from-all` |
 | **Plan / lifecycle hygiene** | `no-quantity-over-shape`, `no-time-estimates`, `bidirectional-learning-pipe`, `plan-drift-watcher`, `sprint-review-prompt` |
 
-**1 workspace-only** at `<project>/.windsurf/rules/know-your-hardware.md` (deployed by `/start-project` step 6a; trigger: `model_decision`):
+**3 workspace-only** at `<project>/.windsurf/rules/<name>.md` (deployed by `/start-project` step 6a; trigger: `model_decision`; long-form lives in `docs/rules/`; **no concise entry** in `global_rules.md` per Windsurf-treats-global-as-always-on constraint):
 
-- `know-your-hardware` — alerts on resource-heavy intent; AWS escalation requires explicit user approval with budget surfaced
+- `know-your-hardware` (ADR-018) — alerts on resource-heavy intent; AWS escalation requires explicit user approval with budget surfaced
+- `obsidian-context-priming` (ADR-028) — primes Cascade on the Obsidian vault at session start when the active project has vault co-location; three-tier load with privacy guardrails
+- `model-selection-advisor` (ADR-034) — emits one-line advisory when phase-typed signals suggest switching to Sonnet 4.6 1M (code-heavy) or Opus 4.7 (decision-heavy); points to `@handoff-to-coding-session` / `@handoff-to-thinking-session`; never auto-switches
 
 Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 
@@ -149,6 +151,18 @@ Two coupled practices for sessions that span sustained authoring. Heuristics, no
 | **Response verbosity scales to stakes** | Tight responses for routine updates (milestone closures, validation summaries, queue captures, PR ledgers). Structured (multi-section, multi-bullet) only for decision-gates, handoffs, retrospectives, and ADR drafts. |
 
 Full driver-breakdown + alternatives in ADR-033 §Context. Manual narrative paragraph at `docs/manual.md` §"Token-economy practices".
+
+### When to use which model (per ADR-034)
+
+Windsurf model selection is per-session (set via UI before the session opens), not per-turn. Phase-typed work has a model-fit; switching mid-session means a new Cascade. The `model-selection-advisor` workspace rule emits a one-line advisory on phase-typed signals; the handoff skill pair writes the context bundle for the new session to pick up.
+
+| Phase type | Preferred model | Pickup pattern |
+|---|---|---|
+| Decision-heavy (PRD, brainstorm, ADR, retro, architectural choice) | **Opus 4.7** | `@handoff-to-thinking-session` → fresh Cascade in Opus 4.7 → `@kickoff <handoff-file>` |
+| Code-heavy (implement, experiment, refactor, scaffold edit, test authoring) | **Sonnet 4.6 1M** | `@handoff-to-coding-session` → fresh Cascade in Sonnet 4.6 1M → `@kickoff <handoff-file>` |
+| Mixed / routine (queue capture, docs edit, small PR) | Either; stay in current session if under ~50k token threshold (ADR-033) | n/a |
+
+Composes with the fresh-session-per-milestone practice above: `@release-manager` PR-close + phase-type transition is the canonical session-boundary signal. Handoff files live at `~/.windsurf/handoffs/<vertical-or-project-slug>-<YYYYMMDDHHMM>-<phase-type>.md`. Full rationale + alternatives in ADR-034 §Context.
 
 ---
 
