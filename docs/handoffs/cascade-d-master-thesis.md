@@ -13,7 +13,7 @@ You are a fresh Cascade picking up the HORUS Master-Thesis project mid-vertical.
 
 ## Current state (2026-05-08)
 
-> **If picking up mid-vertical**: M2D.0 through M2D.4 are complete. Next up is M2D.5 (experiment phase kickoff: repo prep + tooling ADRs + first pilot data loop). Phase chain adaptation: `spec` + `issues` phases are deliberately skipped per `02-brainstorm.md` §8 — see "Work-breakdown" for rationale.
+> **If picking up mid-vertical**: M2D.0 through M2D.4 are complete. Next up is M2D.5 (experiment phase kickoff: repo prep + tooling ADRs + first pilot data loop). Phase chain adaptation: `spec` deliberately skipped; `issues` restored 2026-05-10 per `02-brainstorm.md` §11 (amends §8) — see "Work-breakdown" for rationale.
 
 | Milestone | Status | Commit / PR |
 |---|---|---|
@@ -35,7 +35,7 @@ Project state:
 
 ## 1 — Your role
 
-You author the thesis project at `~/Projects/horus/`. The project is bootstrapped from the `python-ml-uv` L3 template (M2D.0). HORUS identity is captured (M2D.1). Decision-discipline + source-archival rules are live (M2D.2). Literature review imported + synthesised (M2D.3). Brainstorm artefact authored as directional-only, no implementation-phase pre-locks (M2D.4). Next: `experiment` phase (M2D.5) — repo prep + tooling ADRs + first pilot data loop. Phase chain skips `spec` + `issues` per `02-brainstorm.md` §8; see §3 Work-breakdown for rationale.
+You author the thesis project at `~/Projects/horus/`. The project is bootstrapped from the `python-ml-uv` L3 template (M2D.0). HORUS identity is captured (M2D.1). Decision-discipline + source-archival rules are live (M2D.2). Literature review imported + synthesised (M2D.3). Brainstorm artefact authored as directional-only, no implementation-phase pre-locks (M2D.4). Next: `experiment` phase (M2D.5) — repo prep + tooling ADRs + first pilot data loop. Phase chain skips `spec` only (`issues` restored 2026-05-10 per `02-brainstorm.md` §11); see §3 Work-breakdown for rationale.
 
 You do **not** modify L1 (`~/.codeium/windsurf/...`, `~/.windsurf/contracts/`, `~/.windsurf/templates/python-ml-uv/`). If a gap is found in L1 during your work, log it via `bidirectional-learning-pipe` to `cascade-system/queue/pending-review.md` for Cascade A's next horizontal `@sprint-review` to triage.
 
@@ -77,7 +77,7 @@ Decomposed at kickoff (2026-05-07) per `~/.windsurf/plans/kickoff-cascade-d-horu
 
 - **M2D.6+**: Defined at M2D.5 exit based on pilot evidence. Not pre-decomposed here. Likely shape: iterate on architecture choices (Layer-1 single-shot vs orchestrated, Layer-2 graph backend, Layer-3 retrieval strategy) each gated on its own ADR + experiment cycle. Eventually → writeup phase via `@writeup` (L1 skill, forward-reference).
 
-**Phase-chain adaptation**: L3 `python-ml-uv` `phases.yaml` specifies `brainstorm` → `spec` → `issues` → `experiment`. HORUS **skips `spec` + `issues`** and proceeds directly to `experiment` (M2D.5). Rationale (full version in `02-brainstorm.md` §8): (a) v2 §0–§14 already substitutes for ~70% of typical PRD content; (b) the §4.1 a-priori locks a PRD typically formalises are Säring-blocked (cannot lock until first technical-progress meeting, which is gated on pilot results); (c) authoring a pre-Säring PRD risks HARKing on predictions that aren't pilot-grounded. Revisit at `@sprint-review` if phase-skip proves friction.
+**Phase-chain adaptation**: L3 `python-ml-uv` `phases.yaml` specifies `brainstorm` → `spec` → `issues` → `experiment`. HORUS **skips `spec`; `issues` is restored as of 2026-05-10 per `02-brainstorm.md` §11**. Originally both `spec` + `issues` were bundled-skipped per §8; §11 surfaced that §8's three rationales — (a) v2 §0–§14 substitutes for ~70% of typical PRD content, (b) §4.1 a-priori locks are Säring-blocked, (c) pre-Säring PRD risks HARKing — are **spec-only** and do not bear on `issues`-phase semantics; previous Cascade conflated. Issues are authored from brainstorm §8 (M2D.5 sub-steps) + handoff §3 (this section, M2D.5 work-breakdown + M2D.6+ shape) as inputs (adapted consumption pattern for `@to-issues` when no PRD exists; L3 friction queued for next `@sprint-review`). Revisit at `@sprint-review` if the adaptation proves friction.
 
 ### 3.1 — 2026-05-10 cross-check + verified candidates (post-claude-chat external review)
 
