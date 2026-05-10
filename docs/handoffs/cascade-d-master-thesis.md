@@ -79,6 +79,78 @@ Decomposed at kickoff (2026-05-07) per `~/.windsurf/plans/kickoff-cascade-d-horu
 
 **Phase-chain adaptation**: L3 `python-ml-uv` `phases.yaml` specifies `brainstorm` → `spec` → `issues` → `experiment`. HORUS **skips `spec` + `issues`** and proceeds directly to `experiment` (M2D.5). Rationale (full version in `02-brainstorm.md` §8): (a) v2 §0–§14 already substitutes for ~70% of typical PRD content; (b) the §4.1 a-priori locks a PRD typically formalises are Säring-blocked (cannot lock until first technical-progress meeting, which is gated on pilot results); (c) authoring a pre-Säring PRD risks HARKing on predictions that aren't pilot-grounded. Revisit at `@sprint-review` if phase-skip proves friction.
 
+### 3.1 — 2026-05-10 cross-check + verified candidates (post-claude-chat external review)
+
+User-led external review with Claude Opus 4.7 (web chat) on 2026-05-10 surfaced 15 candidate-list deltas vs the v2-derived directional content. Web verification done in this Cascade D session via `search_web` + HuggingFace MCP (`mcp4_hub_repo_details` + `mcp4_paper_search`). 14/15 factual claims verified; 1 caveat. 3 NEW candidates found that claude-chat missed. Plus a methodology refinement (lock-vs-branch separation sharpening v2 §4.1).
+
+Provenance: `~/.windsurf/plans/cascade-d-resume-rethink-2f7f5a.md` (this Cascade D's resume-rethink plan; outside any tracked repo per Windsurf plan-file convention).
+
+**Verified candidate matrix**:
+
+| External claim | Status | Action for new cascade |
+|---|---|---|
+| Drop Qwen2.5-VL → use Qwen3-VL | ✅ verified | Replace v2 §8.1 `Qwen2.5-VL-7B` row with `Qwen3-VL-8B-Instruct` (Apache 2.0, arXiv 2505.09388, released 2025-09-23) and `Qwen3-VL-30B-A3B-Instruct` (MoE) for compute-permitted runs |
+| Add PaddleOCR-VL 1.5 (0.9B SOTA OmniDocBench v1.5 = 94.5%) | ✅ verified | Add candidate. arXiv 2601.21957. Apache 2.0. Multilingual (en+zh tag). Caveat: Chinese-skewed pretraining → German-specific eval needed in cohort ADR |
+| Granite-Docling 258M MLX-ready | ✅ verified | Already in v2 §8.1. MLX path: `ibm-granite/granite-docling-258M-mlx` (200-300 tok/s on M-class). Strong starter candidate per v2 §14.1 P3 |
+| olmOCR-2-7B English-skewed | ✅ verified | HF tag `language: en` only. Annotate v2 §8.1 row with EN-skew caveat: requires German-specific pilot before trusting |
+| Mistral OCR cheapest cloud ($1/1k batch ~$0.50) | ✅ verified | Add to v2 §8.2 cloud baselines. Mistral OCR 3 also released — newer/more capable/higher cost |
+| Gemma 3 cloud (matches Berghaus) | ✅ verified | Add to v2 §8.2. Direct comparison to Berghaus arXiv 2509.04469 (which benchmarks GPT-5/Gemini-2.5/Gemma-3) |
+| ZUGFeRD 2.4 / Factur-X 1.08 (Dec 2025) | ✅ verified | Pin generator target to v2.4. Mustangproject 2.21.0 (released 2025-12-18) supports it |
+| Berghaus arXiv 2509.04469 paper | ✅ verified | Berghaus + Berger + Hillebrand + Cvejoski + Sifa (Fraunhofer IAIS + Lamarr). 2025-08-29. Already in v2 bibliography |
+| Berghaus eval-code anonymous.4open.science URL | ⚠️ unauthorized (anon-submission expired) | Flag as ADR slot: locate de-anonymized URL; fork-or-reinvent decided in new cascade |
+| FATURA on HF (10k imgs, 50 templates) | ✅ verified | `mathieu1256/FATURA2-invoices`. arXiv 2311.11856. Add to v2 §9.2 |
+| Aoschu/German_invoices_dataset | ⚠️ exists but n<1K, license unclear | Add as "sanity test only" — too small + unverified license to be primary |
+| OmniDocBench v1.5 + Real5-OmniDocBench (2026 std) | ✅ verified | Real5 = arXiv 2603.04205 (March 2026), 1,355 imgs, 5 physical conditions. Add to v2 §9.2 |
+| bge-m3 multilingual (LightRAG default) | ✅ verified | 149M downloads, MIT, 100+ langs, arXiv 2402.03216, XLM-RoBERTa base. Replace v2 §10 generic "sentence-transformers (multilingual)" with bge-m3 indicated |
+| vllm-mlx Apple Silicon serving | ✅ verified | `vllm-project/vllm-metal` (official) + `waybarrios/vllm-mlx` (community). Add to v2 §8.4 inference runtime |
+| Python 3.14 + PyTorch 2.10+ compat | ✅ verified | PyTorch 2.10 = Py3.14 `torch.compile`; 2.11 latest. Repo already pins `>=3.14`. No action |
+
+**New finds (claude-chat missed)**:
+
+- **MinerU 2.5-Pro** — 1.2B params, **95.69% on OmniDocBench v1.6** (April 2026, arXiv 2604.04771). v1.6 fixes element-matching biases + adds Hard subset; surpasses PaddleOCR-VL 1.5. Stronger candidate than PaddleOCR-VL 1.5 if v1.6 is the eval target.
+- **MDPBench** — Multilingual Document Parsing Benchmark, 17 langs, 3,400 imgs, March 2026 (arXiv 2603.28130). Closed-source models robust; open-source drops 17.8% on photographed docs, 14% on non-Latin scripts.
+- **Mistral OCR 3** — replaces `mistral-ocr-latest`. To survey at cloud-baseline ADR.
+
+**Methodology refinement** (sharpens v2 §4.1 lock-vs-branch separation per claude-chat point 11):
+
+| Lock-timing tier | Items | Source |
+|---|---|---|
+| **Hard pre-commit** (before ANY model run, incl. pilot) | (1) Held-out test set freeze + hash; (2) Layer-1 eval protocol (v2 §5.1 token F1 + §5.5 field heatmap, MLflow-tracked, deterministic seed) | claude-chat refinement of v2 §4.1 |
+| **First-Säring-meeting lock** | Research question; field weights (v2 §5.2); hypothesis set H1–H6; statistical reporting standards; freeze-date approval | v2 §4.1 + §12 |
+| **Post-Layer-1-evidence** | v2 §5.2 weighted F1, §5.3 compliance pass rate, §5.4 Vorsteuerabzug eligibility, §5.6 validator catch rate | claude-chat refinement (avoids designing metrics for imagined errors) |
+| **Layer-2/3-phase** | KG fidelity propagation; Layer 3 query-accuracy harness; GraphRAG-vs-vector comparison metrics | branches per v2 §4.2 |
+
+**ADR slots flagged for new cascade** (per ADR-001 protocol — Socratic walk at decision time):
+
+| ADR slot | Candidates (post-cross-check) | Note |
+|---|---|---|
+| `ADR-NNN-config-library` | Pydantic Settings (indicated), Hydra, OmegaConf alone, stdlib + PyYAML | **HIGHEST PRIORITY** — Bundle 2 starter, M2D.5 step 0. Gated by sibling rule `horus-config-discipline` (authored same day, see §3.2 below) |
+| `ADR-NNN-config-schema` | Field set for `ExperimentConfig` Pydantic schema | Walked at first experiment authoring; minimal at first |
+| `ADR-NNN-layer-1-cohort` | Granite-Docling 258M, PaddleOCR-VL 1.5, MinerU 2.5-Pro, olmOCR-2 (EN-skew), Qwen3-VL 8B/30B-A3B, Nanonets-OCR2 3B, Docling pipeline | First pilot likely Granite-Docling (smallest + MLX-ready) per v2 §14.1 P3 |
+| `ADR-NNN-cloud-baselines` | Gemini 2.5 Pro, Sonnet 4.5, GPT-5, LandingAI ADE, Mistral OCR, Gemma 3 | Subset by budget at Säring meeting |
+| `ADR-NNN-embeddings` | bge-m3 (indicated), paraphrase-multilingual-MiniLM (alt) | German-friendly required |
+| `ADR-NNN-berghaus-eval-harness` | fork vs reinvent | Locate de-anonymized URL first |
+| `ADR-NNN-zugferd-spec-pin` | v2.4 / Factur-X 1.08 | Mustangproject 2.21.0+ |
+| `ADR-NNN-layer-2-storage` | NetworkX, Neo4j, LightRAG-internal | Branches per v2 §4.2 |
+| `ADR-NNN-layer-3-retrieval` | vector, graph, hybrid, per-query router | Branches per v2 §4.2 |
+| `ADR-NNN-fine-tuning-cohort` | which models, how many | Branches per v2 §4.2 |
+
+### 3.2 — 2026-05-10 config-discipline rule (L2)
+
+User-surfaced gap during this same Cascade D session: `~/Projects/horus/src/horus/config.py` is the L3-template `@dataclass` placeholder with hardcoded defaults (`seed=42`, `learning_rate=1e-3`, `batch_size=32`, `num_epochs=1`) — **exactly** the pattern that compromises reproducibility + scientific correctness if propagated into M2D.5 first-experiment authoring. `experiments/` empty. No `config-discipline` rule existed.
+
+**Bundle 1** (this Cascade D session, separate PR): authored project-local L2 rule `~/Projects/horus/.windsurf/rules/horus-config-discipline.md`. Rule mandates:
+
+- **Forbidden**: hardcoded knobs (hyperparameters / model IDs / dataset paths / seeds / batch sizes / learning rates / prompt strings / eval thresholds / MLflow tags) as default args, module-level constants, or inline literals in any `.py` file outside `src/horus/config.py`
+- **Allowed**: Pydantic schema literal defaults inside `src/horus/config.py`; package metadata; structural constants (column names, schema field names, enum values for typing); test fixtures
+- **Contract**: experiments accept ONE papermill parameter `cfg_path: str`; cfg loaded via `ExperimentConfig.from_yaml(cfg_path)`; Pydantic raises on missing/malformed → fails fast before any model loads
+
+**Forcing function**: Pydantic-validates-at-boot is the architectural backstop (no separate skill/workflow needed; the architecture itself is the workflow — cf. ADR-013/ADR-018 patterns).
+
+**L3 promotion plan**: surface for promotion to `~/.windsurf/templates/python-ml-uv/rules/config-discipline.md` at next `@sprint-review` per Q7 commitment (pre-committed, not deferred indefinitely).
+
+**Bundle 2** (deferred to new cascade, M2D.5 step 0): walks ADR-NNN-config-library Socratically (Pydantic Settings indicated; Hydra / OmegaConf / stdlib alternatives surveyed) → installs chosen library via `uv add` (per `horus-decision-discipline`) → replaces `src/horus/config.py` placeholder with chosen-library schema → scaffolds `configs/` directory + first per-experiment YAML → updates `Makefile` `experiment` target to accept `CFG=configs/<slug>.yaml` parameter. New cascade has the rule loaded at conversation-start (workspace rule, AGENTS.md known) → actively gates Bundle 2 work.
+
 **Locked** (carried from kickoff, ratified at M2D.0–M2D.2):
 
 - Thesis topic + scope + methodology core: HORUS = privacy-first document intelligence for German tax/accounting professionals via local VLMs (no OCR pipeline). Source: `THESIS_BRAINSTORM_STATE_v2.md` §0–§3.
