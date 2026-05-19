@@ -24,6 +24,7 @@ Per `/start-project`, every new project gets these full files copied into `<proj
 | `no-half-knowledge.md` | always_on | Read files fully. Map with grep, then full reads. No `head`/`tail`/snippets as understanding substitute. |
 | `no-quantity-over-shape.md` | always_on | No fixed counts ("build 5 skills"). Archetypes + instances as work demands. |
 | `no-terminal-oneline-scripts.md` | always_on | **CRITICAL.** No embedded newlines in `run_command` quoted args (Windsurf macOS terminal crash). Use `/commit` for commits with body. |
+| `long-running-foreground.md` | always_on | Long-running commands stay foreground with live streaming output. No background-then-poll, no `/dev/null` suppression, no buffering pipes. Sibling to `no-terminal-oneline-scripts` (crash-safety vs observability). |
 | `no-time-estimates.md` | always_on | No time-based language. Event-based only: sprint, milestone, phase, "when X holds". |
 | `plan-drift-watcher.md` | model_decision | Surfaces drift between PRD slices, GitHub state, and commits. Recommends `/recalibrate`. |
 | `sprint-review-prompt.md` | model_decision | Suggests `@sprint-review` when a GitHub milestone closes. |
