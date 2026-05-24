@@ -16,6 +16,7 @@ Per `/start-project`, every new project gets these full files copied into `<proj
 | `be-honest-direct-critical.md` | always_on | 100% honest/direct/critical. Cite facts. No flattery, no hedging. Concise. |
 | `bidirectional-learning-pipe.md` | always_on | Capture insights to queue at the moment they appear; `@sprint-review` drains. |
 | `branch-and-pr-required.md` | always_on | Never push to `main`. All changes via `@release-manager` → branch → PR → CI → squash-merge. Cold-start exception: first push after `gh repo create`. |
+| `issue-project-assignment-required.md` | always_on | Never `gh issue create` in a Project-v2-tracked repo without atomically adding the issue to that Project. Pre-flight `gh project list --owner <owner>`; on hit, use `--project "<title>"` flag OR pair create with `gh project item-add` as the IMMEDIATE next call. Paired with `/issue-create` workflow (forcing function) + `@sync-github` (retroactive reconciler). |
 | `clean-project-structure.md` | always_on | Every artifact in its canonical directory. New top-level paths require an ADR. |
 | `context7-and-docs-first.md` | model_decision | Consult current docs via `context7` MCP before implementing any external dependency. |
 | `document-as-you-go.md` | always_on | ADRs at the moment of decision. Reserve NNN in INDEX before authoring. Supersede, never delete. |
