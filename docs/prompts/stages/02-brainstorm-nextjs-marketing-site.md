@@ -193,7 +193,7 @@ Installed per project via `npx skills add --copy -y` into tracked `.agents/skill
 
 ### S1 — Dogfood order
 
-**loom (US) → saeb (NL) → own site** (user). loom exercises the single-locale path and the simplest legal case first; saeb exercises `nl`+`en`, KVK/BTW, hreflang; the own site is a retrofit (`git init` + `_shared`/template overlays without touching `src/`), entering at `brainstorm` because the rename is a repositioning.
+**loom (US) → saeb (NL) → own site** (user). loom exercises the single-locale path and the simplest legal case first; saeb exercises `nl`+`en`, KVK/BTW, hreflang; the own site is a retrofit (`git init` + `_shared`/template overlays without touching `src/`), entering at `brainstorm` because the rename is a repositioning. **The order only decides which site validates the bootstrap path first**: the three verticals are independent repos with independent `phases.yaml` copies and may run in parallel sessions once the template exists (user requirement, 2026-09-05); only the template itself (M4E.2–M4E.6) is a shared prerequisite.
 
 ### S2 — Client materials
 
