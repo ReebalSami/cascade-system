@@ -17,6 +17,51 @@ Format:
 - Proposed L1 change: ...
 ```
 
+## 2026-08-25 — horus — Cascade D
+
+- **Insight**: The Windsurf→Devin workspace-config rename (`.windsurf/` → `.devin/`) silently invalidated 17 path references across HORUS's living docs, code docstrings, and config comments (README, AGENTS.md, `configs/README.md`, `docs/structure.md`, `src/horus/config.py`, tests, …) — discovered only during the supervisor-delivery audit. Any project bootstrapped before the rename carries the same class of dead references; a rename of an IDE-managed directory is a repo-wide breaking change that nothing currently watches for.
+- **Source**: ReebalSami/horus#138 (commit `a30559c`), supervisor-delivery audit session
+- **Project**: horus
+- **Cascade**: D
+- **Date observed**: 2026-08-25
+- **Proposed L1 change**: when `/docs-refresh` lands (M1.11), include a dead-workspace-path validator (grep for `.windsurf/` in living files of repos whose config dir is `.devin/`, and vice versa); consider a one-off sweep across all active projects at the next horizontal `@sprint-review`.
+- **Update 2026-09-05 (M4E.1)**: the L1-side half of this is now in scope of ADR-037 (19-file `<project>/.windsurf/` sweep in active L1 files + templates + contract, plus a `@verify-l1` dead-path check). The consumer-repo sweep remains queued.
+
+## 2026-09-05 — cascade-system — Vertical E (M4E.1 brainstorm) — always-on rule duplication in consumers under Devin
+
+- **Insight**: `/start-project` step 6a copies all 21 long-form rules from `docs/rules/` into each consumer's rules directory; 15 carry `trigger: always_on`. Under Devin CLI, `.devin/rules/*.md` with `always_on` are injected every session — on top of `global_rules.md`, which already holds the concise versions. Every consumer bootstrapped this way pays roughly double the always-on rule tokens per session (ADR-033 territory) and contradicts Devin's own guidance ("rules and AGENTS should be kept as small as possible"). ADR-014's rationale for the copies ("re-readable long-form") was Windsurf-specific.
+- **Source**: `~/.codeium/windsurf/global_workflows/start-project.md` step 6a; `docs/rules/*.md` frontmatter census (15 `always_on` / 6 `model_decision`); Devin docs `extensibility/rules.mdx` ("Supports `trigger` frontmatter"; "keep rules as small as possible").
+- **Proposed L1 change**: ADR-037 part 3 fixes the workflow going forward (copy only the 6 `model_decision` rules). **Still open**: a one-off sweep of existing consumers that carry the 15 copies (check each active project's `.devin/rules/` / `.windsurf/rules/` for `trigger: always_on` files that duplicate `global_rules.md`; delete or downgrade to `model_decision`). Route via `@sync-github`-style per-repo PRs at the next horizontal `@sprint-review`.
+- **Trigger for promotion**: next horizontal `@sprint-review`, or the first consumer session that shows visibly inflated context from rules.
+
+## 2026-09-05 — cascade-system — Vertical E (M4E.1 brainstorm) — Devin rule-loading semantics for `description`-only rule files
+
+- **Insight**: portfolio-website's `.devin/rules/*.md` files carry only `description:` (no `trigger:`). Devin lists them as "available rules — read when relevant" (agent-decided), not as always-on. So the same file behaves differently across tools depending on whether `trigger:` is explicit. Rule authors should always set `trigger:` explicitly; `description`-only is an accidental `model_decision`.
+- **Source**: observed in the 2026-09-05 Devin session (`<available_rules>` block listing 19 portfolio rules by description); Devin docs `extensibility/rules.mdx` §"Rule Activation Types".
+- **Proposed L1 change**: one clause in `docs/rules/l1-canonical-paths.md` (long-form) or in `@write-skill`/`@propose-extension` rule-authoring steps: *"every rule file declares `trigger:` explicitly; `description`-only files are treated as agent-decided by Devin and always-on by nothing."* Also a `@verify-l1` check for rule files without `trigger:`. Not a new rule (cap).
+- **Trigger for promotion**: ADR-037 apply (M4A.1) is the natural moment since `@verify-l1` is touched anyway; otherwise next horizontal `@sprint-review`.
+
+## 2026-09-05 — cascade-system — Vertical E (M4E.1 brainstorm) — project-level `.agents/skills/` is not read by Windsurf
+
+- **Insight**: ADR-037 puts consumer-project skills (own L3 + third-party via `npx skills add`) at `.agents/skills/` — the cross-tool Agent Skills path natively read by Devin, Claude Code, Cursor, Codex, Copilot. Windsurf reads only `.windsurf/skills/` at project level (and `~/.codeium/windsurf/skills/` globally). Under "Devin-first, Windsurf-compatible" this is an accepted trade-off: global L1 skills stay dual-readable; project skills are Devin-side only.
+- **Source**: Devin docs `extensibility/skills/overview.mdx` §"Where Skills Live"; agentskills.io client list (research pass 1, 2026-09-05); ADR-037 §Alternatives.
+- **Proposed L1 change**: none now. Re-evaluate if Windsurf adopts `.agents/skills/` (then no action) or if a Windsurf session on a consumer project needs the L3 skills (then `/start-project` could additionally symlink `.windsurf/skills/` → `.agents/skills/`; Devin's `skill` tool follows symlinks per changelog).
+- **Trigger for promotion**: first Windsurf session opened on a `nextjs-marketing-site` consumer that misses an L3 skill.
+
+## 2026-09-05 — cascade-system — Vertical E (M4E.1 brainstorm) — OpenNext-Cloudflare `proxy.ts` support is experimental
+
+- **Insight**: Next.js 16's `proxy.ts` compiles to Node.js middleware; `@opennextjs/cloudflare` added support only in 1.20.3 (PR #1309), marked experimental and requiring the `nodejs_compat` flag. next-intl's locale middleware runs there. The `nextjs-marketing-site` template therefore documents a **proxy-free** routing path (`localePrefix: 'always'` + static root redirect) as the Cloudflare default and keeps `src/proxy.ts` optional.
+- **Source**: github.com/opennextjs/opennextjs-cloudflare PR #1309 + release 1.20.3 notes; issues #962/#972/#1277 (verified 2026-09-05); brainstorm §W3, §Open items.
+- **Proposed L1/L3 change**: none at L1. At L3: when OpenNext marks Node middleware stable, flip the template default back to `proxy.ts` (locale negotiation via Accept-Language) — a `@launch` skill pre-flight should re-check the adapter's status line each time a site targets Cloudflare.
+- **Trigger for promotion**: first `launch` phase targeting Cloudflare (Vertical F or G), or the OpenNext stable announcement.
+
+## 2026-09-05 — cascade-system — Vertical E (M4E.1 brainstorm) — client-repo placement guidance for `/start-project`
+
+- **Insight**: the user believed multiple private repos were unavailable on his GitHub account and considered one GitHub account per client. Verified facts: GitHub Free (personal and organisation) includes unlimited private repos with unlimited collaborators (since 2020-04-14); the Terms of Service forbid more than one free personal account per person; org renames redirect repo URLs; user→org repo transfers keep issues/PRs/settings. Decision (brainstorm §S3): private repos under the personal account now, one free org after the business rename, transfer then.
+- **Source**: docs.github.com "GitHub's plans", "GitHub Terms of Service" §Account Requirements, "Renaming an organization", "Transferring a repository" (all accessed 2026-09-05).
+- **Proposed L1 change**: `/start-project` skill's owner prompt (input 4) gains a one-line hint: *"client work → a free organisation (transferable, collaborator/billing separation); never a second personal account (ToS)"*; `@handover` (L3) carries the transfer checklist. Small edit; bundle into ADR-038 apply (M4A.2) if convenient.
+- **Trigger for promotion**: M4A.2, or the org creation after the rename.
+
 ## Sprint 1 — cascade-system — Cascade A — M1.1
 
 - **Insight**: 2 portfolio-website rules remain deferred for L1 promotion (originally 4; 2 were dropped at the Sprint 2 Vertical C drain after three sprints' worth of evidence showed their principles were already covered elsewhere — see `queue/archive/sprint-1-5.md`). The remaining two await trigger-condition firing.

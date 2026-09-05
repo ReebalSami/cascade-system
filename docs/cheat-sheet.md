@@ -100,7 +100,8 @@ Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 |---|---|---|
 | `_shared/` | active | universal `docs/` structure + INDEX files + `strict-docs-placement` rule (applied first by `/start-project` two-pass scaffold per ADR-004) |
 | `python-ml-uv` | active (Vertical B closed at M2B.8; M2B.1–M2B.8 shipped + validated) | Pattern A — Python ML / research (uv + jupytext + papermill + mypy + ruff + pytest; tracker-agnostic; stdlib seeding; `notebook-discipline` + `uv-discipline` L3 rules); validated via `/start-project --dry-run`: `uv sync` + `make test` + `make lint` + `make typecheck` all pass; ready for consumer bootstrap (see `docs/handoffs/cascade-d-master-thesis.md` for Master-Thesis vertical entry point) |
-| `nextjs-app` | not built yet | Pattern B — TypeScript full-stack; defer until first project demands it |
+| `nextjs-marketing-site` | brainstorm approved (M4E.1, 2026-09-05); authoring pending ADR-037 + ADR-038 apply | Pattern B (narrowed) — multilingual marketing / lead-gen brochure sites (Next 16 + Tailwind 4 + shadcn base-nova + next-intl + `motion`; host-agnostic `standalone`; 9-phase content-first chain `discovery → brainstorm → spec → issues → design → content → build → launch → handover`). Consumers: loom-remodelers (US), saeb-group website (NL), own services site (DE). Design: `docs/prompts/stages/02-brainstorm-nextjs-marketing-site.md` |
+| `nextjs-app` | not built yet | Pattern B (generic, CMS/DB apps) — stays deferred until a project demands it; `nextjs-marketing-site` covers the brochure archetype |
 | `python-pipeline` | not built yet | Pattern D — data pipeline; defer until first project demands it |
 
 Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold/` + optional `rules/` + `skills/` + `workflows/` overlays.
