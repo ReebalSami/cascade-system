@@ -61,6 +61,8 @@ Folded into this ADR's apply (user decision at kickoff, fold-into-M4A.1 over a s
 - **`l1-canonical-paths` long-form** gains a "Loading facts" section (strict YAML; explicit `trigger:` on every rule file; manual-skill conventions).
 - Provenance cites in swept skills that pointed at the never-valid `cascade-system/.windsurf/rules/…` path now point at `cascade-system/docs/rules/…`.
 
+Two executable helpers were added under the Agent Skills `scripts/` convention this ADR cites: `~/.codeium/windsurf/skills/verify-l1/scripts/verify-l1.sh` (steps 1–8 of `@verify-l1` as read-only shell checks) and `~/.codeium/windsurf/skills/start-project/scripts/dry-run.sh` (steps 1–7 of `/start-project --dry-run` into a temp dir with shape assertions). Both were the instruments that produced the verification evidence for this ADR's status flip.
+
 Also applied in the same PR, discovered during the sweep: `_shared/scaffold/` files cited the ADR-014-dead `~/.windsurf/rules/…` path (pre-existing `@verify-l1` step-8 drift, never run); `docs/skills/INDEX.md` lacked four skills (`begin`, `kickoff`, `handoff-to-coding-session`, `handoff-to-thinking-session`); `@write-skill` step 9 still said "no global index file yet" (queue entry M_C2.3) — corrected since this apply adds ten L1 skills and must update the indexes it claimed did not exist.
 
 **Source refs**:
