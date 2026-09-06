@@ -6,18 +6,19 @@ The day-to-day operating guide for the Cascade lifecycle system. Covers what liv
 
 ## Where things live
 
-The L1 layer (global rules, skills, workflows, contracts, templates) is split across two roots because Windsurf only scans one of them and global rules have a hard size cap. Per ADR-014:
+The L1 layer (global rules, skills, contracts, templates) is split across two roots because the agent runtimes only scan one of them and global rules have a hard size cap. The system is **Devin-first, Windsurf-compatible** (ADR-037): global skills live where both tools read them; the former workflow layer survives only as redirect stubs. Per ADR-014 + ADR-037:
 
 | Component | Canonical path | Notes |
 |---|---|---|
-| **Skills (global)** | `~/.codeium/windsurf/skills/<name>/SKILL.md` | Multi-file. Discovered automatically by Windsurf. Frontmatter: `name`, `description`, `activation`, `sources_consulted`, `adapted_for`. |
-| **Workflows (global)** | `~/.codeium/windsurf/global_workflows/<name>.md` | Single-file each. Slash-command name = filename. Frontmatter: `description`. (Per ADR-016; `~/.codeium/windsurf/workflows/` is deprecated.) |
-| **Rules (global, concise/active)** | `~/.codeium/windsurf/memories/global_rules.md` | **Single file, ≤6000 chars.** Always-on, no frontmatter. The LAW that loads in every conversation. |
-| **Rules (global, long-form/reference)** | `~/Projects/cascade-system/docs/rules/<name>.md` | Multi-file with full frontmatter, rationale, provenance. The COMMENTARY. Not auto-loaded; available via reading. |
-| **Rules (per-project)** | `<project>/.windsurf/rules/<name>.md` | Workspace-scoped. Loaded only when Cascade is opened inside that project repo. Populated by `/start-project` step 6a from the long-form archive. |
-| **Skills (per-project)** | `<project>/.windsurf/skills/<name>/SKILL.md` | Workspace-scoped. Populated by `/start-project` step 6b from the L3 template if any. |
-| **Workflows (per-project)** | `<project>/.windsurf/workflows/<name>.md` | Workspace-scoped. Populated by `/start-project` step 6b. |
-| **Contracts (L1)** | `~/.windsurf/contracts/<name>.md` | Agent-internal — not Windsurf-loaded; consumed by skills/workflows that read them explicitly. |
+| **Skills (global)** | `~/.codeium/windsurf/skills/<name>/SKILL.md` | Multi-file. Read by Devin CLI and Windsurf. Invoked `/<name>` (Devin) or `@<name>` (Windsurf). Frontmatter: `name`, `description`, `activation`, `sources_consulted`, `adapted_for`; manual skills add `triggers: [user]` + `argument-hint`. **Must parse as strict YAML** — Devin silently drops a skill whose frontmatter does not (ADR-006 amendment). |
+| **Workflow stubs (global)** | `~/.codeium/windsurf/global_workflows/<name>.md` | 3-line redirect stubs only (`Superseded by the @<name> skill (ADR-037); invoke it.`). Keep Windsurf's `/<name>` menu resolving; Devin does not read this directory. No procedures live here. (`~/.codeium/windsurf/workflows/` is deprecated per ADR-016.) |
+| **Rules (global, concise/active)** | `~/.codeium/windsurf/memories/global_rules.md` | **Single file, ≤6000 chars.** Always-on in both tools, no frontmatter. The LAW that loads in every conversation. |
+| **Rules (global, long-form/reference)** | `~/Projects/cascade-system/docs/rules/<name>.md` | Multi-file with full frontmatter, rationale, provenance. The COMMENTARY. Not auto-loaded; available via reading. Every file declares `trigger:`. |
+| **Rules (per-project)** | `<project>/.devin/rules/<name>.md` | Workspace-scoped; Devin honours `trigger:`. `/start-project` step 6a copies **only the six `model_decision` long-forms** (+ `strict-docs-placement` from `_shared/scaffold/`, + L3 rules in 6b); always-on long-forms are referenced, not copied. Legacy `<project>/.windsurf/rules/` is still read. |
+| **Phases (per-project)** | `<project>/.devin/phases.yaml` | Runtime source of truth for `/run-phase`; copied from the L3 template by `/start-project` step 5. Readers fall back to legacy `.windsurf/phases.yaml`. |
+| **Skills (per-project)** | `<project>/.agents/skills/<name>/SKILL.md` | Cross-tool Agent Skills path (Devin, Claude Code, Cursor, Codex, Copilot; `npx skills add` target). Populated by `/start-project` step 6b from the L3 template. Not read by Windsurf — accepted trade-off (ADR-037). |
+| **AGENTS.md / CLAUDE.md (per-project)** | `<project>/AGENTS.md`, `<project>/CLAUDE.md` | Always-on pointer file (≤ ~20 lines, from `_shared/scaffold/`; type-specific scaffolds may override) + `@AGENTS.md` alias for Claude Code. |
+| **Contracts (L1)** | `~/.windsurf/contracts/<name>.md` | Agent-internal — not tool-loaded; consumed by skills that read them explicitly. |
 | **Templates (L3)** | `~/.windsurf/templates/<type>/` and `~/.windsurf/templates/_shared/` | Agent-internal; consumed by `/start-project` and `/add-project-type`. |
 | **Plans (current/historical)** | `~/.windsurf/plans/<slug>-<suffix>.md` | Cascade-authored plans before implementation. Not Windsurf-loaded. |
 | **ADRs** | `~/Projects/cascade-system/docs/decisions/ADR-NNN-<slug>.md` (meta-repo) or `<project>/docs/decisions/ADR-NNN-<slug>.md` (downstream) | One ADR per significant decision. Reserve NNN in `INDEX.md` first (per ADR-009). |
@@ -26,29 +27,33 @@ The L1 layer (global rules, skills, workflows, contracts, templates) is split ac
 
 ### Paths that are dead
 
-- `~/.windsurf/skills/`, `~/.windsurf/workflows/`, `~/.windsurf/rules/` → Windsurf does not scan them. The migration on 2026-04-30 (ADR-014) emptied these. Anything authored there will be invisible to Cascade.
+- `~/.windsurf/skills/`, `~/.windsurf/workflows/`, `~/.windsurf/rules/` → neither tool scans them. The migration on 2026-04-30 (ADR-014) emptied these. Anything authored there is invisible.
+- `~/.codeium/windsurf/global_workflows/` **for new content** → Devin does not import workflows (ADR-037). Stubs only.
+- `<project>/.windsurf/{rules,skills,workflows,phases.yaml}` **for new bootstraps** → consumer paths are `.devin/` + `.agents/` (ADR-037). Readers keep a legacy fallback for projects bootstrapped earlier.
 
-### Cross-agent fallback paths (informational only)
+### Cross-agent paths
 
-Windsurf also discovers skills under `~/.agents/skills/` and `.agents/skills/` for cross-agent compatibility (and `~/.claude/skills/`, `.claude/skills/` if Claude Code config reading is enabled). We do **not** use these as primary — `~/.codeium/windsurf/` is canonical.
+`<project>/.agents/skills/` is the **primary** consumer skill path since ADR-037 — it is the Agent Skills open-standard location read natively by Devin (and Claude Code, Cursor, Codex, Copilot) and the install target of `npx skills add`. Devin also reads `~/.agents/skills/`, `~/.config/devin/skills/`, `.devin/skills/`, `.windsurf/skills/` and (with Claude import on) `~/.claude/skills/`, `.claude/skills/`. Global L1 skills stay at `~/.codeium/windsurf/skills/` because that is the one global path both Devin and Windsurf read.
 
 ## How to update an L1 component
 
 Always route through `@update-horizontal`. Never edit L1 from outside that skill (exception: initial milestone authoring or `@write-skill` for new skills).
 
-For rule edits specifically, the skill enforces dual-update: long-form archive in `~/Projects/cascade-system/docs/rules/<name>.md` AND the corresponding section in `~/.codeium/windsurf/memories/global_rules.md`. The two are siblings, not source/derived. Run `wc -c ~/.codeium/windsurf/memories/global_rules.md` after every rule edit; must remain ≤6000.
+For rule edits specifically, the skill enforces dual-update: long-form archive in `~/Projects/cascade-system/docs/rules/<name>.md` AND the corresponding section in `~/.codeium/windsurf/memories/global_rules.md`. The two are siblings, not source/derived. Run `wc -m ~/.codeium/windsurf/memories/global_rules.md` after every rule edit; must remain ≤6000.
 
-For verification: invoke `@verify-l1` to confirm the layout is consistent before declaring an L1 change complete.
+For skill edits: after writing, parse the frontmatter block as strict YAML and confirm the skill appears in `devin skills list` (run from outside the skills directory; binary at `/Applications/Devin.app/Contents/Resources/app/extensions/windsurf/devin/bin/devin` if not on `PATH`). Six L1 skills were silently invisible to Devin before M4A.1 because of unquoted `: ` in frontmatter.
+
+For verification: invoke `@verify-l1` to confirm the layout is consistent before declaring an L1 change complete — and before opening any PR that touches L1.
 
 ## How to start a new project
 
 ```
-/start-project [<name> <type>]
+/start-project [<name> <type>] [--dry-run]
 ```
 
-The workflow walks 15 steps (validate type → scaffold → copy global rules → GitHub repo → initial commit → push → branch protection → Project v2 → milestones → brainstorm phase → handoff). See `~/.codeium/windsurf/global_workflows/start-project.md` for the procedure.
+The skill walks 15 steps (validate type → two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` + L3 skills into `.agents/skills/` → README → GitHub repo → initial commit → push → branch protection → Project v2 → milestones → first phase → handoff). See `~/.codeium/windsurf/skills/start-project/SKILL.md` for the procedure. A fresh tree carries `AGENTS.md` + `CLAUDE.md` from `_shared/scaffold/` and no `.windsurf/` directory.
 
-Recommended: hand off to a fresh Cascade after `/start-project` completes — running phases in a context-cleared session prevents state bleed.
+Recommended: hand off to a fresh session after `/start-project` completes — running phases in a context-cleared session prevents state bleed.
 
 ## How to run a phase
 
@@ -56,7 +61,7 @@ Recommended: hand off to a fresh Cascade after `/start-project` completes — ru
 /run-phase <phase-name>
 ```
 
-Looks up the phase in the project's `.windsurf/phases.yaml`, runs pre-checks, invokes the phase's skill, runs post-checks, hints at the next phase. Contract source: `~/.windsurf/contracts/phase-taxonomy.md`.
+Looks up the phase in the project's `.devin/phases.yaml` (legacy fallback: `.windsurf/phases.yaml`), runs pre-checks, hands off to the phase's skill, runs post-checks, hints at the next phase. Contract source: `~/.windsurf/contracts/phase-taxonomy.md`.
 
 ## Sprint lifecycle
 
@@ -82,9 +87,12 @@ The audit driver-breakdown (M2D.0–M2D.4 ~100k-token session) is preserved in A
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `@skills:` shows nothing | Skills authored at deprecated `~/.windsurf/skills/` instead of canonical `~/.codeium/windsurf/skills/` | Move them. Run `@verify-l1`. |
-| Slash command not in list | Workflow missing `description:` frontmatter, or authored at deprecated path (`~/.codeium/windsurf/workflows/`) instead of `~/.codeium/windsurf/global_workflows/` (per ADR-016) | Add frontmatter or move file to `global_workflows/`. |
-| Global rule "not taking effect" | Section missing from `global_rules.md`, OR file exceeds 6000 chars (silent truncation) | `wc -c` the file; ensure rule has a `## <name>` section. |
-| Per-project rule out of date | Global rule edited after `/start-project` ran; per-project copy is stale | Manual `cp` from archive, or run `/sync-rules` (planned). |
+| A skill is missing from `devin skills list` / `/name` completion (Devin) | Its frontmatter does not parse as strict YAML (unquoted `: ` or a value starting with a backtick) — Devin drops it silently | Quote the scalar; re-run `devin skills list` from outside the skills dir. `@verify-l1` step 3 catches this. |
+| `/name` in Devin says "unknown skill" for a former workflow | The procedure is still only in `global_workflows/` (Devin does not import workflows) | Re-home it as a manual skill per ADR-037; leave a stub. |
+| Slash command not in Windsurf's list | Stub missing `description:` frontmatter, or authored at deprecated path (`~/.codeium/windsurf/workflows/`) instead of `~/.codeium/windsurf/global_workflows/` (per ADR-016) | Add frontmatter or move the stub to `global_workflows/`. |
+| Global rule "not taking effect" | Section missing from `global_rules.md`, OR file exceeds 6000 chars (silent truncation) | `wc -m` the file; ensure rule has a `## <name>` section. |
+| A per-project rule behaves as agent-decided in Devin but always-on elsewhere | Rule file has `description:` but no `trigger:` | Add an explicit `trigger:` (every rule file must declare one). |
+| Per-project rule out of date | Global rule edited after `/start-project` ran; per-project copy is stale | Manual `cp` from archive, or run `/sync-rules` (planned). Only the six `model_decision` rules are copied post-ADR-037. |
 | Cascade ignored a rule | Rule is `model_decision`-triggered and the description didn't match the conversation context | Either rewrite the description for better activation OR promote to `always_on`. |
 
 ## Pointers
@@ -95,21 +103,24 @@ For the long-form rule archive index: `docs/rules/INDEX.md`. For the live (conci
 
 ## Invocation cheat-sheet
 
-| Intent | Syntax | Auto-activates? |
-|---|---|---|
-| Use a skill | `@<skill-name>` | Yes — description-match on user phrasing |
-| Browse skills in a dropdown | `@skills:` then pick | n/a |
-| Use a manual rule | `@<rule-name>` | n/a (manual rules are never auto-loaded) |
-| Run a workflow | `/<workflow-name>` | Never auto |
-| Browse workflows in a dropdown | `/` then pick | n/a |
+Per ADR-037 (supersedes ADR-015's table). There is one artifact kind for procedures — skills — invoked differently per tool:
 
-`@rules:` dropdown shows only `manual`-trigger rules plus any `AGENTS.md` — by Windsurf design (docs [chunk 340](https://docs.windsurf.com/llms-full.txt)). Always-on and `model_decision` rules are silently active in every message; they are **not** listed in any dropdown and do **not** need (or benefit from) `@rules:` invocation. We currently have zero manual-trigger rules.
+| Intent | Devin CLI | Windsurf | Auto-activates? |
+|---|---|---|---|
+| Use an auto skill (`@grill-me`, `@to-prd`, …) | `/<name>` | `@<name>` | Yes — description-match on user phrasing (Devin: `triggers` default `[user, model]`) |
+| Use a manual skill (former workflow: `/start-project`, `/run-phase`, `/commit`, …) | `/<name>` | `@<name>`, or `/<name>` via the redirect stub | **Never** — `triggers: [user]` + `activation: manual`; description starts "Manual: …" |
+| Browse skills | `/` then type | `@skills:` dropdown | n/a |
+| Use a manual rule | n/a | `@<rule-name>` | n/a (manual rules are never auto-loaded); we currently have zero |
 
-Workflows are slash-only. The `@` prefix does not resolve workflow names (docs [chunk 362](https://docs.windsurf.com/llms-full.txt): *"Manual only via `/[workflow-name]` slash command"*).
+In this documentation, `@<name>` denotes a judgment-heavy (auto) skill and `/<name>` a manual deterministic one — a readability convention inherited from ADR-015, not a difference in artifact kind. Both forms resolve in `phases.yaml` `skill:` values.
 
-The `docs/rules/` long-form archive is a human/agent reference; Windsurf does not scan it as rules (ADR-014 hybrid model). Active rules live in `~/.codeium/windsurf/memories/global_rules.md`.
+`@rules:` dropdown (Windsurf) shows only `manual`-trigger rules plus any `AGENTS.md` — by Windsurf design (docs [chunk 340](https://docs.windsurf.com/llms-full.txt)). Always-on and `model_decision` rules are silently active in every message. In Devin, `.devin/rules/*.md` honour the same `trigger:` values; a rule file without `trigger:` is agent-decided in Devin and always-on in nothing — declare it explicitly.
 
-Source: `https://docs.windsurf.com/llms-full.txt` chunks 338, 340, 352, 362.
+The workflow layer is stubs only: `~/.codeium/windsurf/global_workflows/<name>.md` tells Windsurf to invoke `@<name>`; Devin does not read it (Devin docs `reference/configuration/read-config-from.mdx`: workflows are not imported).
+
+The `docs/rules/` long-form archive is a human/agent reference; neither tool scans it as rules (ADR-014 hybrid model). Active rules live in `~/.codeium/windsurf/memories/global_rules.md`.
+
+Source: `https://docs.windsurf.com/llms-full.txt` chunks 338, 340, 352, 362; Devin CLI docs on disk `extensibility/skills/overview.mdx`, `extensibility/rules.mdx`, `reference/configuration/read-config-from.mdx`.
 
 ## Mental model
 
@@ -117,9 +128,9 @@ Cascade operates across four layers. Each layer has a distinct authoring discipl
 
 | Layer | What lives here | Canonical location | Edit discipline |
 |---|---|---|---|
-| **L0** | User + Windsurf IDE + system shell | Fixed substrate | n/a — not authored |
-| **L1** | Cross-project system: global rules, skills, workflows, contracts, L3 templates, meta-repo ADRs | `~/.codeium/windsurf/` (active surface) + `~/Projects/cascade-system/` (long-form docs) | `@propose-extension` dispatches to `@write-skill` / `@update-horizontal` / direct-write by route |
-| **L2** | Per-project: project-scoped rules, skills, workflows, handoffs, retros, ADRs | `<project>/.windsurf/` + `<project>/docs/` | Direct authoring within the project; per-project rules may mirror L1 long-form archive via `/start-project` step 6a |
+| **L0** | User + Devin CLI / Windsurf IDE + system shell | Fixed substrate | n/a — not authored |
+| **L1** | Cross-project system: global rules, skills (incl. manual former workflows), contracts, L3 templates, meta-repo ADRs | `~/.codeium/windsurf/` (active surface) + `~/Projects/cascade-system/` (long-form docs) | `@propose-extension` dispatches to `@write-skill` / `@update-horizontal` / direct-write by route |
+| **L2** | Per-project: project-scoped rules, skills, `phases.yaml`, `AGENTS.md`, handoffs, retros, ADRs | `<project>/.devin/` + `<project>/.agents/skills/` + `<project>/docs/` (legacy `<project>/.windsurf/`) | Direct authoring within the project; per-project rules are the six on-demand L1 long-forms + L3 rules via `/start-project` step 6a/6b |
 | **L3** | Project-type templates (Python ML, Next.js, thesis/research, etc.) | `~/.windsurf/templates/<type>/` | `/add-project-type` to bootstrap; `@write-skill` + `@update-horizontal` to modify |
 
 ### Meta-repo vs project repo
@@ -127,7 +138,7 @@ Cascade operates across four layers. Each layer has a distinct authoring discipl
 Two distinct git repos carry different responsibilities:
 
 - **`cascade-system/`** — the L1 meta-repo: long-form documentation (ADRs, rule archive, handoffs, retros), learning queue, vendored reference skills in `refs/`. Immutable history via conventional-commits + PR discipline. Active L1 surface (`~/.codeium/windsurf/{skills,global_workflows,memories}/`) is operationally separate and currently unversioned (M-2 storage decision deferred).
-- **`portfolio-website/`, `hafenhut/`, `FH-Wedel-thesis/`, …** — project repos carrying L2 artifacts alongside domain code. Each has its own `.windsurf/` with project-scoped rules/skills/workflows.
+- **`portfolio-website/`, `hafenhut/`, `FH-Wedel-thesis/`, …** — project repos carrying L2 artifacts alongside domain code. Each has its own `.devin/` (rules, `phases.yaml`) + `.agents/skills/` (legacy: `.windsurf/`) with project-scoped rules/skills.
 
 The two are coupled through `/start-project` (seeds a new project repo with a snapshot of relevant L1 rules) and `@update-horizontal` (propagates L1 changes to downstream projects when an L1 rule is modified).
 

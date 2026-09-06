@@ -1,6 +1,6 @@
 # ADR-015: Skill vs workflow invocation syntax
 
-**Status**: Accepted
+**Status**: Accepted — **invocation table superseded by ADR-037** (2026-09-06). Devin CLI does not import workflows, so the ten L1 workflows are now skills; in Devin every skill is invoked as `/<name>`, in Windsurf as `@<name>` (the `/<name>` stubs in `global_workflows/` redirect). The skill-vs-workflow *design* distinction (judgment-heavy vs deterministic) survives as `triggers: [user]` + `activation: manual` on the converted skills; the syntax rule "skills are always `@`, workflows are always `/`" no longer holds.
 **Date**: 2026-04-30
 **Source**: Cascade discovery verification (Sprint 2 prep) — fresh Cascade session confirmed the `/<skill-name>` convention used throughout Sprint 1 skill bodies is wrong. Windsurf docs review at `https://docs.windsurf.com/windsurf/cascade/skills` (chunk 352) and `https://docs.windsurf.com/windsurf/cascade/workflows` (chunk 361) confirmed the correct syntax.
 

@@ -1,6 +1,6 @@
 # ADR-014: L1 canonical storage paths
 
-**Status**: Accepted
+**Status**: Accepted (amended by ADR-016 — workflow path row; amended by ADR-037 — workflows re-homed as skills, `global_workflows/` = redirect stubs, per-project rows moved to `<project>/.devin/rules/` + `<project>/.devin/phases.yaml` + `<project>/.agents/skills/`, per-project rule copies reduced to the six `model_decision` long-forms. The skills row, the hybrid rule model, and the `~/.windsurf/` prohibition remain in force.)
 **Date**: 2026-04-30
 **Supersedes**: none (extends ADR-006 path conventions; ADR-012/013 references to `~/.windsurf/workflows/commit.md` remain as historical record but their canonical path is now `~/.codeium/windsurf/workflows/commit.md`)
 **Source**: User-driven discovery during Sprint 1 hardening — `@skills:` returned empty results in fresh Cascade conversations despite skills being authored under `~/.windsurf/skills/`. Windsurf documentation review (`https://docs.windsurf.com/llms-full.txt` chunks 30, 128, 340, 347, 350, 353) confirmed Windsurf does not scan `~/.windsurf/`.
