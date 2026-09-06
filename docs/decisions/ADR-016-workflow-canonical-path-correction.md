@@ -1,6 +1,6 @@
 # ADR-016: Workflow canonical path correction
 
-**Status**: Accepted
+**Status**: Accepted (amended by ADR-037, 2026-09-06 — `~/.codeium/windsurf/global_workflows/` remains the location Windsurf scans for `/<name>`, but it now holds only 3-line redirect stubs; the procedures live at `~/.codeium/windsurf/skills/<name>/SKILL.md`. Devin does not read this directory at all.)
 **Date**: 2026-04-30
 **Supersedes**: ADR-014 — workflow-path row only. All other ADR-014 decisions (skill path, rules path, deprecated-path prohibition, hybrid rule model) remain in force.
 **Source**: Cascade discovery verification (Sprint 2 prep) — fresh Cascade session confirmed workflows were invisible in the `/`-menu despite files existing on disk. Windsurf docs confirmed the wrong path was recorded in ADR-014.

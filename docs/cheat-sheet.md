@@ -9,18 +9,21 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 - `docs/skills/INDEX.md` and `docs/workflows/INDEX.md` — pointer indexes (machine-maintained by `@docs-refresh`)
 - `docs/rules/INDEX.md` — long-form rule archive
 
-**Authoritative paths** (per ADR-014):
+**Authoritative paths** (per ADR-014 + ADR-037 — Devin-first, Windsurf-compatible):
 
-- Active L1 surface: `~/.codeium/windsurf/skills/<name>/SKILL.md`, `~/.codeium/windsurf/global_workflows/<name>.md`, `~/.codeium/windsurf/memories/global_rules.md`
+- Active L1 surface: `~/.codeium/windsurf/skills/<name>/SKILL.md` (read by Devin **and** Windsurf; the single content home — former workflows included), `~/.codeium/windsurf/memories/global_rules.md`
+- `~/.codeium/windsurf/global_workflows/<name>.md` — **redirect stubs only** (keep Windsurf's `/name` menu resolving; Devin does not read them)
 - L1 contracts + templates: `~/.windsurf/contracts/`, `~/.windsurf/templates/`
-- L2 workspace overlays: `<project>/.windsurf/{rules,skills,workflows}/`
+- L2 consumer overlays: `<project>/.devin/rules/` (six on-demand rules + `strict-docs-placement` + L3 rules), `<project>/.devin/phases.yaml`, `<project>/.agents/skills/` (L3 + third-party skills). Legacy `<project>/.windsurf/` is read as a fallback only.
 - Plan files: `~/.windsurf/plans/<slug>-<suffix>.md`
+
+**Invocation**: every skill is `/<name>` in Devin CLI and `@<name>` in Windsurf. Skills marked *manual* below carry `triggers: [user]` + `activation: manual` — never auto-invoked.
 
 ---
 
-## 1 — Skills (13)
+## 1 — Skills (27)
 
-`@<skill-name>` — auto-activated by description match. Per ADR-015, skills are stateful, judgment-heavy, multi-step.
+17 judgment-heavy skills (auto-activated by description match) + 10 **manual** deterministic procedures (the former workflows, re-homed by ADR-037).
 
 | Skill | Purpose | Phase / when |
 |---|---|---|
@@ -30,35 +33,36 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 | `@sync-github` | Reconcile Project board with repo signals; flag naked commits; idempotent | board has drifted; before `@sprint-review` |
 | `@sprint-review` | Heartbeat retro: drain queue, write retro, propose L1 promotions, hand off to `@update-horizontal` | milestone close |
 | `@update-horizontal` | Apply L1 change (rule/skill/workflow/contract/template); writes change ADR; propagates downstream | invoked by `@sprint-review` after L1 promotion |
-| `@verify-l1` | Validate L1 storage layout against ADR-014; check rule cap; flag drift | read-only audit, idempotent |
+| `@verify-l1` | Validate L1 layout against ADR-014/016/037; strict-YAML frontmatter parse + `devin skills list` cross-check; rule cap; drift; dead-path sweeps | read-only audit, idempotent; before any L1-touching PR |
 | `@docs-refresh` | Validate + regenerate `docs/` placement; regenerate INDEX files; audit diagrams | after ADR/handoff/retro changes |
-| `@release-manager` | Orchestrate branch lifecycle: branch → commits → push → PR → CI → squash-merge → cleanup | every `main`-bound change |
+| `@release-manager` | Orchestrate branch lifecycle: branch → commits → push → PR → CI → squash-merge → cleanup (delegates to the four manual helper skills) | every `main`-bound change |
 | `@propose-extension` | **Single intake channel** for any system extension; 5-question interview, route table | "I want to add a new rule/skill/workflow" |
 | `@write-skill` | Author/edit a skill body (frontmatter, structure, sources_consulted) | invoked by `@propose-extension` for skill routes |
 | `@vault-research` | Surface ranked vault notes for a topic via structural composite ranking. READ bookend of `@vault-distill` | `@grill-me` / `@to-prd` vault-context load, `/recalibrate` vault-drift triage, standalone topic exploration |
 | `@vault-distill` | Compile raw vault sources → `wiki/` cards per ADR-023 §8 ingest workflow; dry-run tempdir preview + `--commit` atomic write. WRITE bookend of `@vault-research` | ingest clippings / papers / books / _inbox into vault; dogfood ADR → `wiki/sources/adrs/` per ADR-030 |
+| `@begin` | Front door for new projects: `@grill-me` → stack decision → `/add-project-type` (if needed) → `/start-project` → `/run-phase brainstorm` | "I have a new idea" (ADR-019) |
+| `@kickoff` | Front door for vertical pickups: reads handoff + plan + ADRs + cheat-sheet, detects lifecycle position, files missing issues, asks one question | "pick up Cascade X" / `@kickoff <handoff>` (ADR-020) |
+| `@handoff-to-coding-session` / `@handoff-to-thinking-session` | Write a context-bundle handoff for a fresh session in the phase-fit model | phase-type transition (ADR-034) |
+| `/start-project` *(manual)* | Bootstrap new project from L3 template (15 steps): two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` → L3 skills into `.agents/skills/` → repo + branch protection + Project + milestones → first-phase handoff; `--dry-run` | new project (via `@begin` or directly) |
+| `/run-phase <name>` *(manual)* | Dispatcher — reads `<project>/.devin/phases.yaml` (legacy `.windsurf/` fallback) and hands off to the phase's skill (no arg = list phases with status) | every phase transition |
+| `/recalibrate` *(manual)* | Detect/resolve drift between PRD §11, GitHub state, recent commits, vault; per-finding triage | `plan-drift-watcher` fires; before `@sprint-review` |
+| `/add-project-type` *(manual)* | Bootstrap new L3 template at `~/.windsurf/templates/<type>/` (12 steps + ADR + dry-run) | new project archetype |
+| `/commit` *(manual)* | Safe multi-paragraph git commit (tempfile + `git commit -F`); bypasses the macOS-Windsurf newline crash (ADR-013) | any commit with a body |
+| `/branch-start` *(manual)* | (helper for `@release-manager`) — start branch or worktree from `main` | start of a `main`-bound change |
+| `/branch-push-and-pr` *(manual)* | (helper) — push + open PR after user approves the drafted description | after commits |
+| `/ci-watch` *(manual)* | (helper) — watch PR's CI status with adaptive cadence; clean exit when no CI configured | after PR open |
+| `/branch-merge-and-cleanup` *(manual)* | (helper) — 4-option closeout; squash-merge + delete branch + sync `main` | PR approved |
+| `/issue-create` *(manual)* | Create a GitHub issue + atomically add it to the Project v2 board; forcing function for `issue-project-assignment-required` | every issue in a Project-tracked repo (ADR-036) |
 
-Canonical paths: `~/.codeium/windsurf/skills/<name>/SKILL.md`. Maintained index: `docs/skills/INDEX.md`.
+Canonical paths: `~/.codeium/windsurf/skills/<name>/SKILL.md`. Maintained index: `docs/skills/INDEX.md`. Every frontmatter block must parse as strict YAML (ADR-006 amendment) — Devin silently drops skills that don't.
 
 ---
 
-## 2 — Workflows (9)
+## 2 — Workflows → compatibility stubs (10)
 
-`/<workflow-name>` — slash-only, no auto-activation. Per ADR-015, workflows are deterministic procedures.
+Per ADR-037 the workflow layer no longer holds procedures: Devin CLI does not import Windsurf workflows, so the ten workflows above are skills. `~/.codeium/windsurf/global_workflows/<name>.md` files are 3-line redirect stubs (`Superseded by the @<name> skill (ADR-037); invoke it.`) kept so Windsurf's `/<name>` menu resolves and nothing is deleted (ADR-011). Do not add new content there — a new deterministic procedure is a manual skill via `@propose-extension` → `@write-skill`.
 
-| Workflow | Purpose |
-|---|---|
-| `/start-project` | Bootstrap new project from L3 template (15 steps): scaffold + repo + Project + milestones + first-phase handoff |
-| `/run-phase <name>` | Dispatcher — reads `<project>/.windsurf/phases.yaml` and invokes the named phase's skill (no arg = list phases with status) |
-| `/recalibrate` | Detect/resolve drift between PRD §11, GitHub state, recent commits; per-finding triage |
-| `/add-project-type` | Bootstrap new L3 template at `~/.windsurf/templates/<type>/` (12 steps + ADR) |
-| `/branch-start` | (helper for `@release-manager`) — start branch or worktree |
-| `/branch-push-and-pr` | (helper) — push + `gh pr create --fill` |
-| `/ci-watch` | (helper) — watch PR's CI status with adaptive cadence; clean exit when no CI configured |
-| `/branch-merge-and-cleanup` | (helper) — squash-merge + delete branch + sync `main` |
-| `/commit` | Safe multi-paragraph git commit (tempfile + `git commit -F`); bypasses macOS-Windsurf newline crash (per ADR-013) |
-
-Canonical paths: `~/.codeium/windsurf/global_workflows/<name>.md`. Maintained index: `docs/workflows/INDEX.md`.
+Maintained index: `docs/workflows/INDEX.md` (stub → skill table).
 
 ---
 
@@ -76,7 +80,7 @@ Canonical paths: `~/.codeium/windsurf/global_workflows/<name>.md`. Maintained in
 | **Documentation** | `document-as-you-go`, `adapt-from-all` |
 | **Plan / lifecycle hygiene** | `no-quantity-over-shape`, `no-time-estimates`, `bidirectional-learning-pipe`, `plan-drift-watcher`, `sprint-review-prompt` |
 
-**3 workspace-only** at `<project>/.windsurf/rules/<name>.md` (deployed by `/start-project` step 6a; trigger: `model_decision`; long-form lives in `docs/rules/`; **no concise entry** in `global_rules.md` per Windsurf-treats-global-as-always-on constraint):
+**3 workspace-only** at `<project>/.devin/rules/<name>.md` (trigger: `model_decision`; long-form lives in `docs/rules/`; **no concise entry** in `global_rules.md` per Windsurf-treats-global-as-always-on constraint). Per ADR-037, `/start-project` step 6a deploys exactly the six `model_decision` long-forms into `<project>/.devin/rules/` — these three plus `context7-and-docs-first`, `plan-drift-watcher`, `sprint-review-prompt` — and **references** the 15 `always_on` long-forms instead of copying them (their concise versions already load via `global_rules.md`; copying doubled per-session rule tokens under Devin). Every rule file declares `trigger:` explicitly.
 
 - `know-your-hardware` (ADR-018) — alerts on resource-heavy intent; AWS escalation requires explicit user approval with budget surfaced
 - `obsidian-context-priming` (ADR-028) — primes Cascade on the Obsidian vault at session start when the active project has vault co-location; three-tier load with privacy guardrails
@@ -104,7 +108,7 @@ Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 | `nextjs-app` | not built yet | Pattern B (generic, CMS/DB apps) — stays deferred until a project demands it; `nextjs-marketing-site` covers the brochure archetype |
 | `python-pipeline` | not built yet | Pattern D — data pipeline; defer until first project demands it |
 
-Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold/` + optional `rules/` + `skills/` + `workflows/` overlays.
+Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold/` + optional `rules/` + `skills/` overlays (+ optional `skills.yaml` for third-party installs once ADR-038 lands; `workflows/` is deprecated per ADR-037 — ship manual skills instead). `_shared/scaffold/` contributes `docs/`, `.devin/rules/strict-docs-placement.md`, `AGENTS.md`, `CLAUDE.md` to every consumer.
 
 ---
 
@@ -116,7 +120,7 @@ Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold
 |---|---|
 | New skill (any layer) | invokes `@write-skill` |
 | New rule (any layer) | direct authoring (L1 dual: long-form archive + concise `global_rules.md`; L2/L3: workspace/template path) |
-| New workflow (any layer) | direct authoring at canonical path |
+| New workflow (any layer) | per ADR-037: a manual skill (`triggers: [user]` + `activation: manual`) via `@write-skill` at that layer's skill path — never new content under `global_workflows/` |
 | New contract (L1) | direct authoring at `~/.windsurf/contracts/<name>.md` |
 | New L3 project type | invokes `/add-project-type` |
 | Modify existing L1 artifact | invokes `@update-horizontal` |
@@ -124,7 +128,7 @@ Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold
 | AGENTS.md (any workspace root) | direct authoring at `<project>/AGENTS.md` |
 | Capture-only (defer build) | append to `cascade-system/queue/pending-review.md` |
 
-**Never** author L1 artifacts under `~/.windsurf/skills/`, `~/.windsurf/workflows/`, or `~/.windsurf/rules/` — those paths are dead per ADR-014 and Windsurf does not scan them.
+**Never** author L1 artifacts under `~/.windsurf/skills/`, `~/.windsurf/workflows/`, or `~/.windsurf/rules/` — those paths are dead per ADR-014 and neither tool scans them. **Never** add content under `~/.codeium/windsurf/global_workflows/` — stubs only per ADR-037.
 
 ---
 
@@ -135,7 +139,7 @@ Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold
 | Start a project from a new idea or brainstorm note | `@begin` | Reads the idea note, runs `@grill-me`, decides L3 stack, dispatches to `/add-project-type` (if needed) → `/start-project` → `/run-phase brainstorm` |
 | Pick up a vertical Cascade from a handoff doc | `@kickoff` | Reads handoff + parent plan + cited ADRs + cheat-sheet, determines lifecycle position, files vertical's milestone issues if missing, asks ONE focused starting question |
 | Resume work in an existing project | open the project directory | `AGENTS.md` auto-loads + L2 rules auto-load; ask *"what's in flight?"* or invoke `/run-phase` (no arg) to list phases with artifact status |
-| Land a change to `main` | `@release-manager` | Orchestrates branch → commits → push → PR → CI → squash-merge → cleanup (delegates to 4 helper workflows) |
+| Land a change to `main` | `@release-manager` | Orchestrates branch → commits → push → PR → CI → squash-merge → cleanup (delegates to the 4 manual helper skills `/branch-start`, `/branch-push-and-pr`, `/ci-watch`, `/branch-merge-and-cleanup`) |
 | Close a sprint milestone | `@sprint-review` | Drains queue, writes retro, decides L1 promotions, hands off to `@update-horizontal` |
 
 ---

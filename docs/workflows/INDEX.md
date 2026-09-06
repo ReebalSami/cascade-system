@@ -1,41 +1,50 @@
-# Workflows index — pointer to canonical L1 surface
+# Workflows index — compatibility stubs (ADR-037)
 
-This file is a **pointer index**. It lists every L1 workflow with a one-line description and a link to its canonical workflow location at `~/.codeium/windsurf/global_workflows/<name>.md` (per ADR-014 + ADR-016).
+This file is a **pointer index** for `~/.codeium/windsurf/global_workflows/<name>.md`. Since ADR-037 (2026-09-06) that directory holds **3-line redirect stubs only**: Devin CLI does not import Windsurf workflows (Devin docs, `reference/configuration/read-config-from.mdx`), so every procedure that used to live here is now a skill at `~/.codeium/windsurf/skills/<name>/SKILL.md` with `triggers: [user]` + `activation: manual`. The stubs exist so Windsurf's `/<name>` slash menu still resolves and nothing is deleted (ADR-011).
 
-Workflows are **not duplicated here** — only catalogued. The single source of truth for each workflow body is the file at the canonical L1 path. To read a workflow's full procedure, hard gates, idempotency rules, and provenance, open the linked file.
+Do **not** add new content under `global_workflows/`. A new deterministic procedure is a manual skill — route it through `@propose-extension` → `@write-skill`.
 
-Per ADR-015, workflows are deterministic procedures invoked via `/<name>` slash commands. They do **not** auto-activate by description match (only skills do that). For the skill-vs-workflow distinction, see ADR-015.
+For the skills themselves (descriptions, canonical paths, activation), see `docs/skills/INDEX.md`. For a higher-level view, see `docs/cheat-sheet.md` and `docs/architecture/system-overview.mmd`.
 
-For a higher-level view of how workflows fit into the system, see `docs/cheat-sheet.md` (single-page system inventory) and `docs/architecture/system-overview.mmd` (visual layer diagram).
+## Stubs
 
-## Workflows
-
-| Workflow | Concise description | Canonical path |
+| Stub (`/<name>` in Windsurf) | Redirects to | Skill path |
 |---|---|---|
-| `/start-project` | Bootstrap new project from L3 template (15 steps): scaffold + repo + Project + milestones + first-phase handoff | `~/.codeium/windsurf/global_workflows/start-project.md` |
-| `/run-phase` | Dispatcher — reads `<project>/.windsurf/phases.yaml` and invokes the named phase's skill (no arg = list phases with status) | `~/.codeium/windsurf/global_workflows/run-phase.md` |
-| `/recalibrate` | Detect/resolve drift between PRD §11 slices, GitHub state, and recent commits; per-finding triage | `~/.codeium/windsurf/global_workflows/recalibrate.md` |
-| `/add-project-type` | Bootstrap new L3 template at `~/.windsurf/templates/<type>/` (12 steps + ADR) | `~/.codeium/windsurf/global_workflows/add-project-type.md` |
-| `/branch-start` | (helper for `@release-manager`) — start branch or worktree from `main` with conventional-commit prefix | `~/.codeium/windsurf/global_workflows/branch-start.md` |
-| `/branch-push-and-pr` | (helper) — push branch + open PR via `gh pr create --fill`; idempotent | `~/.codeium/windsurf/global_workflows/branch-push-and-pr.md` |
-| `/ci-watch` | (helper) — watch PR's CI status with adaptive cadence; clean exit when no CI configured | `~/.codeium/windsurf/global_workflows/ci-watch.md` |
-| `/branch-merge-and-cleanup` | (helper) — squash-merge + delete branch (remote + local) + sync `main` | `~/.codeium/windsurf/global_workflows/branch-merge-and-cleanup.md` |
-| `/commit` | Safe multi-paragraph git commit (tempfile + `git commit -F`); bypasses macOS-Windsurf newline crash per ADR-013 | `~/.codeium/windsurf/global_workflows/commit.md` |
+| `/start-project` | `@start-project` | `~/.codeium/windsurf/skills/start-project/SKILL.md` |
+| `/run-phase` | `@run-phase` | `~/.codeium/windsurf/skills/run-phase/SKILL.md` |
+| `/recalibrate` | `@recalibrate` | `~/.codeium/windsurf/skills/recalibrate/SKILL.md` |
+| `/add-project-type` | `@add-project-type` | `~/.codeium/windsurf/skills/add-project-type/SKILL.md` |
+| `/branch-start` | `@branch-start` | `~/.codeium/windsurf/skills/branch-start/SKILL.md` |
+| `/branch-push-and-pr` | `@branch-push-and-pr` | `~/.codeium/windsurf/skills/branch-push-and-pr/SKILL.md` |
+| `/ci-watch` | `@ci-watch` | `~/.codeium/windsurf/skills/ci-watch/SKILL.md` |
+| `/branch-merge-and-cleanup` | `@branch-merge-and-cleanup` | `~/.codeium/windsurf/skills/branch-merge-and-cleanup/SKILL.md` |
+| `/commit` | `@commit` | `~/.codeium/windsurf/skills/commit/SKILL.md` |
+| `/issue-create` | `@issue-create` | `~/.codeium/windsurf/skills/issue-create/SKILL.md` |
+
+Stub shape (every file):
+
+```markdown
+---
+description: "Superseded by the @<name> skill (ADR-037); invoke it."
+---
+Superseded by the `@<name>` skill (ADR-037); invoke it.
+```
 
 ## Notes
 
-- This index is **maintained by `@docs-refresh`**. When a new L1 workflow is authored at `~/.codeium/windsurf/global_workflows/<name>.md`, run `@docs-refresh` to regenerate this table.
-- The 4 helper workflows (`/branch-*`, `/ci-watch`) compose into `@release-manager` per ADR-018, but each is also independently invocable. The skill orchestrates judgment-heavy decisions across them; the workflows execute the deterministic steps.
-- The originals lived at `~/.windsurf/workflows/` until 2026-04-30 when ADR-014 relocated them, then again at `~/.codeium/windsurf/workflows/` until ADR-016 corrected the canonical path to `global_workflows/`. The two former paths are **deprecated** because Windsurf does not scan them.
-- L2 (per-project) and L3 (template) workflows are **not listed here** — they're scoped to their workspace/template. Each project's `<project>/.windsurf/workflows/` is its own surface.
-- Workflows do not have an `activation` field (only skills do per ADR-006). All workflows fire only when their slash command is typed.
-- For a one-page summary of all artifacts plus how to extend the system, see `docs/cheat-sheet.md`.
+- In Devin CLI, `/<name>` invokes the skill directly; the stub directory is not read at all.
+- In Windsurf, typing `/<name>` loads the stub, which tells Cascade to invoke `@<name>`; the skill's `description` starts with "Manual: …" so it never auto-activates by description match.
+- `@verify-l1` step 4 checks that every stub has a `description`, redirects to an existing skill, and has not grown a body (content belongs in the skill).
+- History: the originals lived at `~/.windsurf/workflows/` until 2026-04-30 (ADR-014), then `~/.codeium/windsurf/workflows/` until ADR-016 corrected the path to `global_workflows/`, then were re-homed as skills by ADR-037. The two former paths are **deprecated**; `global_workflows/` is stubs-only.
+- L2 (per-project) and L3 (template) `workflows/` directories are likewise deprecated: `/start-project` deploys any legacy L3 `workflows/` into `<project>/.agents/skills/` for compatibility and `/add-project-type` no longer proposes them.
 
 ## Source
 
+- ADR-037 (Devin runtime adoption cluster) — workflows → skills; stubs kept per ADR-011
 - ADR-014 (L1 canonical storage paths) — initial migration to `~/.codeium/windsurf/`
 - ADR-016 (workflows path correction) — `workflows/` → `global_workflows/` (Windsurf scans the latter)
-- ADR-015 (`@` skills vs `/` workflows) — invocation syntax + skill-vs-workflow choice rationale
+- ADR-015 (`@` skills vs `/` workflows) — original invocation syntax; invocation table superseded by ADR-037
 - ADR-013 (commit forcing function) — origin of `/commit`
 - ADR-018 (release-discipline cluster) — origin of `/branch-*` helpers + `/ci-watch`
+- ADR-036 (issue-project-assignment rule) — origin of `/issue-create`
 - Sprint 1.5.4 (this index) — companion to `docs/skills/INDEX.md` and `docs/rules/INDEX.md`

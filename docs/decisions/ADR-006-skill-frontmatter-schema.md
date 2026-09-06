@@ -53,6 +53,16 @@ adapted_for:                               # required (may be empty list); per a
 - `phase` — if the skill maps to a phase taxonomy entry (e.g., `phase: brainstorm`), aids `/run-phase` resolution
 - `produces_artifacts` — list of expected output paths (mirrors `phases.yaml` `artifacts` field for skills invoked outside `/run-phase`)
 - `requires_skills` — skills this one calls/depends on (forward-references allowed in docs)
+- `triggers` — list, Devin CLI semantics (`user`, `model`; default both). **Added by ADR-037**: every `activation: manual` skill sets `triggers: [user]` so Devin never auto-invokes it; `activation` remains the ADR-006 field Windsurf-side authoring reads, `triggers` is what Devin enforces. Manual skills also start their `description` with `Manual:` so Windsurf's description-matching never fires.
+- `argument-hint` — string shown after the slash command in Devin completions (e.g. `"[<name> <type>] [--dry-run]"`). **Added by ADR-037**; omit when the skill takes no arguments.
+
+### Frontmatter must be strict YAML (amendment, ADR-037 apply — 2026-09-06)
+
+Devin parses the block with a strict YAML parser and **silently drops the skill** if parsing fails — it vanishes from `devin skills list` and `/name` completion with no error. Six L1 skills were invisible this way until M4A.1. Rules:
+
+- Quote any scalar (description or list item) that contains `: ` (colon-space) — otherwise the parser reads a nested mapping and errors on the second colon.
+- Quote any scalar that begins with a YAML reserved indicator: `` ` `` `@` `*` `&` `!` `%` `|` `>` `#` `-` `?` `[` `{`.
+- Gate before shipping: extract the block and parse it (e.g. `ruby -ryaml -e 'YAML.safe_load(File.read(ARGV[0]))'`); for L1 skills also confirm the name appears in `devin skills list`. `@write-skill` step 8 and `@verify-l1` step 3 carry the gate.
 
 ### Forbidden in frontmatter
 
@@ -74,7 +84,7 @@ adapted_for:                               # required (may be empty list); per a
 - L3-template skills (Sprint 2 onward) inherit this schema; downstream projects use it too.
 - `/write-skill` (M1.10) generates new skills using this schema as its template.
 - `/update-horizontal` (M1.10) uses `sources_consulted` to mechanically check upstream changes.
-- L1 workflows (`~/.codeium/windsurf/global_workflows/<name>.md` per ADR-014/016) use a similar but not identical schema — separate ADR if a workflow-specific decision arises (none anticipated; workflows are simpler).
+- L1 workflows (`~/.codeium/windsurf/global_workflows/<name>.md` per ADR-014/016) use a similar but not identical schema — separate ADR if a workflow-specific decision arises (none anticipated; workflows are simpler). *Superseded by ADR-037 (2026-09-06): the ten workflows are now skills under this schema with `triggers: [user]` + `activation: manual`; `global_workflows/` holds only 3-line redirect stubs whose sole frontmatter field is `description`.*
 
 ## Source
 

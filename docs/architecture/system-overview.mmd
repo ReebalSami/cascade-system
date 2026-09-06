@@ -47,11 +47,11 @@ flowchart TB
     subgraph L1["L1 — Cascade meta-system"]
         direction TB
 
-        subgraph L1Active["Active surface — Windsurf-scanned (~/.codeium/windsurf/)"]
+        subgraph L1Active["Active surface — read by Devin CLI + Windsurf (~/.codeium/windsurf/)"]
             L1Skills["skills/&lt;name&gt;/SKILL.md
-            (11 skills)"]
+            (27 skills: 17 auto + 10 manual former workflows — ADR-037)"]
             L1Wf["global_workflows/&lt;name&gt;.md
-            (9 workflows)"]
+            (10 redirect stubs → skills; Windsurf-only)"]
             L1Rules["memories/global_rules.md
             (16 always-on rules, ≤6000 chars)"]
         end
@@ -74,18 +74,19 @@ flowchart TB
 
     %% =========== L2 PER-PROJECT ===========
     subgraph L2["L2 — per-project workspace (&lt;project&gt;/)"]
-        L2WS[".windsurf/{rules, skills, workflows}/"]
+        L2WS[".devin/rules/ (6 on-demand + L3) · .agents/skills/ (L3 + third-party)
+        legacy: .windsurf/"]
         L2Docs["docs/{decisions, handoffs, retros, prompts/stages}/"]
-        L2Agents["AGENTS.md (auto-loads on workspace open)"]
-        L2Phases[".windsurf/phases.yaml"]
+        L2Agents["AGENTS.md + CLAUDE.md (auto-load on workspace open)"]
+        L2Phases[".devin/phases.yaml"]
     end
 
     %% =========== L3 PROJECT-TYPE TEMPLATES ===========
     subgraph L3["L3 — project-type templates (~/.windsurf/templates/)"]
         L3Shared["_shared/scaffold/
         (universal docs structure, applied first per ADR-004)"]
-        L3Type["&lt;type&gt;/scaffold/ + phases.yaml + (rules/skills/workflows)
-        active: python-ml-uv · pending: nextjs-app, python-pipeline"]
+        L3Type["&lt;type&gt;/scaffold/ + phases.yaml + (rules/skills)
+        active: python-ml-uv · authoring: nextjs-marketing-site · pending: nextjs-app, python-pipeline"]
     end
 
     %% =========== FLOWS ===========
