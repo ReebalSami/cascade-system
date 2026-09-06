@@ -1,6 +1,6 @@
 # ADR-037: Devin runtime adoption cluster — workflows re-homed as skills, `.devin/` + `.agents/` consumer paths, rule-copy fix
 
-**Status**: Proposed (apply at M4A.1; flip to Accepted when `@verify-l1` is clean and a fresh Devin session runs `/commit` + `/start-project --dry-run`)
+**Status**: Accepted (2026-09-06, M4A.1 — `ReebalSami/cascade-system#114`, PR #123). Gate evidence: strict-YAML parse 27/27; `devin skills list` = 27 with the 10 re-homed skills `[user]`-only; `wc -m global_rules.md` = 5962; `@verify-l1` (`scripts/verify-l1.sh`) 0 errors / 0 warnings; `/start-project --dry-run python-ml-uv-test python-ml-uv` tree = `.devin/phases.yaml` + `.devin/rules/` (6 + `strict-docs-placement` + 3 L3) + `.agents/skills/` + `AGENTS.md` + `CLAUDE.md`, no `.windsurf/`; `uv sync && make test` 4 passed; user-confirmed in a fresh Devin session (slash completion, `/start-project --dry-run`, `/commit`) and in Windsurf (`/start-project` stub resolves to `@start-project`).
 
 **Date**: 2026-09-05
 
