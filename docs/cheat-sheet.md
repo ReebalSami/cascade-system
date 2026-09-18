@@ -43,7 +43,7 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 | `@begin` | Front door for new projects: `@grill-me` → stack decision → `/add-project-type` (if needed) → `/start-project` → `/run-phase brainstorm` | "I have a new idea" (ADR-019) |
 | `@kickoff` | Front door for vertical pickups: reads handoff + plan + ADRs + cheat-sheet, detects lifecycle position, files missing issues, asks one question | "pick up Cascade X" / `@kickoff <handoff>` (ADR-020) |
 | `@handoff-to-coding-session` / `@handoff-to-thinking-session` | Write a context-bundle handoff for a fresh session in the phase-fit model | phase-type transition (ADR-034) |
-| `/start-project` *(manual)* | Bootstrap new project from L3 template (15 steps): two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` → L3 skills into `.agents/skills/` → repo + branch protection + Project + milestones → first-phase handoff; `--dry-run` | new project (via `@begin` or directly) |
+| `/start-project` *(manual)* | Bootstrap new project from L3 template (15 steps): two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` → L3 skills into `.agents/skills/` → template-token substitution (`your-pkg`/`your_pkg`, `your-site`/`your_site` → slug; contract §10) → third-party skills from `<type>/skills.yaml` (`npx skills add … -a codex --copy`, tracked + `skills-lock.json`) → repo + branch protection + Project + milestones → first-phase handoff; `--dry-run` (substitutes, skips installs), `--local-dir <abs-path>` (ADR-038) | new project (via `@begin` or directly) |
 | `/run-phase <name>` *(manual)* | Dispatcher — reads `<project>/.devin/phases.yaml` (legacy `.windsurf/` fallback) and hands off to the phase's skill (no arg = list phases with status) | every phase transition |
 | `/recalibrate` *(manual)* | Detect/resolve drift between PRD §11, GitHub state, recent commits, vault; per-finding triage | `plan-drift-watcher` fires; before `@sprint-review` |
 | `/add-project-type` *(manual)* | Bootstrap new L3 template at `~/.windsurf/templates/<type>/` (12 steps + ADR + dry-run) | new project archetype |
@@ -94,7 +94,7 @@ Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 
 | Contract | Purpose | Path |
 |---|---|---|
-| `phase-taxonomy` | Schema for L3 templates' `phases.yaml` files (consumed by `/run-phase`, `/recalibrate`, `@sprint-review`, `plan-drift-watcher`) | `~/.windsurf/contracts/phase-taxonomy.md` |
+| `phase-taxonomy` | Schema for L3 templates' `phases.yaml` files (consumed by `/run-phase`, `/recalibrate`, `@sprint-review`, `plan-drift-watcher`); §10 adds the scaffold-time extension points consumed by `/start-project` — template-token vocabulary + `skills.yaml` manifest (ADR-038) | `~/.windsurf/contracts/phase-taxonomy.md` |
 
 ---
 
@@ -104,11 +104,11 @@ Long-form archive: `docs/rules/<name>.md`. Index: `docs/rules/INDEX.md`.
 |---|---|---|
 | `_shared/` | active | universal `docs/` structure + INDEX files + `strict-docs-placement` rule (applied first by `/start-project` two-pass scaffold per ADR-004) |
 | `python-ml-uv` | active (Vertical B closed at M2B.8; M2B.1–M2B.8 shipped + validated) | Pattern A — Python ML / research (uv + jupytext + papermill + mypy + ruff + pytest; tracker-agnostic; stdlib seeding; `notebook-discipline` + `uv-discipline` L3 rules); validated via `/start-project --dry-run`: `uv sync` + `make test` + `make lint` + `make typecheck` all pass; ready for consumer bootstrap (see `docs/handoffs/cascade-d-master-thesis.md` for Master-Thesis vertical entry point) |
-| `nextjs-marketing-site` | brainstorm approved (M4E.1, 2026-09-05); authoring pending ADR-037 + ADR-038 apply | Pattern B (narrowed) — multilingual marketing / lead-gen brochure sites (Next 16 + Tailwind 4 + shadcn base-nova + next-intl + `motion`; host-agnostic `standalone`; 9-phase content-first chain `discovery → brainstorm → spec → issues → design → content → build → launch → handover`). Consumers: loom-remodelers (US), saeb-group website (NL), own services site (DE). Design: `docs/prompts/stages/02-brainstorm-nextjs-marketing-site.md` |
+| `nextjs-marketing-site` | brainstorm approved (M4E.1, 2026-09-05); ADR-037 + ADR-038 applied (M4A.1/M4A.2); authoring starts at M4E.2 (`phases.yaml`) | Pattern B (narrowed) — multilingual marketing / lead-gen brochure sites (Next 16 + Tailwind 4 + shadcn base-nova + next-intl + `motion`; host-agnostic `standalone`; 9-phase content-first chain `discovery → brainstorm → spec → issues → design → content → build → launch → handover`). Consumers: loom-remodelers (US), saeb-group website (NL), own services site (DE). Design: `docs/prompts/stages/02-brainstorm-nextjs-marketing-site.md` |
 | `nextjs-app` | not built yet | Pattern B (generic, CMS/DB apps) — stays deferred until a project demands it; `nextjs-marketing-site` covers the brochure archetype |
 | `python-pipeline` | not built yet | Pattern D — data pipeline; defer until first project demands it |
 
-Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold/` + optional `rules/` + `skills/` overlays (+ optional `skills.yaml` for third-party installs once ADR-038 lands; `workflows/` is deprecated per ADR-037 — ship manual skills instead). `_shared/scaffold/` contributes `docs/`, `.devin/rules/strict-docs-placement.md`, `AGENTS.md`, `CLAUDE.md` to every consumer.
+Templates live at `~/.windsurf/templates/<type>/` with `phases.yaml` + `scaffold/` + optional `rules/` + `skills/` overlays + optional `skills.yaml` (third-party Agent Skills installed at bootstrap per ADR-038; `workflows/` is deprecated per ADR-037 — ship manual skills instead). Consumer-specific names in scaffolds are the tokens `your-pkg`/`your_pkg` (Python) or `your-site`/`your_site` (web), substituted by `/start-project` step 6c (contract §10.1). `_shared/scaffold/` contributes `docs/`, `.devin/rules/strict-docs-placement.md`, `AGENTS.md`, `CLAUDE.md` to every consumer.
 
 ---
 
