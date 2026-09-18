@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: Emits a one-line advisory when phase-typed signals suggest the active session would benefit from a different model — Sonnet 4.6 1M for code-heavy work (multiple consecutive `write_to_file`/`edit`/`multi_edit` calls; `phase_type: execute` in `phases.yaml`; about to invoke `@tdd`/`@run-experiment`/`@implement`-class skills) or Opus 4.7 for decision-heavy work (about to invoke `@grill-me`/`@to-prd`/ADR drafting/retro authoring; `phase_type: decide` in `phases.yaml`). Advisory points to `@handoff-to-coding-session` / `@handoff-to-thinking-session` skill pair. Never auto-switches; never blocks. Per-session suppression after one decline. Workspace-deployed only (no entry in `global_rules.md`) per `know-your-hardware` + `obsidian-context-priming` precedent.
+description: "Emits a one-line advisory when phase-typed signals suggest the active session would benefit from a different model — Sonnet 4.6 1M for code-heavy work (multiple consecutive `write_to_file`/`edit`/`multi_edit` calls; `phase_type: execute` in `phases.yaml`; about to invoke `@tdd`/`@run-experiment`/`@implement`-class skills) or Opus 4.7 for decision-heavy work (about to invoke `@grill-me`/`@to-prd`/ADR drafting/retro authoring; `phase_type: decide` in `phases.yaml`). Advisory points to `@handoff-to-coding-session` / `@handoff-to-thinking-session` skill pair. Never auto-switches; never blocks. Per-session suppression after one decline. Workspace-deployed only (no entry in `global_rules.md`) per `know-your-hardware` + `obsidian-context-priming` precedent."
 sources_consulted:
   - cascade-system/docs/decisions/ADR-034-model-selection-cluster.md (own) — the ADR this rule implements (Artifact 1 of the cluster)
   - cascade-system/docs/decisions/ADR-018-release-discipline-cluster.md (own) — `know-your-hardware` workspace-only precedent for `model_decision`-activated rules (per the ADR-018 brainstorm drift correction)
@@ -10,9 +10,9 @@ sources_consulted:
   - cascade-system/docs/decisions/ADR-014-l1-canonical-storage-paths.md (own) — `global_rules.md` 6000-char cap rationale for workspace-only deployment
   - cascade-system/docs/rules/know-your-hardware.md (own) — style template for workspace-only `model_decision` rule (long-form archive at `docs/rules/` + deployment via `/start-project` step 6a)
   - cascade-system/docs/rules/obsidian-context-priming.md (own) — closer style template (watcher-archetype, single-line surface, suppression pattern)
-  - cascade-system/docs/rules/plan-drift-watcher.md (own) — watcher-archetype style: inline surface + suppression pattern
-  - cascade-system/docs/rules/sprint-review-prompt.md (own) — watcher-archetype style: trigger-on-state-transition + don't-auto-invoke pattern
-  - cascade-system/retros/cascade-d-mid-vertical-capture.md (own) — §Learning 6 source observation (M2D.4 user verbatim ask: "opus 4.7 for thinking planing deciding. sonnet 4.6 1m for coding")
+  - "cascade-system/docs/rules/plan-drift-watcher.md (own) — watcher-archetype style: inline surface + suppression pattern"
+  - "cascade-system/docs/rules/sprint-review-prompt.md (own) — watcher-archetype style: trigger-on-state-transition + don't-auto-invoke pattern"
+  - 'cascade-system/retros/cascade-d-mid-vertical-capture.md (own) — §Learning 6 source observation (M2D.4 user verbatim ask: "opus 4.7 for thinking planing deciding. sonnet 4.6 1m for coding")'
   - ~/.codeium/windsurf/skills/handoff-to-coding-session/SKILL.md (own) — paired skill the advisory points to (code-heavy direction)
   - ~/.codeium/windsurf/skills/handoff-to-thinking-session/SKILL.md (own) — paired skill the advisory points to (decision-heavy direction)
 adapted_for:
@@ -20,7 +20,7 @@ adapted_for:
   - Pairs with `@handoff-to-coding-session` + `@handoff-to-thinking-session` skill pair (ADR-034 Artifact 2) — the advisory references both skill names directly
   - Per-session suppression after one decline (matches `plan-drift-watcher` + `sprint-review-prompt` patterns)
   - Advisory-only — never auto-switches, never blocks; user always decides
-  - Composes with `bidirectional-learning-pipe`: false-positive observations flow to queue for re-evaluation per ADR-034 §Re-evaluation triggers
+  - "Composes with `bidirectional-learning-pipe`: false-positive observations flow to queue for re-evaluation per ADR-034 §Re-evaluation triggers"
 ---
 
 # Model-selection advisor
@@ -83,7 +83,7 @@ Per-session only. Reset on next session (matches `plan-drift-watcher` + `sprint-
 
 ## Workspace-only activation
 
-Per ADR-018 + ADR-028 precedent: `model_decision` activation requires workspace-scoped rules (Windsurf treats entries in `global_rules.md` as always-on regardless of frontmatter annotation). To preserve the *"fires only when phase-typed signals warrant"* semantic, this rule lives at `<project>/.windsurf/rules/model-selection-advisor.md` in every project that cares about model-switching ergonomics.
+Per ADR-018 + ADR-028 precedent: `model_decision` activation requires workspace-scoped rules (Windsurf treats entries in `global_rules.md` as always-on regardless of frontmatter annotation). To preserve the *"fires only when phase-typed signals warrant"* semantic, this rule lives at `<project>/.devin/rules/model-selection-advisor.md` in every project that cares about model-switching ergonomics.
 
 Additional rationale beyond the always-on / model_decision constraint:
 
@@ -92,7 +92,7 @@ Additional rationale beyond the always-on / model_decision constraint:
 
 Deployment:
 
-- **New projects**: `/start-project` step 6a `cp ~/Projects/cascade-system/docs/rules/*.md <parent>/<name>/.windsurf/rules/` picks this file up automatically
+- **New projects**: `/start-project` step 6a copies the six `model_decision` long-forms (this file included) into `<dir>/.devin/rules/` (ADR-037)
 - **Existing projects** that want the advisor: manual copy required to opt in (matches `obsidian-context-priming` deployment model)
 - **cascade-system itself**: opt-in for the meta-repo when phase-typed work surfaces; not strictly needed for capture / queue-drain sessions
 

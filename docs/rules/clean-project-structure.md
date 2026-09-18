@@ -9,7 +9,7 @@ sources_consulted:
   - mattpocock/skills (browsed, no direct rule analog)
 adapted_for:
   - L1 global rule (was L2 portfolio-only with hardcoded subdir list)
-  - Stack-agnostic: dropped portfolio-specific layout (`utility/`, `infra/`, `Bewerbung/`, `PORTFOLIO_BUILD_PROMPT.md`)
+  - "Stack-agnostic: dropped portfolio-specific layout (`utility/`, `infra/`, `Bewerbung/`, `PORTFOLIO_BUILD_PROMPT.md`)"
   - Aligned with ADR-003 (strict-docs-structure) for the meta-repo and downstream projects
   - L3 templates carry stack-specific layout; this rule states the principle only
 ---

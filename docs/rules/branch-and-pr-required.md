@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: Never `git push` while on `main` in any repo. All changes flow through `@release-manager` (branch → commits → push → PR → CI → squash-merge → cleanup). Cold-start exception: `git push -u origin main` immediately after `gh repo create` when no upstream exists, working tree has 1 commit, and remote has no `main` branch yet.
+description: "Never `git push` while on `main` in any repo. All changes flow through `@release-manager` (branch → commits → push → PR → CI → squash-merge → cleanup). Cold-start exception: `git push -u origin main` immediately after `gh repo create` when no upstream exists, working tree has 1 commit, and remote has no `main` branch yet."
 sources_consulted:
   - cascade-system/docs/decisions/ADR-018-release-discipline-cluster.md (own) — codifies this rule + paired skill + workflows
   - cascade-system/docs/decisions/ADR-013-commit-workflow-forcing-function.md (own) — pattern precedent (rule + skill/workflow as forcing function)
@@ -10,8 +10,8 @@ sources_consulted:
   - Sprint 1 hardening session — direct observation of push-to-main happening despite git-flow being "obvious"; rules-as-text proven insufficient
 adapted_for:
   - L1 always_on rule (was deprecated `~/.windsurf/rules/` shape; now ADR-014 layer-1 archive + concise `global_rules.md`)
-  - Cascade tool model: `git push` is the choke point; rule fires on the intent, skill orchestrates the resolution
-  - Solo-dev workflow: branch-protection skip-with-warning when unenforceable (free-tier private repos)
+  - "Cascade tool model: `git push` is the choke point; rule fires on the intent, skill orchestrates the resolution"
+  - "Solo-dev workflow: branch-protection skip-with-warning when unenforceable (free-tier private repos)"
   - Pairs with `@release-manager` skill as forcing function (mirrors `no-terminal-oneline-scripts` ↔ `/commit` pairing)
 ---
 

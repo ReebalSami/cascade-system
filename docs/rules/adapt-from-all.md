@@ -14,7 +14,7 @@ At minimum, before writing a new component, browse:
 - `~/Projects/cascade-system/refs/superpowers/` — `obra/superpowers` (skills lifecycle: brainstorming, writing-plans, executing-plans, TDD, debugging, code-review, worktrees, …)
 - `~/Projects/cascade-system/refs/mattpocock-skills/` — `mattpocock/skills` (grill-me, to-prd, to-issues, tdd, improve-codebase-architecture)
 - `~/Projects/cascade-system/refs/awesome-agent-skills/` and `~/Projects/cascade-system/refs/claude-skills/` — curated ecosystem libraries (200+ skills)
-- `~/Projects/portfolio-website/.windsurf/` — battle-tested in production for one full project
+- `~/Projects/portfolio-website/.devin/` — battle-tested in production for one full project (renamed from `.windsurf/` per ADR-037)
 - Our own thinking — gaps the above don't cover
 
 ## 2. Cite `sources_consulted` in frontmatter
@@ -25,7 +25,7 @@ Every authored SKILL.md / rule / workflow includes:
 sources_consulted:
   - obra/superpowers/skills/<name> (MIT, refs/superpowers/skills/<name>)
   - mattpocock/skills/<category>/<name> (MIT, refs/mattpocock-skills/skills/<category>/<name>)
-  - portfolio-website/.windsurf/<path> (own, inspirational)
+  - portfolio-website/.devin/<path> (own, inspirational)
   - awesome-agent-skills (browsed, no direct adoption)
 adapted_for:
   - Windsurf Cascade SKILL.md format
@@ -38,7 +38,9 @@ This makes provenance explicit, lets `@update-horizontal` spot-check upstream ch
 
 ## 3. Vendor — never runtime-depend
 
-Copy adapted code into the canonical L1 location: skills → `~/.codeium/windsurf/skills/<name>/`; workflows → `~/.codeium/windsurf/global_workflows/<name>.md`; rules → dual-stored at `~/Projects/cascade-system/docs/rules/<name>.md` (long-form) + section in `~/.codeium/windsurf/memories/global_rules.md` (concise). **Never** `npx skills@latest add ...` at runtime. **Never** import a third-party skill registry. Upstream changes get reviewed each sprint via `@update-horizontal`.
+Copy adapted code into the canonical L1 location: skills → `~/.codeium/windsurf/skills/<name>/` (deterministic procedures too — as manual skills with `triggers: [user]`; `global_workflows/` holds redirect stubs only per ADR-037); rules → dual-stored at `~/Projects/cascade-system/docs/rules/<name>.md` (long-form) + section in `~/.codeium/windsurf/memories/global_rules.md` (concise). **Never** `npx skills@latest add ...` at runtime. **Never** import a third-party skill registry. Upstream changes get reviewed each sprint via `@update-horizontal`.
+
+**Exception — consumer-project dependencies (ADR-038)**: an L3 template may declare third-party Agent Skills in `<type>/skills.yaml`; `/start-project` step 6d installs them once, at bootstrap, as *tracked copies* into the consumer repo's `.agents/skills/` (pinned by `skills-lock.json`). That is vendoring at the consumer layer, not a runtime import, and it does not touch L1 authoring — L1 skills are still adapted and vendored by hand.
 
 ## 4. Adapt — don't blind-copy
 

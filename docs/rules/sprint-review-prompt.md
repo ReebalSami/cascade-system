@@ -9,7 +9,7 @@ sources_consulted:
 adapted_for:
   - Windsurf rule frontmatter (model_decision activation)
   - Pairs with `@sprint-review` (M1.9) — this rule prompts; the skill runs
-  - Phase-taxonomy contract: `phases[].milestone` is the trigger field
+  - "Phase-taxonomy contract: `phases[].milestone` is the trigger field"
 ---
 
 # Sprint-review prompt

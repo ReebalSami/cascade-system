@@ -8,12 +8,12 @@ sources_consulted:
   - cascade-system/docs/rules/branch-and-pr-required.md (own) — structural template for the "discipline backstop + forcing function" rule shape
   - ~/.codeium/windsurf/skills/sync-github/SKILL.md (own) — retroactive reconciler that pairs with this rule for orphan recovery
   - GitHub CLI `gh project` + `gh issue create --project` flag docs (browse) — canonical add-at-create syntax
-  - Empirical incident, HORUS evidence-base audit follow-up, 2026-05-23 (Cascade D filed #62/#63/#64 via bare `gh issue create`, omitting Project v2 board assignment; user-flagged gap → rule promotion)
+  - "Empirical incident, HORUS evidence-base audit follow-up, 2026-05-23 (Cascade D filed #62/#63/#64 via bare `gh issue create`, omitting Project v2 board assignment; user-flagged gap → rule promotion)"
 adapted_for:
-  - L1 always_on rule (paired with workspace propagation via `/start-project` step 6a)
-  - Cascade tool model: `gh issue create` is the choke point; rule fires on the intent, workflow orchestrates the resolution
-  - Repos WITHOUT a linked Project v2 board: rule no-ops; plain `gh issue create` remains allowed (graceful fallback for non-tracked repos)
-  - User's project topology: one Project v2 per repo (1:1 mapping; cached project number once known per repo)
+  - L1 always_on rule (concise law in `global_rules.md`; long-form referenced, not copied, by `/start-project` step 6a since ADR-037)
+  - "Cascade tool model: `gh issue create` is the choke point; rule fires on the intent, workflow orchestrates the resolution"
+  - "Repos WITHOUT a linked Project v2 board: rule no-ops; plain `gh issue create` remains allowed (graceful fallback for non-tracked repos)"
+  - "User's project topology: one Project v2 per repo (1:1 mapping; cached project number once known per repo)"
   - Pairs with `/issue-create` workflow forcing function (mirrors `no-terminal-oneline-scripts` ↔ `/commit` and `branch-and-pr-required` ↔ `@release-manager` pairings)
 ---
 

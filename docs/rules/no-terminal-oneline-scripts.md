@@ -8,8 +8,8 @@ sources_consulted:
   - Sprint 1 hardening session — direct observation of the authoring Cascade violating ADR-012 within minutes of writing it (rules-as-text are insufficient; forcing function required)
 adapted_for:
   - L1 global rule (was L2 portfolio-only)
-  - Cascade tool model: `run_command` vs `write_to_file` / `edit` separation made explicit
-  - Stack-agnostic: dropped `pnpm`-specific exception phrasing; replaced with "short well-defined commands" criterion
+  - "Cascade tool model: `run_command` vs `write_to_file` / `edit` separation made explicit"
+  - 'Stack-agnostic: dropped `pnpm`-specific exception phrasing; replaced with "short well-defined commands" criterion'
   - Promoted to crash-level language (was "fragile") after observed in-session violation; pairs with `/commit` workflow as a forcing function
 ---
 

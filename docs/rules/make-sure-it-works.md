@@ -10,7 +10,7 @@ sources_consulted:
 adapted_for:
   - L1 global rule (was L2 portfolio-only with stack-specific commands)
   - Windsurf rule frontmatter
-  - Stack-agnostic: project-defined verification commands, not hardcoded `make lint/build`
+  - "Stack-agnostic: project-defined verification commands, not hardcoded `make lint/build`"
   - Absorbed `local-demo-before-push.md` so we have one rule for "verify before declaring done", not two
   - Extended (May 2026) with the `## Artifact review before push` subsection, forcing-function paired with `@release-manager` step 4 (mirrors the `no-terminal-oneline-scripts` + `/commit` rule+skill pairing pattern)
 ---

@@ -16,7 +16,7 @@ The L1 layer (global rules, skills, contracts, templates) is split across two ro
 | **Rules (global, long-form/reference)** | `~/Projects/cascade-system/docs/rules/<name>.md` | Multi-file with full frontmatter, rationale, provenance. The COMMENTARY. Not auto-loaded; available via reading. Every file declares `trigger:`. |
 | **Rules (per-project)** | `<project>/.devin/rules/<name>.md` | Workspace-scoped; Devin honours `trigger:`. `/start-project` step 6a copies **only the six `model_decision` long-forms** (+ `strict-docs-placement` from `_shared/scaffold/`, + L3 rules in 6b); always-on long-forms are referenced, not copied. Legacy `<project>/.windsurf/rules/` is still read. |
 | **Phases (per-project)** | `<project>/.devin/phases.yaml` | Runtime source of truth for `/run-phase`; copied from the L3 template by `/start-project` step 5. Readers fall back to legacy `.windsurf/phases.yaml`. |
-| **Skills (per-project)** | `<project>/.agents/skills/<name>/SKILL.md` | Cross-tool Agent Skills path (Devin, Claude Code, Cursor, Codex, Copilot; `npx skills add` target). Populated by `/start-project` step 6b from the L3 template. Not read by Windsurf — accepted trade-off (ADR-037). |
+| **Skills (per-project)** | `<project>/.agents/skills/<name>/SKILL.md` | Cross-tool Agent Skills path (Devin, Claude Code, Cursor, Codex, Copilot; `npx skills add` target). Populated by `/start-project` step 6b from the L3 template and step 6d from `<type>/skills.yaml` (third-party skills as tracked copies, pinned by `skills-lock.json`; ADR-038). Not read by Windsurf — accepted trade-off (ADR-037). |
 | **AGENTS.md / CLAUDE.md (per-project)** | `<project>/AGENTS.md`, `<project>/CLAUDE.md` | Always-on pointer file (≤ ~20 lines, from `_shared/scaffold/`; type-specific scaffolds may override) + `@AGENTS.md` alias for Claude Code. |
 | **Contracts (L1)** | `~/.windsurf/contracts/<name>.md` | Agent-internal — not tool-loaded; consumed by skills that read them explicitly. |
 | **Templates (L3)** | `~/.windsurf/templates/<type>/` and `~/.windsurf/templates/_shared/` | Agent-internal; consumed by `/start-project` and `/add-project-type`. |
@@ -48,10 +48,10 @@ For verification: invoke `@verify-l1` to confirm the layout is consistent before
 ## How to start a new project
 
 ```
-/start-project [<name> <type>] [--dry-run]
+/start-project [<name> <type>] [--dry-run] [--local-dir <abs-path>]
 ```
 
-The skill walks 15 steps (validate type → two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` + L3 skills into `.agents/skills/` → README → GitHub repo → initial commit → push → branch protection → Project v2 → milestones → first phase → handoff). See `~/.codeium/windsurf/skills/start-project/SKILL.md` for the procedure. A fresh tree carries `AGENTS.md` + `CLAUDE.md` from `_shared/scaffold/` and no `.windsurf/` directory.
+The skill walks 15 steps (validate type → two-pass scaffold → `.devin/phases.yaml` → six on-demand rules into `.devin/rules/` + L3 skills into `.agents/skills/` → template-token substitution → third-party skills from `skills.yaml` → README → GitHub repo → initial commit → push → branch protection → Project v2 → milestones → first phase → handoff). See `~/.codeium/windsurf/skills/start-project/SKILL.md` for the procedure. A fresh tree carries `AGENTS.md` + `CLAUDE.md` from `_shared/scaffold/`, no `.windsurf/` directory, and no literal `your-pkg` / `your_pkg` / `your-site` / `your_site` — the `<name>` argument is substituted into contents and path names (ADR-038; vocabulary in `~/.windsurf/contracts/phase-taxonomy.md` §10). `--local-dir <abs-path>` puts the checkout somewhere other than `~/Projects/<name>` while `<name>` stays the repo/Project name.
 
 Recommended: hand off to a fresh session after `/start-project` completes — running phases in a context-cleared session prevents state bleed.
 
@@ -88,6 +88,7 @@ The audit driver-breakdown (M2D.0–M2D.4 ~100k-token session) is preserved in A
 |---|---|---|
 | `@skills:` shows nothing | Skills authored at deprecated `~/.windsurf/skills/` instead of canonical `~/.codeium/windsurf/skills/` | Move them. Run `@verify-l1`. |
 | A skill is missing from `devin skills list` / `/name` completion (Devin) | Its frontmatter does not parse as strict YAML (unquoted `: ` or a value starting with a backtick) — Devin drops it silently | Quote the scalar; re-run `devin skills list` from outside the skills dir. `@verify-l1` step 3 catches this. |
+| A consumer project's `.devin/rules/*.md` rule never fires / is absent from Devin's available-rules list (or its `.agents/skills/` skill is missing) | Same cause — rule and L3-skill frontmatter is strict-parsed too; 8 of 10 deployed rules were invisible at the M4A.2 gate | Quote the scalar in the L1 source (`docs/rules/`, `~/.windsurf/templates/`); re-run `dry-run.sh` (CHECKS parse every deployed rule + skill) and `@verify-l1` step 6. |
 | `/name` in Devin says "unknown skill" for a former workflow | The procedure is still only in `global_workflows/` (Devin does not import workflows) | Re-home it as a manual skill per ADR-037; leave a stub. |
 | Slash command not in Windsurf's list | Stub missing `description:` frontmatter, or authored at deprecated path (`~/.codeium/windsurf/workflows/`) instead of `~/.codeium/windsurf/global_workflows/` (per ADR-016) | Add frontmatter or move the stub to `global_workflows/`. |
 | Global rule "not taking effect" | Section missing from `global_rules.md`, OR file exceeds 6000 chars (silent truncation) | `wc -m` the file; ensure rule has a `## <name>` section. |
