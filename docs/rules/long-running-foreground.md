@@ -2,15 +2,15 @@
 trigger: always_on
 description: Long-running commands (model downloads, VLM inference smokes, big test suites, package wheel downloads, dataset clones) stay in the **foreground** with **continuous live output visible**. Pairs with `no-terminal-oneline-scripts` (crash-safety) — this rule covers **observability**. Do NOT background-then-poll, suppress to `/dev/null`, pipe to a buffered consumer (`tail -N`), or hide progress bars. The user needs real-time signal to distinguish working-vs-hung commands. Concise law lives in `~/.codeium/windsurf/memories/global_rules.md`; this file is the full rationale + checklist + patterns.
 sources_consulted:
-  - `~/Projects/horus/docs/retros/m2d.5-pilot-13-cohort-harness.md` — pilot-13 cross-cutting learning #1 (2026-05-18) on log-streaming
-  - `~/Projects/horus/.windsurf/handoffs/horus-adr-009-prb-202605141837-coding.md` — user-stated rule (2026-05-14) on foreground + live output during ADR-009 cohort smokes
-  - `~/Projects/cascade-system/queue/pending-review.md` 2026-05-13 entry "token-economy / no-status-polling" — sibling principle on token economics of polling
-  - `~/Projects/cascade-system/docs/rules/no-terminal-oneline-scripts.md` — sibling crash-safety rule; this rule's structure mirrors it
-  - `~/Projects/cascade-system/docs/rules/make-sure-it-works.md` — evidence-over-claims discipline; foreground streaming IS the evidence channel during long ops
+  - "`~/Projects/horus/docs/retros/m2d.5-pilot-13-cohort-harness.md` — pilot-13 cross-cutting learning #1 (2026-05-18) on log-streaming"
+  - "`~/Projects/horus/.windsurf/handoffs/horus-adr-009-prb-202605141837-coding.md` — user-stated rule (2026-05-14) on foreground + live output during ADR-009 cohort smokes"
+  - '`~/Projects/cascade-system/queue/pending-review.md` 2026-05-13 entry "token-economy / no-status-polling" — sibling principle on token economics of polling'
+  - "`~/Projects/cascade-system/docs/rules/no-terminal-oneline-scripts.md` — sibling crash-safety rule; this rule's structure mirrors it"
+  - "`~/Projects/cascade-system/docs/rules/make-sure-it-works.md` — evidence-over-claims discipline; foreground streaming IS the evidence channel during long ops"
 adapted_for:
   - L1 global rule (was project-local observation across 3+ HORUS sessions)
-  - Cascade tool model: `Blocking` parameter semantics + `WaitDurationSeconds` semantics made explicit
-  - Stack-agnostic: applies to model downloads (HF/git-lfs/wget), inference smokes (Transformers/MLX/Ollama/vLLM), training runs, large test suites, `uv add`/`pip install`/`npm install` wheel downloads, dataset acquisition
+  - "Cascade tool model: `Blocking` parameter semantics + `WaitDurationSeconds` semantics made explicit"
+  - "Stack-agnostic: applies to model downloads (HF/git-lfs/wget), inference smokes (Transformers/MLX/Ollama/vLLM), training runs, large test suites, `uv add`/`pip install`/`npm install` wheel downloads, dataset acquisition"
   - Promoted from project-local learning to L1 always-on after observed across multiple HORUS milestones (M2D.5 step 3 dataset acquisition, M2D.5 step 5 ADR-009 PR(b) cohort smokes, M2D.5 step 7 pilot-13 cohort sweep)
 ---
 
@@ -94,7 +94,7 @@ A command that fails after 15 minutes of `2>/dev/null` produces only an exit cod
 ## Migration / propagation
 
 - **Existing projects**: this rule is `always_on` in `global_rules.md` from the moment of L1 promotion. No per-project workspace copy required for enforcement.
-- **New projects via `/start-project`**: step 6a copies all long-form rules into `<project>/.windsurf/rules/`; this rule will be included automatically.
+- **New projects via `/start-project`**: since ADR-037, step 6a copies only the six `model_decision` long-forms into `<project>/.devin/rules/`; this `always_on` rule is referenced, not copied — enforcement comes from `global_rules.md`.
 - **Existing per-project workspace `.windsurf/rules/` directories** (e.g., HORUS): manually copying the long-form file there is optional and provides workspace-level long-form for project-specific Cascade sessions. The always-on enforcement does not require it.
 
 ## Provenance

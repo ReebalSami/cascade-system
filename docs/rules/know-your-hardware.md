@@ -1,16 +1,16 @@
 ---
 trigger: model_decision
-description: Local hardware is M1 Pro / 16 GB / Metal 4 / 14 GPU cores / no CUDA. Tool / library / model choices respect ARM availability + RAM ceiling + Metal-vs-CUDA. When task plausibly exceeds local capacity (training >3B model, processing >50 GB data, requiring CUDA-only library, or other resource-heavy compute), STOP and surface: what is needed / why local fails / AWS-or-API recommendation / budget estimate / ask user approval. Never spin up AWS resources or make paid API calls without explicit budget-acknowledged approval.
+description: "Local hardware is M1 Pro / 16 GB / Metal 4 / 14 GPU cores / no CUDA. Tool / library / model choices respect ARM availability + RAM ceiling + Metal-vs-CUDA. When task plausibly exceeds local capacity (training >3B model, processing >50 GB data, requiring CUDA-only library, or other resource-heavy compute), STOP and surface: what is needed / why local fails / AWS-or-API recommendation / budget estimate / ask user approval. Never spin up AWS resources or make paid API calls without explicit budget-acknowledged approval."
 sources_consulted:
   - cascade-system/docs/decisions/ADR-018-release-discipline-cluster.md (own) — co-authored with this rule
   - cascade-system/docs/architecture/parked-items-brainstorm.md (own) — §3 design walking + drift correction (workspace-only deploy, not global)
   - SETUP_ROADMAP.md §1 L0 system tools — actual hardware spec
   - User operating constraints — AWS escalation policy explicitly requested in original plan §2
 adapted_for:
-  - L2 workspace-deployed rule (NOT in `global_rules.md` per ADR-018 drift correction; deployed via `/start-project` step 6a to every project's `.windsurf/rules/`)
-  - `model_decision` trigger — only fires when resource-heavy intent is detected (saves context budget; per Windsurf docs only workspace rules support `model_decision`)
+  - L2 workspace-deployed rule (NOT in `global_rules.md` per ADR-018 drift correction; deployed via `/start-project` step 6a to every project's `.devin/rules/`)
+  - "`model_decision` trigger — only fires when resource-heavy intent is detected (saves context budget; per Windsurf docs only workspace rules support `model_decision`)"
   - AWS / OpenAI / Anthropic / Bedrock as escalation paths (original plan was AWS-only)
-  - Cost guardrails: spot instances, S3 lifecycle, immediate teardown
+  - "Cost guardrails: spot instances, S3 lifecycle, immediate teardown"
 ---
 
 # know-your-hardware
@@ -147,4 +147,4 @@ When the description is ambiguous (e.g., "process some data"), do not fire prema
 
 ## Source
 
-Workspace-deployed rule per ADR-018 brainstorm drift correction. Long-form archive at `~/Projects/cascade-system/docs/rules/know-your-hardware.md`. Deployed to every project's `.windsurf/rules/` by `/start-project` step 6a (the per-project rule copy mechanism from ADR-014).
+Workspace-deployed rule per ADR-018 brainstorm drift correction. Long-form archive at `~/Projects/cascade-system/docs/rules/know-your-hardware.md`. Deployed to every project's `.devin/rules/` by `/start-project` step 6a (the per-project rule copy mechanism from ADR-014; path per ADR-037).

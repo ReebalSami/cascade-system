@@ -33,7 +33,7 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 | `@sync-github` | Reconcile Project board with repo signals; flag naked commits; idempotent | board has drifted; before `@sprint-review` |
 | `@sprint-review` | Heartbeat retro: drain queue, write retro, propose L1 promotions, hand off to `@update-horizontal` | milestone close |
 | `@update-horizontal` | Apply L1 change (rule/skill/workflow/contract/template); writes change ADR; propagates downstream | invoked by `@sprint-review` after L1 promotion |
-| `@verify-l1` | Validate L1 layout against ADR-014/016/037; strict-YAML frontmatter parse + `devin skills list` cross-check; rule cap; drift; dead-path sweeps | read-only audit, idempotent; before any L1-touching PR |
+| `@verify-l1` | Validate L1 layout against ADR-014/016/037; strict-YAML frontmatter parse of every L1 skill, deployable rule, and L3 template skill + `devin skills list` cross-check; rule cap; drift; dead-path sweeps | read-only audit, idempotent; before any L1-touching PR |
 | `@docs-refresh` | Validate + regenerate `docs/` placement; regenerate INDEX files; audit diagrams | after ADR/handoff/retro changes |
 | `@release-manager` | Orchestrate branch lifecycle: branch → commits → push → PR → CI → squash-merge → cleanup (delegates to the four manual helper skills) | every `main`-bound change |
 | `@propose-extension` | **Single intake channel** for any system extension; 5-question interview, route table | "I want to add a new rule/skill/workflow" |
@@ -54,7 +54,7 @@ Single-page scannable inventory. Goal: a fresh reader (or future-you) answers *"
 | `/branch-merge-and-cleanup` *(manual)* | (helper) — 4-option closeout; squash-merge + delete branch + sync `main` | PR approved |
 | `/issue-create` *(manual)* | Create a GitHub issue + atomically add it to the Project v2 board; forcing function for `issue-project-assignment-required` | every issue in a Project-tracked repo (ADR-036) |
 
-Canonical paths: `~/.codeium/windsurf/skills/<name>/SKILL.md`. Maintained index: `docs/skills/INDEX.md`. Every frontmatter block must parse as strict YAML (ADR-006 amendment) — Devin silently drops skills that don't.
+Canonical paths: `~/.codeium/windsurf/skills/<name>/SKILL.md`. Maintained index: `docs/skills/INDEX.md`. Every frontmatter block — skills **and** rule files — must parse as strict YAML (ADR-006 amendment + M4A.2 extension) — Devin silently drops skills and rules that don't.
 
 ---
 

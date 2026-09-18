@@ -8,7 +8,7 @@ sources_consulted:
 adapted_for:
   - L1 global rule (was L2 portfolio-only)
   - Windsurf tool calls (`read_file` with no offset/limit by default)
-  - Cross-project, not just code: also applies to docs, configs, ADRs, retros
+  - "Cross-project, not just code: also applies to docs, configs, ADRs, retros"
 ---
 
 # No half-knowledge

@@ -64,6 +64,8 @@ Devin parses the block with a strict YAML parser and **silently drops the skill*
 - Quote any scalar that begins with a YAML reserved indicator: `` ` `` `@` `*` `&` `!` `%` `|` `>` `#` `-` `?` `[` `{`.
 - Gate before shipping: extract the block and parse it (e.g. `ruby -ryaml -e 'YAML.safe_load(File.read(ARGV[0]))'`); for L1 skills also confirm the name appears in `devin skills list`. `@write-skill` step 8 and `@verify-l1` step 3 carry the gate.
 
+**Extension (M4A.2 fresh-session gate — 2026-09-18):** the same clause applies to **every rule file** (`docs/rules/*.md`, `~/.windsurf/templates/*/rules/*.md`, `_shared/scaffold/.devin/rules/*.md`) and to **L3 template skills** (`~/.windsurf/templates/*/skills/*/SKILL.md`). Devin parses `.devin/rules/*.md` frontmatter with the same strict parser and silently drops a rule that fails — observed directly: a fresh `python-ml-uv` dry-run tree exposed 2 of its 10 deployed rules and neither L3 skill; after quoting, all 10 rules (incl. the always-on `strict-docs-placement`) and both skills loaded. Two further sub-rules learned there: a list item shaped `Key: value` without quotes silently becomes a one-pair mapping instead of a string (`sources_consulted` / `adapted_for` must be lists of strings), and a ` #` inside an unquoted scalar starts a YAML comment and truncates the value. `@verify-l1` step 6 and `start-project/scripts/dry-run.sh` CHECKS parse every deployable rule and skill; `grep trigger:` is not a gate.
+
 ### Forbidden in frontmatter
 
 - Time-based fields (`estimated_duration`, `time_to_run`) — violates `no-time-estimates`
